@@ -18,7 +18,7 @@ export default function Home() {
           <Image
             src="/home/avatar.png"
             alt="avatar"
-            width={150}
+            width={220}
             height={650}
             priority
           />

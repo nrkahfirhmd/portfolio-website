@@ -1,29 +1,46 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 
 interface Props {
     icon: string;
     label: string;
     className: string;
+    rotation: number;
+    width: number;
 }
 
 export default function FloatingItem({
     icon,
     label,
     className,
+    rotation,
+    width,
 }: Props) {
+    const [hovered, setHovered] = useState(false);
+
     return (
         <button
-            className={`absolute float group transition-all duration-300 hover:scale-110 ${className}`}
+            className={`absolute group ${className}`}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
         >
-            <Image
-                src={icon}
-                alt={label}
-                width={120}
-                height={120}
-                className="drop-shadow-xl"
-            />
+            <div
+                className="transition-transform duration-300"
+                style={{
+                    transform: `rotate(${hovered ? 0 : rotation}deg)`,
+                }}
+            >
+                <Image
+                    src={icon}
+                    alt={label}
+                    width={width}
+                    height={120}
+                />
+            </div>
 
-            <p className="mt-3 text-center font-semibold text-lg text-text group-hover:text-primary transition-colors">
+            <p className="mt-3 text-center text-lg font-semibold text-text transition-colors group-hover:text-primary">
                 {label}
             </p>
         </button>
