@@ -10,15 +10,15 @@ export default function Home() {
       <Navbar />
 
       <section className="relative flex min-h-screen items-center justify-center">
-        {floatingItems.map((item) => (
-          <FloatingItem key={item.label} {...item} />
-        ))}
-
-        <div className="relative z-10">
+        <div className="relative z-10 w-fit">
+          {floatingItems.map((item) => (
+            <FloatingItem key={item.label} {...item} />
+          ))}
+          
           <Image
             src="/home/avatar.png"
-            alt="Nurkahfi Rahmada"
-            width={420}
+            alt="avatar"
+            width={150}
             height={650}
             priority
           />

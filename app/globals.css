@@ -17,6 +17,24 @@
   --color-text-muted: #6B7280;
 }
 
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
 body {
   @apply bg-background text-text font-sans;
 }

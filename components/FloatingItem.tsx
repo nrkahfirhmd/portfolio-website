@@ -13,7 +13,7 @@ export default function FloatingItem({
 }: Props) {
     return (
         <button
-            className={`absolute group transition-all duration-300 hover:scale-110 ${className}`}
+            className={`absolute float group transition-all duration-300 hover:scale-110 ${className}`}
         >
             <Image
                 src={icon}
@@ -23,7 +23,7 @@ export default function FloatingItem({
                 className="drop-shadow-xl"
             />
 
-            <p className="mt-3 text-center font-semibold text-lg">
+            <p className="mt-3 text-center font-semibold text-lg text-text group-hover:text-primary transition-colors">
                 {label}
             </p>
         </button>
