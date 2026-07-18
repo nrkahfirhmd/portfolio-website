@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rubik, Teko } from "next/font/google";
 import "./globals.css";
+import CustomCursor from "@/components/CustomCursor";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -29,7 +30,8 @@ export default function RootLayout({
       lang="en"
       className={`${rubik.variable} ${teko.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col cursor-none">
+        <CustomCursor />
         {children}
       </body>
     </html>
