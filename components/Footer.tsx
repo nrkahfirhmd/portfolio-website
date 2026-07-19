@@ -50,8 +50,8 @@ export default function Footer() {
 
     return (
         <footer className="absolute inset-x-0 bottom-0 z-50">
-            <div className="flex justify-between px-8 py-4">
-                <span className="font-bold text-text font-heading text-xl tracking-wide">LAB</span>
+            <div className="flex justify-between px-gutter py-4">
+                <span className="font-bold text-text font-heading text-mark tracking-wide">LAB</span>
 
                 <div className="flex items-center gap-2 text-sm text-text-muted">
                     <input

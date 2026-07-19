@@ -37,7 +37,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
         <div className="flex flex-row h-screen">
             <div className="relative pt-16 flex flex-col gap-12">
                 <div className="flex flex-col gap-8">
-                    <h1 className="text-center">KAHFI</h1>
+                    <h1 className="text-center font-bold font-heading text-mark tracking-wide">KAHFI</h1>
 
                     <div className="px-4">
                         <Image
@@ -45,6 +45,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                             alt={"Personal Picture"}
                             width={250}
                             height={120}
+                            className="ring-4 ring-quaternary"
                         />
                     </div>
                 </div>
@@ -67,7 +68,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                                     border-b
                                     border-border
                                     last:border-b-0
-                                    py-4
+                                    py-2
                                     text-left
                                 "
                             >
@@ -85,12 +86,17 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                                     `}
                                 />
 
+                                {/* Hover tint for unselected items */}
+                                {!isSelected && (
+                                    <div className="absolute inset-0 bg-secondary/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                )}
+
                                 {/* Content */}
                                 <div className="relative z-10 flex items-center px-6">
                                     <p
                                         className={`
                                             font-heading
-                                            text-3xl
+                                            text-nav
                                             tracking-wide
                                             transition-colors
                                             duration-300
@@ -108,15 +114,17 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                     })}
                 </nav>
                 
-                <div className="absolute bottom-0 left-0 h-120 w-full bg-gradient-to-b from-background to-primary" />
+                <div className="absolute bottom-0 left-0 h-120 w-full bg-gradient-to-b from-background via-tertiary to-primary" />
             </div>
 
             <span className="w-[1px] bg-border" />
 
-            <div className="flex flex-col gap-6 text-center items-center py-16">
-                <h1 className="font-bold text-xl">窟</h1>
+            <div className="flex w-16 flex-col items-center gap-20 py-16 text-center">
+                <h1 className="font-bold font-heading text-4xl tracking-wide">窟</h1>
 
-                <h2 className="rotate-90 text-2xl font-heading">{selected}</h2>
+                <h2 className="w-20 rotate-90 whitespace-nowrap text-center text-caption font-heading">
+                    {selected}
+                </h2>
 
                 <button
                     type="button"

@@ -18,8 +18,8 @@ export default function ContentPanel({ label }: Props) {
                 <span className="h-4 w-full bg-quaternary" />
             </div>
 
-            <div className="px-8 py-12">
-                <h1 className="font-heading text-7xl tracking-wide text-text">{label}</h1>
+            <div className="px-gutter py-12">
+                <h1 className="font-heading text-heading tracking-wide text-text">{label}</h1>
                 <p className="max-w-xl text-text-muted">
                     {placeholders[label] ?? "Content coming soon."}
                 </p>

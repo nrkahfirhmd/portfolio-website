@@ -14,9 +14,20 @@
   
   /* Neutral */
   --color-surface: #FFFFFF;
-  --color-border: #E5E7EB;
-  --color-text: #111827;  
+  --color-border: #000000;
+  --color-text: #111827;
   --color-text-muted: #6B7280;
+
+  /* Typography scale */
+  --text-mark: 1.25rem;
+  --text-label: 1.125rem;
+  --text-caption: 1.5rem;
+  --text-nav: 1rem;
+  --text-heading: 4.5rem;
+
+  /* Spacing scale */
+  --spacing-gutter: 2rem;
+  --spacing-sidebar: 300px;
 }
 
 :root,

@@ -43,7 +43,7 @@ export default function FloatingItem({
                 />
             </div>
 
-            <p className="mt-3 text-center text-lg font-semibold text-text transition-colors group-hover:text-primary">
+            <p className="mt-3 text-center text-label font-semibold text-text transition-colors group-hover:text-primary">
                 {label}
             </p>
         </button>

@@ -20,7 +20,7 @@ export default function Home() {
         <main className="relative min-h-screen overflow-hidden bg-background">
             <div
                 className={`fixed left-0 top-0 z-40 h-screen bg-background transition-all duration-500 ease-in-out ${
-                    selected ? "w-[300px] border-r border-black" : "w-full"
+                    selected ? "w-sidebar border-r border-border" : "w-full"
                 }`}
             >
               <div
@@ -76,7 +76,7 @@ export default function Home() {
 
             <div
                 className={`min-h-screen transition-all duration-500 ease-in-out ${
-                    selected ? "ml-[300px] opacity-100 flex-1" : "pointer-events-none ml-0 opacity-0"
+                    selected ? "ml-sidebar opacity-100 flex-1" : "pointer-events-none ml-0 opacity-0"
                 }`}
             >
                 {selected && <ContentPanel label={selected} />}
