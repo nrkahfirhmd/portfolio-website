@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { recolorSvg } from "@/helper/recolorSvg";
 import { useTheme } from "@/components/ThemeProvider";
+import type { NavItem } from "@/lib/nav";
 import Image from "next/image";
-
-interface Item {
-    label: string;
-}
+import { colorFromIndex } from "@/helper/menuColors";
 
 interface Props {
-    items: Item[];
+    items: NavItem[];
     selected: string;
     onSelect: (label: string) => void;
 }
@@ -50,71 +48,105 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                     </div>
                 </div>
 
-                <nav className="z-10 overflow-hidden border border-border">
-                    {items.map((item) => {
+                <nav className="overflow-hidden border border-border divide-y divide-border z-10 border-r-0">
+                    {items.map((item, index) => {
+                        const bg = colorFromIndex(index);
                         const isSelected = item.label === selected;
 
                         return (
-                            <button
-                                key={item.label}
-                                onClick={() => onSelect(item.label)}
-                                className="
-                                    group
-                                    relative
-                                    flex
-                                    w-full
-                                    items-center
-                                    overflow-hidden
-                                    border-b
-                                    border-border
-                                    last:border-b-0
-                                    py-2
-                                    text-left
-                                "
-                            >
-                                {/* Expanding background */}
-                                <div
+                            <div key={item.label}>
+                                {/* Main section item */}
+                                <button
+                                    onClick={() => onSelect(item.label)}
                                     className={`
-                                        absolute
-                                        inset-0
-                                        origin-left
-                                        bg-primary
-                                        transition-transform
+                                        w-full
+                                        py-2
+                                        text-center
+                                        font-heading
+                                        text-nav
+                                        tracking-wide
+                                        transition-colors
                                         duration-300
-                                        ease-out
-                                        ${isSelected ? "scale-x-100" : "scale-x-4"}
+                                        ${bg}
+                                        ${isSelected
+                                            ? "text-background underline"
+                                            : "text-gray-700 hover:text-text"
+                                        }
                                     `}
-                                />
+                                >
+                                    {item.label}
+                                </button>
 
-                                {/* Hover tint for unselected items */}
-                                {!isSelected && (
-                                    <div className="absolute inset-0 bg-secondary/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                {/* Sub-items */}
+                                {!!item.children?.length && (
+                                    <div className="flex flex-col overflow-hidden border-t border-border divide-y divide-border">
+                                        {item.children.map((child, childIndex) => {
+                                            const isChildSelected = child.label === selected;
+                                            const bg = colorFromIndex(index + childIndex + 1);
+
+                                            return (
+                                                <button
+                                                    key={child.label}
+                                                    onClick={() => onSelect(child.label)}
+                                                    className="
+                                                        group
+                                                        relative
+                                                        flex
+                                                        w-full
+                                                        items-center
+                                                        overflow-hidden
+                                                        py-2
+                                                        text-left
+                                                    "
+                                                >
+                                                    {/* Expanding background */}
+                                                    <div
+                                                        className={`
+                                                            absolute
+                                                            inset-0
+                                                            origin-left
+                                                            ${bg}
+                                                            transition-transform
+                                                            duration-300
+                                                            ease-out
+                                                            ${isChildSelected ? "scale-x-100" : "scale-x-6"}
+                                                        `}
+                                                    />
+
+                                                    {/* Hover tint for unselected items */}
+                                                    {!isChildSelected && (
+                                                        <div className="absolute inset-0 bg-secondary/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                                                    )}
+
+                                                    {/* Content */}
+                                                    <div className="relative z-10 flex items-center px-6">
+                                                        <p
+                                                            className={`
+                                                                font-heading
+                                                                text-nav
+                                                                tracking-wide
+                                                                transition-colors
+                                                                duration-300
+                                                                ${isChildSelected
+                                                                    ? "text-white"
+                                                                    : "text-text-muted group-hover:text-text"
+                                                                }
+                                                        `}
+                                                        >
+                                                            {child.label}
+                                                        </p>
+                                                    </div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 )}
-
-                                {/* Content */}
-                                <div className="relative z-10 flex items-center px-6">
-                                    <p
-                                        className={`
-                                            font-heading
-                                            text-nav
-                                            tracking-wide
-                                            transition-colors
-                                            duration-300
-                                            ${isSelected
-                                                ? "text-white"
-                                                : "text-text-muted group-hover:text-text"
-                                            }
-                                    `}
-                                    >
-                                        {item.label}
-                                    </p>
-                                </div>
-                            </button>
+                            </div>
                         );
                     })}
                 </nav>
                 
-                <div className="absolute bottom-0 left-0 h-120 w-full bg-gradient-to-b from-background via-tertiary to-primary" />
+                <div className="absolute bottom-0 left-0 h-25 w-full bg-gradient-to-b from-background via-tertiary to-primary" />
             </div>
 
             <span className="w-[1px] bg-border" />

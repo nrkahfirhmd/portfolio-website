@@ -17,12 +17,13 @@
   --color-border: #000000;
   --color-text: #111827;
   --color-text-muted: #6B7280;
+  --color-text-subtle: #C4C4C4;
 
   /* Typography scale */
   --text-mark: 1.25rem;
   --text-label: 1.125rem;
   --text-caption: 1.5rem;
-  --text-nav: 1rem;
+  --text-nav: 1.3rem;
   --text-heading: 4.5rem;
 
   /* Spacing scale */

@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SidebarMenu from "@/components/SidebarMenu";
 import { floatingItems } from "@/lib/home";
+import { navItems } from "@/lib/nav";
 
 export default function Home() {
     const [selected, setSelected] = useState<string | null>(null);
@@ -19,31 +20,29 @@ export default function Home() {
     return (
         <main className="relative min-h-screen overflow-hidden bg-background">
             <div
-                className={`fixed left-0 top-0 z-40 h-screen bg-background transition-all duration-500 ease-in-out ${
-                    selected ? "w-sidebar border-r border-border" : "w-full"
+                className={`fixed left-0 top-0 z-40 h-screen overflow-hidden bg-background transition-[width,border-color] duration-[400ms] delay-[150ms] ease-in-out ${
+                    selected ? "w-sidebar border-r border-border" : "w-full border-r border-transparent"
                 }`}
             >
-              <div
-                className={`transition-all duration-300 ${selected
-                    ? "pointer-events-none -translate-y-6 opacity-0"
-                    : "translate-y-0 opacity-100"
-                  }`}
-              >
-                <Navbar />
-              </div>
-
-                <section
-                    className={`relative flex h-full ${
-                        selected ? "items-center justify-start" : "items-center justify-center"
+                <div
+                    className={`transition-all ease-out ${
+                        selected
+                            ? "pointer-events-none -translate-y-6 opacity-0 duration-[150ms]"
+                            : "translate-y-0 opacity-100 duration-[200ms] delay-[400ms]"
                     }`}
                 >
-                    {selected ? (
-                        <SidebarMenu
-                            items={floatingItems}
-                            selected={selected}
-                            onSelect={handleSelect}
-                        />
-                    ) : (
+                    <Navbar />
+                </div>
+
+                <section className="relative h-full">
+                    {/* Home layer */}
+                    <div
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity ease-out ${
+                            selected
+                                ? "pointer-events-none opacity-0 duration-[150ms]"
+                                : "opacity-100 duration-[200ms] delay-[400ms]"
+                        }`}
+                    >
                         <div className="relative z-10 w-fit">
                             {floatingItems.map((item) => (
                                 <FloatingItem
@@ -61,22 +60,40 @@ export default function Home() {
                                 priority
                             />
                         </div>
-                    )}
+                    </div>
+
+                    {/* Sidebar layer */}
+                    <div
+                        className={`absolute inset-0 flex items-center justify-start transition-opacity ease-out ${
+                            selected
+                                ? "opacity-100 duration-[200ms] delay-[300ms]"
+                                : "pointer-events-none opacity-0 duration-[150ms]"
+                        }`}
+                    >
+                        <SidebarMenu
+                            items={navItems}
+                            selected={selected ?? ""}
+                            onSelect={handleSelect}
+                        />
+                    </div>
                 </section>
 
                 <div
-                  className={`transition-all duration-300 ${selected
-                      ? "pointer-events-none translate-y-6 opacity-0"
-                      : "translate-y-0 opacity-100"
+                    className={`transition-all ease-out ${
+                        selected
+                            ? "pointer-events-none translate-y-6 opacity-0 duration-[150ms]"
+                            : "translate-y-0 opacity-100 duration-[200ms] delay-[400ms]"
                     }`}
                 >
-                  <Footer />
+                    <Footer />
                 </div>
             </div>
 
             <div
-                className={`min-h-screen transition-all duration-500 ease-in-out ${
-                    selected ? "ml-sidebar opacity-100 flex-1" : "pointer-events-none ml-0 opacity-0"
+                className={`min-h-screen transition-all ease-out ${
+                    selected
+                        ? "ml-sidebar flex-1 opacity-100 duration-[350ms] delay-[300ms]"
+                        : "pointer-events-none ml-0 opacity-0 duration-[150ms]"
                 }`}
             >
                 {selected && <ContentPanel label={selected} />}

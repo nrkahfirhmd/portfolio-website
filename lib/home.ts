@@ -15,7 +15,7 @@ export const floatingItems = [
     },
     {
         icon: "/home/iphone.png",
-        label: "Contact",
+        label: "Exploration",
         className: "right-0 top-1/2 translate-x-40 translate-y-1/4",
         rotation: -12,
         width: 100,
