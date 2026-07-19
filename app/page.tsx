@@ -96,7 +96,9 @@ export default function Home() {
                         : "pointer-events-none ml-0 opacity-0 duration-[150ms]"
                 }`}
             >
-                {selected && <ContentPanel label={selected} />}
+                {selected && (
+                    <ContentPanel label={selected} onNavigate={setSelected} />
+                )}
             </div>
         </main>
     );
