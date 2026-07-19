@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { recolorSvg } from "@/helper/recolorSvg";
+import { useTheme } from "@/components/ThemeProvider";
 import Image from "next/image";
 
 interface Item {
@@ -11,6 +16,23 @@ interface Props {
 }
 
 export default function SidebarMenu({ items, selected, onSelect }: Props) {
+    const [svg, setSvg] = useState("");
+    const { cycleTheme } = useTheme();
+
+    useEffect(() => {
+        async function loadSvg() {
+            const raw = await fetch("/sushi.svg").then((r) => r.text());
+            setSvg(
+                recolorSvg(raw, {
+                    "#e9885b": "var(--primary)",
+                    "#cc5e30": "var(--secondary)",
+                    "#f1bb9b": "var(--tertiary)",
+                })
+            );
+        }
+        loadSvg();
+    }, []);
+
     return (
         <div className="flex flex-row h-screen">
             <div className="relative pt-16 flex flex-col gap-12">
@@ -86,19 +108,24 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                     })}
                 </nav>
                 
-                <div className="absolute bottom-0 left-0 h-120 w-full bg-gradient-to-b from-white to-primary" />
+                <div className="absolute bottom-0 left-0 h-120 w-full bg-gradient-to-b from-background to-primary" />
             </div>
 
-            <span className="w-[1px] bg-black" />
-            
-            <div className="flex flex-col gap-6 text-center py-16">
+            <span className="w-[1px] bg-border" />
+
+            <div className="flex flex-col gap-6 text-center items-center py-16">
                 <h1 className="font-bold text-xl">窟</h1>
-                
-                <h2 className="rotate-90 text-2xl font-heading">Projects</h2>
 
-                {/* interactivity later */}
+                <h2 className="rotate-90 text-2xl font-heading">{selected}</h2>
+
+                <button
+                    type="button"
+                    onClick={cycleTheme}
+                    aria-label="Toggle color theme"
+                    className="w-10 h-10 transition-transform hover:scale-110 [&>svg]:w-full [&>svg]:h-full"
+                    dangerouslySetInnerHTML={{ __html: svg }}
+                />
             </div>
-            
         </div>
     );
 }

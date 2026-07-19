@@ -7,14 +7,38 @@
 
   /* Colors */
   --color-background: #F9FAFB;
-  --color-primary: #34D399;
-  --color-accent: #10B981;
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-quaternary: var(--quaternary);
   
   /* Neutral */
   --color-surface: #FFFFFF;
   --color-border: #E5E7EB;
   --color-text: #111827;  
   --color-text-muted: #6B7280;
+}
+
+:root,
+[data-theme="green"] {
+  --primary: #659287;
+  --secondary: #88BDA4;
+  --tertiary: #B1D3B9;
+  --quaternary: #E6F2DD;
+}
+
+[data-theme="blue"] {
+  --primary: #78A4CB;
+  --secondary: #95BDD7;
+  --tertiary: #B4E1EB;
+  --quaternary: #F9E8A2;
+}
+
+[data-theme="red"] {
+  --primary: #FF9A86;
+  --secondary: #FFB399;
+  --tertiary: #FFD6A6;
+  --quaternary: #FFF0BE;
 }
 
 @keyframes float {
