@@ -49,7 +49,7 @@ export default function Footer() {
     }
 
     return (
-        <footer className="fixed inset-x-0 bottom-0 z-50">
+        <footer className="absolute inset-x-0 bottom-0 z-50">
             <div className="flex justify-between px-8 py-4">
                 <span className="font-bold text-text font-heading text-xl tracking-wide">LAB</span>
 

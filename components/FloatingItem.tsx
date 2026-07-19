@@ -9,6 +9,7 @@ interface Props {
     className: string;
     rotation: number;
     width: number;
+    onSelect?: () => void;
 }
 
 export default function FloatingItem({
@@ -17,12 +18,14 @@ export default function FloatingItem({
     className,
     rotation,
     width,
+    onSelect,
 }: Props) {
     const [hovered, setHovered] = useState(false);
 
     return (
         <button
             className={`absolute group ${className}`}
+            onClick={onSelect}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
