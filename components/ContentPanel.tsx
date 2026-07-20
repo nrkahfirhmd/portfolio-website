@@ -1,11 +1,17 @@
+import ExperienceStory from "@/components/experience/ExperienceStory";
+
 interface Props {
     label: string;
 }
 
 const placeholders: Record<string, string> = {
     Work: "Project list & case studies go here.",
-    Experience: "Timeline of roles & skills goes here.",
     Contact: "Contact form & socials go here.",
+};
+
+/** Sections with a dedicated view render it full-bleed under the color strip. */
+const views: Record<string, React.ReactNode> = {
+    Experience: <ExperienceStory />,
 };
 
 export default function ContentPanel({ label }: Props) {
@@ -18,12 +24,14 @@ export default function ContentPanel({ label }: Props) {
                 <span className="h-4 w-full bg-quaternary" />
             </div>
 
-            <div className="px-gutter py-12">
-                <h1 className="font-heading text-heading tracking-wide text-text">{label}</h1>
-                <p className="max-w-xl text-text-muted">
-                    {placeholders[label] ?? "Content coming soon."}
-                </p>
-            </div>
+            {views[label] ?? (
+                <div className="px-gutter py-12">
+                    <h1 className="font-heading text-heading tracking-wide text-text">{label}</h1>
+                    <p className="max-w-xl text-text-muted">
+                        {placeholders[label] ?? "Content coming soon."}
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
