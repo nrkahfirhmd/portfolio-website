@@ -1,30 +1,25 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
     motion,
     useTransform,
     useReducedMotion,
     type MotionValue,
 } from "framer-motion";
+import { recolorSvg } from "@/helper/recolorSvg";
+import type { StickerItem } from "@/lib/notFound";
 
-interface Props {
-    src: string;
-    alt: string;
-    size: number;
-    /** Tailwind position classes, e.g. "left-[12%] top-[20%]". */
-    className: string;
-    rotation: number;
-    /** Parallax intensity — higher drifts further with the cursor. */
-    depth: number;
+interface Props extends StickerItem {
     /** Shared, normalized (-0.5..0.5) cursor position from the page. */
     pointerX: MotionValue<number>;
     pointerY: MotionValue<number>;
 }
 
 /**
- * A draggable image sticker that drifts with the cursor (parallax) and
- * straightens + lifts on hover. Reuses the portfolio's existing art.
+ * A draggable SVG sticker that drifts with the cursor (parallax) and
+ * straightens + lifts on hover. Its fills are rewritten to theme CSS
+ * variables, so it recolors with the active theme.
  */
 export default function ParallaxSticker({
     src,
@@ -33,36 +28,56 @@ export default function ParallaxSticker({
     className,
     rotation,
     depth,
+    colors,
     pointerX,
     pointerY,
 }: Props) {
     const reduce = useReducedMotion();
+    const [svg, setSvg] = useState("");
+
     const driftX = useTransform(pointerX, (v) => (reduce ? 0 : v * depth));
     const driftY = useTransform(pointerY, (v) => (reduce ? 0 : v * depth));
+
+    useEffect(() => {
+        let active = true;
+
+        fetch(src)
+            .then((r) => r.text())
+            .then((raw) => {
+                if (active) setSvg(recolorSvg(raw, colors));
+            })
+            .catch(() => {});
+
+        return () => {
+            active = false;
+        };
+    }, [src, colors]);
 
     return (
         <motion.div
             className={`absolute ${className}`}
             style={{ x: driftX, y: driftY }}
         >
+            {/* Drag lives on its own node: framer-motion's drag projection
+                mis-measures when the same element also carries a rotate. */}
             <motion.div
                 drag={!reduce}
                 dragElastic={0.4}
                 dragTransition={{ bounceStiffness: 260, bounceDamping: 16 }}
-                initial={{ opacity: 0, scale: 0.6, rotate: rotation }}
-                animate={{ opacity: 1, scale: 1, rotate: rotation }}
-                transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
-                whileHover={{ rotate: 0, scale: 1.08, zIndex: 30 }}
-                whileTap={{ scale: 0.92 }}
-                className="cursor-none select-none drop-shadow-[6px_10px_14px_rgba(0,0,0,0.14)]"
+                whileDrag={{ cursor: "grabbing", zIndex: 30 }}
+                style={{ width: size }}
+                className="cursor-none"
             >
-                <Image
-                    src={src}
-                    alt={alt}
-                    width={size}
-                    height={size}
-                    draggable={false}
-                    className="pointer-events-none h-auto w-full"
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.6, rotate: rotation }}
+                    animate={{ opacity: svg ? 1 : 0, scale: 1, rotate: rotation }}
+                    transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
+                    whileHover={{ rotate: 0, scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    role="img"
+                    aria-label={alt}
+                    className="aspect-square select-none drop-shadow-[6px_10px_14px_rgba(0,0,0,0.14)] [&>svg]:h-full [&>svg]:w-full"
+                    dangerouslySetInnerHTML={{ __html: svg }}
                 />
             </motion.div>
         </motion.div>

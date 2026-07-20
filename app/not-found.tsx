@@ -1,28 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
 import {
     motion,
     useMotionValue,
     useSpring,
     useReducedMotion,
 } from "framer-motion";
+import DraggableDigit from "@/components/DraggableDigit";
 import EyeZero from "@/components/EyeZero";
 import MagneticButton from "@/components/MagneticButton";
 import ParallaxSticker from "@/components/ParallaxSticker";
-
-const STICKERS = [
-    { src: "/home/glasses.png", alt: "glasses", size: 150, className: "left-[8%] top-[18%]", rotation: -14, depth: 46 },
-    { src: "/home/iphone.png", alt: "phone", size: 80, className: "right-[12%] top-[22%]", rotation: 12, depth: 70 },
-    { src: "/sushi.svg", alt: "sushi", size: 120, className: "left-[14%] bottom-[16%]", rotation: 8, depth: 60 },
-    { src: "/home/hand.png", alt: "waving hand", size: 130, className: "right-[9%] bottom-[14%]", rotation: -10, depth: 38 },
-];
+import { stickers } from "@/lib/notFound";
 
 const digitSpring = { type: "spring" as const, stiffness: 260, damping: 18 };
 
 export default function NotFound() {
-    const stageRef = useRef<HTMLDivElement>(null);
     const reduce = useReducedMotion();
 
     // Normalized cursor position shared with every parallax sticker.
@@ -58,7 +51,7 @@ export default function NotFound() {
             </div>
 
             {/* Floating draggable stickers */}
-            {STICKERS.map((s) => (
+            {stickers.map((s) => (
                 <ParallaxSticker
                     key={s.src}
                     {...s}
@@ -68,26 +61,12 @@ export default function NotFound() {
             ))}
 
             {/* Center stage */}
-            <div
-                ref={stageRef}
-                className="relative z-10 flex flex-1 flex-col items-center justify-center px-gutter text-center"
-            >
+            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-gutter text-center">
                 {/* 404 — draggable 4s, cursor-tracking eye 0 */}
                 <div className="flex select-none items-center justify-center font-heading leading-none text-[clamp(6rem,24vw,17rem)] text-text">
-                    <motion.span
-                        drag={!reduce}
-                        dragConstraints={stageRef}
-                        dragElastic={0.5}
-                        dragTransition={{ bounceStiffness: 300, bounceDamping: 14 }}
-                        initial={{ y: -120, opacity: 0, rotate: -12 }}
-                        animate={{ y: 0, opacity: 1, rotate: -6 }}
-                        transition={{ ...digitSpring, delay: 0.05 }}
-                        whileHover={{ rotate: 0, scale: 1.05 }}
-                        whileDrag={{ scale: 1.15, rotate: 4, cursor: "grabbing" }}
-                        className="cursor-none"
-                    >
+                    <DraggableDigit rotation={-6} delay={0.05}>
                         4
-                    </motion.span>
+                    </DraggableDigit>
 
                     <motion.div
                         initial={{ scale: 0, opacity: 0 }}
@@ -98,20 +77,9 @@ export default function NotFound() {
                         <EyeZero />
                     </motion.div>
 
-                    <motion.span
-                        drag={!reduce}
-                        dragConstraints={stageRef}
-                        dragElastic={0.5}
-                        dragTransition={{ bounceStiffness: 300, bounceDamping: 14 }}
-                        initial={{ y: -120, opacity: 0, rotate: 12 }}
-                        animate={{ y: 0, opacity: 1, rotate: 6 }}
-                        transition={{ ...digitSpring, delay: 0.25 }}
-                        whileHover={{ rotate: 0, scale: 1.05 }}
-                        whileDrag={{ scale: 1.15, rotate: -4, cursor: "grabbing" }}
-                        className="cursor-none"
-                    >
+                    <DraggableDigit rotation={6} delay={0.25}>
                         4
-                    </motion.span>
+                    </DraggableDigit>
                 </div>
 
                 <motion.h1
