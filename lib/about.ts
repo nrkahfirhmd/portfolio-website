@@ -63,6 +63,7 @@ export const stats = [
 export const outro = {
     kanji: "縁",
     heading: "The door is open",
-    body: "If you build things that matter — or want to — I'd like to hear about it.",
+    body: "“Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines. Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.”",
+    quoter: "- H. Jackson Brown Jr.",
     cta: "Say hello",
 };

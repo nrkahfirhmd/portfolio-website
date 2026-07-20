@@ -199,7 +199,7 @@ function Hero() {
         <section
             ref={ref}
             onMouseMove={handleMove}
-            className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden px-gutter py-24"
+            className="relative flex min-h-screen flex-col justify-center overflow-hidden px-gutter"
         >
             {/* Giant kanji watermark */}
             <motion.span
@@ -288,12 +288,12 @@ function Chapters() {
             {chapters.map((ch, i) => (
                 <section
                     key={ch.heading}
-                    className="relative grid min-h-[80vh] grid-cols-1 items-center gap-10 px-gutter py-24 md:grid-cols-[1fr_1.1fr] md:pl-24"
+                    className="relative grid min-h-[60vh] grid-cols-1 items-center gap-10 px-gutter md:grid-cols-[1fr_1.1fr] md:pl-24"
                 >
                     {/* Sticky kanji marker */}
                     <div className="md:sticky md:top-[24vh] md:self-start">
                         <FadeUp>
-                            <span className="mb-4 block font-sans text-label uppercase tracking-[0.35em] text-primary">
+                            <span className="mb-24 block font-sans text-label uppercase tracking-[0.35em] text-primary">
                                 {ch.kicker}
                             </span>
                             <span
@@ -320,16 +320,6 @@ function Chapters() {
                             ))}
                         </div>
                     </div>
-
-                    {/* Alternating decorative block bar */}
-                    <div
-                        aria-hidden
-                        className={`absolute top-24 hidden h-24 w-24 md:block ${
-                            i % 2 === 0
-                                ? "right-gutter bg-tertiary"
-                                : "right-gutter bg-secondary"
-                        }`}
-                    />
                 </section>
             ))}
         </div>
@@ -352,9 +342,15 @@ function SkillsMarquee() {
                 {[0, 1].map((r) => (
                     <div key={r} className="flex overflow-hidden">
                         <div
-                            className={`flex shrink-0 items-center gap-6 pr-6 ${
-                                reduce ? "" : r === 0 ? "marquee" : "marquee-reverse"
-                            }`}
+                            className={`
+                                flex
+                                w-max
+                                shrink-0
+                                items-center
+                                gap-6
+                                pr-6
+                                ${reduce ? "" : r === 0 ? "marquee" : "marquee-reverse"}
+                            `}
                         >
                             {row.map((skill, i) => (
                                 <span
@@ -414,7 +410,7 @@ function ThemePlay() {
                 <button
                     onClick={cycleTheme}
                     aria-label="Change color theme"
-                    className="group flex h-24 w-full max-w-2xl overflow-hidden border-2 border-border"
+                    className="group flex h-24 w-full overflow-hidden border-2 border-border"
                 >
                     {swatches.map((c) => (
                         <motion.span
@@ -432,7 +428,7 @@ function ThemePlay() {
 
 function Outro() {
     return (
-        <section className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden px-gutter py-24 text-center">
+        <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-gutter text-center">
             <span
                 aria-hidden
                 className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none font-heading text-[38vw] leading-none text-text/[0.06]"
@@ -446,15 +442,18 @@ function Outro() {
                     className="mb-8 text-[clamp(2.5rem,8vw,7rem)] text-text"
                 />
                 <FadeUp>
-                    <p className="mb-12 max-w-lg font-sans text-xl leading-relaxed text-text-muted">
+                    <p className="mb-4 max-w-4xl font-sans text-xl leading-relaxed text-text-muted">
                         {outro.body}
+                    </p>
+                    <p className="mb-12 text-xl font-bold text-text-muted font-sans">
+                        {outro.quoter}
                     </p>
                 </FadeUp>
 
                 <FadeUp>
                     <Magnetic>
                         <a
-                            href="mailto:hello@example.com"
+                            href="mailto:nurkahfirahmada@gmail.com"
                             className="inline-flex items-center gap-4 border-2 border-border bg-text px-10 py-5 font-heading text-2xl uppercase tracking-wide text-background transition-colors hover:bg-primary hover:text-text"
                         >
                             {outro.cta}
@@ -470,7 +469,6 @@ function Outro() {
 /* ------------------------------------------------------------------ */
 /*  Root                                                               */
 /* ------------------------------------------------------------------ */
-
 export default function AboutStory() {
     return (
         <div className="relative">
