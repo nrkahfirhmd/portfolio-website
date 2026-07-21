@@ -403,7 +403,7 @@ function ThemePlay() {
         <section className="px-gutter py-24">
             <FadeUp className="mb-6">
                 <p className="font-sans text-label uppercase tracking-[0.35em] text-text-muted">
-                    Pick a mood — the whole den shifts
+                    Pick a mood — the whole cave shifts
                 </p>
             </FadeUp>
             <FadeUp>

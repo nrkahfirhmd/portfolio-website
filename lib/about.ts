@@ -1,7 +1,3 @@
-// Story content for the About ("Index") page.
-// First-person, editable narrative. Swap copy freely — structure drives the
-// scroll animation, not the exact words.
-
 export interface Chapter {
     kanji: string;
     kicker: string;
@@ -10,31 +6,30 @@ export interface Chapter {
 }
 
 export const intro = {
-    // Big kinetic opener
-    tagline: ["I build", "quiet software", "in a loud world."],
+    tagline: ["Exploring", "the many ways", "technology creates value."],
     kanji: "窟", // "den" / "cave" — the place where things get made
     name: "KAHFI",
-    role: "Software Engineer · Maker · Perpetual Beginner",
-    scrollCue: "scroll to enter the den",
+    role: "Technology Orchestrator · Currently In Training",
+    scrollCue: "scroll to enter the cave",
 };
 
 export const chapters: Chapter[] = [
     {
         kanji: "始",
         kicker: "01 — Origin",
-        heading: "It started with a broken thing",
+        heading: "It started always with a curiosity",
         body: [
-            "Before I wrote a single line, I took things apart. Remote controls, old radios, the family PC that never booted the same way twice.",
-            "Curiosity was never a hobby. It was the whole personality. Software just gave that instinct an infinite room to run in.",
+            "Before I jumped into the technology field, I always questioned anything that interested me. Sometimes, I would go so far as to reverse engineer it.",
+            "Curiosity was never a decision to make. It was my whole personality. Technology just gave that instinct an infinite room to run in."
         ],
     },
     {
         kicker: "02 — Craft",
         kanji: "作",
-        heading: "I care about the seams",
+        heading: "I care a lot about the sense",
         body: [
-            "Anyone can ship a screen. I obsess over the moments between screens — the transition, the empty state, the error nobody planned for.",
-            "Good software feels obvious in hindsight and invisible in use. That gap between messy reality and calm interface is where I like to live.",
+            "Anyone can build features. I care about how they feel. Every interaction should be intentional, effortless, and leave people with the sense that someone truly cared.",
+            "Software isn't just a collection of functions. It's the quiet work of turning complexity into clarity, one thoughtful decision at a time.",
         ],
     },
     {
@@ -42,22 +37,25 @@ export const chapters: Chapter[] = [
         kanji: "念",
         heading: "Small, sharp, and honest",
         body: [
-            "I would rather ship one thing that works than ten that demo well. Constraints aren't the enemy of creativity — they're the point of it.",
-            "Every project is a conversation with the person who'll use it. My job is to listen harder than I talk.",
+            "I'd rather ship one thing that truly works than ten things that only look good in a demo. Quality isn't about scale — it's about intention.",
+            "Every product is a conversation with the person on the other side of the screen. My job is to listen first, then build with honesty and care.",
         ],
     },
 ];
 
 export const skills = [
-    "TypeScript", "React", "Next.js", "Node", "Rust", "Go", "Python",
-    "Postgres", "Systems Design", "AI / LLMs", "Design Systems", "Motion",
+    "Python", "Tensorflow", "PyTorch", "Scikit-Learn",
+    "TypeScript", "React", "Next.js", "NestJS", "Express.js", "PHP", "Laravel", "CodeIgniter",
+    "Swift", "SwiftUI",
+    "PostgreSQL", "MySQL", "MongoDB",
+    "Bash", "Ubuntu", "Docker"
 ];
 
 export const stats = [
-    { value: 7, suffix: "+", label: "years making things" },
-    { value: 40, suffix: "+", label: "projects shipped" },
-    { value: 3, suffix: "am", label: "favorite build hour" },
-    { value: 100, suffix: "%", label: "still learning" },
+    { value: 5, suffix: "+", label: "things brought to life" },
+    { value: 100, suffix: "%", label: "built with intention" },
+    { value: 24, suffix: "/7", label: "learning mindset" },
+    { value: Infinity, suffix: "", label: "things to learn" },
 ];
 
 export const outro = {
