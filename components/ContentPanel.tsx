@@ -1,3 +1,5 @@
+import AboutStory from "@/components/about/AboutStory";
+
 interface Props {
     label: string;
 }
@@ -9,6 +11,10 @@ const placeholders: Record<string, string> = {
 };
 
 export default function ContentPanel({ label }: Props) {
+    if (label === "Index") {
+        return <AboutStory />;
+    }
+
     return (
         <div className="flex h-full flex-col gap-6">
             <div className="flex">
