@@ -28,17 +28,18 @@ interface Props {
 
 type Filter = ProjectCategory | "All";
 
+// Small accent dot per category — a whisper of color, not a loud band.
 const accentByCategory: Record<ProjectCategory, string> = {
     Software: "bg-primary",
     AI: "bg-secondary",
     System: "bg-tertiary",
 };
 
-// Showcase backdrop gradient per category — makes each cover read distinct.
-const coverBgByCategory: Record<ProjectCategory, string> = {
-    Software: "from-primary via-secondary to-quaternary",
-    AI: "from-secondary via-tertiary to-quaternary",
-    System: "from-tertiary via-quaternary to-primary",
+// Faint corner tint on the showcase — subtle, sits over a neutral base.
+const coverTintByCategory: Record<ProjectCategory, string> = {
+    Software: "from-primary/15",
+    AI: "from-secondary/15",
+    System: "from-tertiary/15",
 };
 
 /* ---------- header ---------- */
@@ -103,16 +104,16 @@ function Header({
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}
-                                className={`relative cursor-pointer border border-border px-4 py-1.5 font-heading text-label tracking-wide transition-colors duration-200 ${
+                                className={`relative cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-200 ${
                                     active
-                                        ? "text-background"
-                                        : "text-text hover:bg-quaternary"
+                                        ? "border-transparent text-background"
+                                        : "border-black/10 text-text-muted hover:border-black/20 hover:text-text"
                                 }`}
                             >
                                 {active && (
                                     <motion.span
                                         layoutId="filter-pill"
-                                        className="absolute inset-0 bg-text"
+                                        className="absolute inset-0 rounded-full bg-text"
                                         transition={{
                                             type: "spring",
                                             stiffness: 400,
@@ -126,7 +127,7 @@ function Header({
                     })}
                 </div>
 
-                <span className="ml-auto font-heading text-label tabular-nums text-text-muted">
+                <span className="ml-auto text-sm tabular-nums text-text-muted">
                     <AnimatePresence mode="popLayout" initial={false}>
                         <motion.span
                             key={count}
@@ -193,9 +194,6 @@ function ProjectCard({
         py.set(0);
     }
 
-    // Stagger columns for an asymmetric, editorial rhythm.
-    const columnOffset = index % 2 === 1 ? "md:mt-16" : "";
-
     return (
         <motion.a
             href={project.href ?? "#"}
@@ -214,81 +212,88 @@ function ProjectCard({
                 setHovered(false);
                 resetPointer();
             }}
-            whileHover={reduce ? undefined : { y: -6 }}
+            whileHover={reduce ? undefined : { y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            className={`group relative block overflow-hidden border border-border bg-surface ${columnOffset}`}
+            className="group relative block overflow-hidden rounded-2xl border border-black/[0.06] bg-surface"
             style={{
                 boxShadow: hovered
-                    ? "10px 10px 0 0 var(--color-border)"
-                    : "0px 0px 0 0 var(--color-border)",
+                    ? "0 20px 40px -16px rgba(17,24,39,0.22)"
+                    : "0 1px 2px rgba(17,24,39,0.05)",
             }}
         >
             {/* ---------- image showcase ---------- */}
             <div
                 ref={showcaseRef}
                 onPointerMove={onPointerMove}
-                className={`relative h-64 w-full overflow-hidden border-b border-border bg-gradient-to-br ${
-                    coverBgByCategory[project.category]
-                }`}
+                className="relative aspect-[16/10] w-full overflow-hidden bg-background"
             >
-                {/* giant ghost index behind the product shot */}
-                <span className="pointer-events-none absolute -left-2 top-1/2 -translate-y-1/2 select-none font-heading text-[10rem] leading-none text-background/40 mix-blend-soft-light">
-                    {project.id}
-                </span>
+                {/* faint category tint in the corner */}
+                <div
+                    className={`absolute inset-0 bg-gradient-to-br to-transparent ${coverTintByCategory[project.category]}`}
+                />
 
                 <motion.div
                     style={reduce ? undefined : { x: imgX, y: imgY }}
-                    animate={{ scale: hovered ? 1.08 : 1 }}
+                    animate={{ scale: hovered ? 1.05 : 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 22 }}
-                    className="absolute inset-0 flex items-center justify-center p-8"
+                    className="absolute inset-0 flex items-center justify-center p-10"
                 >
                     <Image
                         src={project.cover}
                         alt={`${project.title} showcase`}
                         width={340}
                         height={240}
-                        className="h-full w-auto object-contain drop-shadow-2xl"
+                        className="h-full w-auto object-contain drop-shadow-xl"
                     />
                 </motion.div>
 
-                {/* category tag overlay */}
-                <span className="absolute right-3 top-3 border border-border bg-surface/90 px-2 py-0.5 font-heading text-mark tracking-wide backdrop-blur-sm">
-                    {project.category}
+                {/* muted index, top-left */}
+                <span className="absolute left-5 top-4 text-sm font-medium tabular-nums text-text-subtle">
+                    {project.id}
                 </span>
-
-                {/* index + view chip slides up on hover */}
-                <motion.div
-                    initial={false}
-                    animate={{ y: hovered ? 0 : 44, opacity: hovered ? 1 : 0 }}
-                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                    className="absolute bottom-3 left-3 flex items-center gap-2 border border-border bg-text px-3 py-1 font-heading text-mark tracking-wide text-background"
-                >
-                    View project <span aria-hidden>→</span>
-                </motion.div>
             </div>
 
             {/* ---------- meta ---------- */}
-            <div className="flex flex-col gap-4 p-6">
-                <div className="flex items-baseline justify-between gap-4">
-                    <h2 className="font-heading text-[2.5rem] leading-none tracking-wide text-text">
-                        {project.title}
-                    </h2>
-                    <span className="shrink-0 text-sm tabular-nums text-text-muted">
+            <div className="flex flex-col gap-3 p-6">
+                {/* category + year row */}
+                <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-2 font-medium uppercase tracking-wider text-text-muted">
+                        <span
+                            className={`h-1.5 w-1.5 rounded-full ${accentByCategory[project.category]}`}
+                        />
+                        {project.category}
+                    </span>
+                    <span className="tabular-nums text-text-subtle">
                         {project.year} · {project.role}
                     </span>
                 </div>
 
-                <p className="max-w-md text-text-muted">{project.blurb}</p>
+                <h2 className="font-heading text-[2rem] leading-none tracking-wide text-text">
+                    {project.title}
+                </h2>
 
-                <div className="flex flex-wrap items-center gap-2">
-                    {project.stack.map((tech) => (
-                        <span
-                            key={tech}
-                            className="rounded-full border border-border/30 bg-quaternary px-3 py-0.5 text-sm text-text"
-                        >
-                            {tech}
+                <p className="text-sm leading-relaxed text-text-muted">
+                    {project.blurb}
+                </p>
+
+                {/* footer: stack + hover arrow */}
+                <div className="mt-2 flex items-center justify-between border-t border-black/[0.05] pt-4">
+                    <span className="text-xs tabular-nums text-text-subtle">
+                        {project.stack.join(" · ")}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-text">
+                        <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                            View
                         </span>
-                    ))}
+                        <motion.span
+                            initial={false}
+                            animate={{ x: hovered ? 4 : 0 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            aria-hidden
+                        >
+                            →
+                        </motion.span>
+                    </span>
                 </div>
             </div>
         </motion.a>
@@ -322,7 +327,7 @@ export default function WorkProjects({ activeCategory, onNavigate }: Props) {
 
             <motion.div
                 layout
-                className="grid grid-cols-1 gap-6 px-gutter pt-12 md:grid-cols-2"
+                className="grid grid-cols-1 gap-8 px-gutter pt-12 md:grid-cols-2"
             >
                 <AnimatePresence mode="popLayout">
                     {visible.map((project, i) => (

@@ -23,10 +23,11 @@ const accentByCategory: Record<ProjectCategory, string> = {
     System: "bg-tertiary",
 };
 
+// Faint hero wash — a hint of category color over the neutral background.
 const coverBgByCategory: Record<ProjectCategory, string> = {
-    Software: "from-primary via-secondary to-quaternary",
-    AI: "from-secondary via-tertiary to-quaternary",
-    System: "from-tertiary via-quaternary to-primary",
+    Software: "from-primary/12",
+    AI: "from-secondary/12",
+    System: "from-tertiary/12",
 };
 
 /* ---------- inline renderer ---------- */
@@ -52,7 +53,7 @@ function InlineRun({ nodes }: { nodes: Inline[] }) {
                     return (
                         <code
                             key={i}
-                            className="rounded border border-border/30 bg-quaternary px-1.5 py-0.5 font-mono text-[0.85em] text-text"
+                            className="rounded-md border border-black/[0.06] bg-black/[0.04] px-1.5 py-0.5 font-mono text-[0.85em] text-text"
                         >
                             {n.code}
                         </code>
@@ -91,13 +92,13 @@ function CodeBlock({ lang, code }: { lang: string; code: string }) {
     }
 
     return (
-        <div className="overflow-hidden border border-border bg-text">
-            <div className="flex items-center justify-between border-b border-white/15 px-4 py-2">
+        <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-[#1c1c1f]">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
                 <div className="flex items-center gap-1.5">
-                    <span className="h-3 w-3 rounded-full bg-primary" />
-                    <span className="h-3 w-3 rounded-full bg-tertiary" />
-                    <span className="h-3 w-3 rounded-full bg-quaternary" />
-                    <span className="ml-3 font-mono text-xs text-white/50">
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    <span className="ml-3 font-mono text-xs text-white/40">
                         {lang}
                     </span>
                 </div>
@@ -109,7 +110,7 @@ function CodeBlock({ lang, code }: { lang: string; code: string }) {
                 </button>
             </div>
             <pre className="overflow-x-auto p-4">
-                <code className="font-mono text-sm leading-relaxed text-quaternary">
+                <code className="font-mono text-sm leading-relaxed text-white/85">
                     {code}
                 </code>
             </pre>
@@ -123,9 +124,9 @@ const calloutTone: Record<
     "info" | "warn" | "success",
     { bar: string; bg: string; icon: string }
 > = {
-    info: { bar: "bg-primary", bg: "bg-primary/10", icon: "i" },
-    warn: { bar: "bg-secondary", bg: "bg-secondary/15", icon: "!" },
-    success: { bar: "bg-tertiary", bg: "bg-tertiary/20", icon: "✓" },
+    info: { bar: "bg-primary", bg: "bg-primary/[0.06]", icon: "i" },
+    warn: { bar: "bg-secondary", bg: "bg-secondary/[0.08]", icon: "!" },
+    success: { bar: "bg-tertiary", bg: "bg-tertiary/[0.1]", icon: "✓" },
 };
 
 function BlockView({
@@ -155,7 +156,7 @@ function BlockView({
         case "quote":
             return (
                 <blockquote className="relative py-2 pl-6">
-                    <span className="absolute left-0 top-0 h-full w-1.5 bg-primary" />
+                    <span className="absolute left-0 top-1 bottom-1 w-px bg-black/20" />
                     <p className="font-heading text-[1.9rem] leading-snug tracking-wide text-text">
                         <InlineRun nodes={block.content} />
                     </p>
@@ -173,7 +174,7 @@ function BlockView({
                 <figure className="flex flex-col gap-2">
                     <button
                         onClick={() => onZoom(block.src, block.alt)}
-                        className="group relative block cursor-pointer overflow-hidden border border-border bg-gradient-to-br from-quaternary to-tertiary"
+                        className="group relative block cursor-pointer overflow-hidden rounded-2xl border border-black/[0.06] bg-background"
                     >
                         <div className="flex h-72 items-center justify-center p-8">
                             <Image
@@ -181,10 +182,10 @@ function BlockView({
                                 alt={block.alt}
                                 width={420}
                                 height={280}
-                                className="h-full w-auto object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
+                                className="h-full w-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
                             />
                         </div>
-                        <span className="absolute right-3 top-3 border border-border bg-surface/90 px-2 py-0.5 font-mono text-xs backdrop-blur-sm">
+                        <span className="absolute right-3 top-3 rounded-full border border-black/[0.06] bg-surface/90 px-2.5 py-0.5 font-mono text-xs text-text-muted backdrop-blur-sm">
                             ⤢ zoom
                         </span>
                     </button>
@@ -200,7 +201,7 @@ function BlockView({
                 <ol className="flex flex-col gap-2 pl-1">
                     {block.items.map((item, i) => (
                         <li key={i} className="flex gap-3 text-lg text-text-muted">
-                            <span className="font-heading text-xl leading-none text-primary">
+                            <span className="font-heading text-xl leading-none text-text-subtle">
                                 {String(i + 1).padStart(2, "0")}
                             </span>
                             <span>
@@ -213,7 +214,7 @@ function BlockView({
                 <ul className="flex flex-col gap-2 pl-1">
                     {block.items.map((item, i) => (
                         <li key={i} className="flex gap-3 text-lg text-text-muted">
-                            <span className="mt-2.5 h-2 w-2 shrink-0 bg-primary" />
+                            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-text-subtle" />
                             <span>
                                 <InlineRun nodes={item} />
                             </span>
@@ -225,7 +226,7 @@ function BlockView({
             const tone = calloutTone[block.tone];
             return (
                 <div
-                    className={`flex gap-4 border border-border ${tone.bg} p-4`}
+                    className={`flex gap-4 rounded-xl border border-black/[0.06] ${tone.bg} p-4`}
                 >
                     <span
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${tone.bar} font-heading text-background`}
@@ -264,7 +265,7 @@ function Toc({
             <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-subtle">
                 On this page
             </p>
-            <ul className="flex flex-col gap-1 border-l border-border/30">
+            <ul className="flex flex-col gap-1 border-l border-black/[0.08]">
                 {headings.map((h) => {
                     const active = h.id === activeId;
                     return (
@@ -374,13 +375,13 @@ export default function ProjectArticle({ project, onClose }: Props) {
             {/* reading progress */}
             <motion.div
                 style={{ scaleX: scrollYProgress }}
-                className={`absolute left-0 top-0 z-20 h-1.5 w-full origin-left ${accentByCategory[project.category]}`}
+                className={`absolute left-0 top-0 z-20 h-1 w-full origin-left ${accentByCategory[project.category]}`}
             />
 
             {/* back button */}
             <button
                 onClick={onClose}
-                className="absolute left-6 top-6 z-20 flex cursor-pointer items-center gap-2 border border-border bg-surface px-4 py-2 font-heading text-mark tracking-wide text-text shadow-[3px_3px_0_0_var(--color-border)] transition-transform hover:-translate-y-0.5"
+                className="absolute left-6 top-5 z-20 flex cursor-pointer items-center gap-2 rounded-full border border-black/[0.06] bg-surface/80 px-4 py-2 text-sm font-medium text-text shadow-[0_2px_10px_-2px_rgba(17,24,39,0.12)] backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-4px_rgba(17,24,39,0.18)]"
             >
                 <span aria-hidden>←</span> Back to work
             </button>
@@ -389,13 +390,16 @@ export default function ProjectArticle({ project, onClose }: Props) {
             <div ref={scrollRef} className="h-full overflow-y-auto">
                 {/* hero */}
                 <header
-                    className={`relative overflow-hidden border-b border-border bg-gradient-to-br ${coverBgByCategory[project.category]}`}
+                    className={`relative overflow-hidden border-b border-black/[0.05] bg-gradient-to-b to-transparent ${coverBgByCategory[project.category]}`}
                 >
                     <motion.div
                         style={{ y: heroY }}
                         className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-gutter py-24 text-center"
                     >
-                        <span className="border border-border bg-surface/80 px-3 py-1 font-heading text-mark tracking-wide backdrop-blur-sm">
+                        <span className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-surface/70 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-text-muted backdrop-blur-sm">
+                            <span
+                                className={`h-1.5 w-1.5 rounded-full ${accentByCategory[project.category]}`}
+                            />
                             {project.category} · {project.year} · {article.readMinutes} min read
                         </span>
 
@@ -447,13 +451,13 @@ export default function ProjectArticle({ project, onClose }: Props) {
                             </motion.div>
                         ))}
 
-                        <div className="mt-8 flex items-center justify-between border-t border-border/40 pt-8">
-                            <span className="font-heading text-mark tracking-wide text-text-muted">
+                        <div className="mt-8 flex items-center justify-between border-t border-black/[0.06] pt-8">
+                            <span className="text-xs tabular-nums text-text-subtle">
                                 {project.stack.join(" · ")}
                             </span>
                             <button
                                 onClick={onClose}
-                                className="cursor-pointer border border-border bg-text px-5 py-2 font-heading text-nav tracking-wide text-background transition-transform hover:-translate-y-0.5"
+                                className="cursor-pointer rounded-full bg-text px-5 py-2.5 text-sm font-medium text-background transition-transform hover:-translate-y-0.5"
                             >
                                 ← All projects
                             </button>
