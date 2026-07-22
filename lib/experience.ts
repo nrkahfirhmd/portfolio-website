@@ -189,3 +189,32 @@ export const experienceStats = [
     { value: 20, suffix: "+", label: "People mentored" },
     { value: 3, suffix: "", label: "Communities served" },
 ];
+
+/**
+ * A photo, either a real file under /public or a generated placeholder frame.
+ * Set `image` once you have real shots; until then `tint` + `caption` render
+ * a captioned gradient so the layout is complete.
+ */
+export interface ExperiencePhoto {
+    caption: string;
+    /** Optional image path under /public. Falls back to a gradient frame. */
+    image?: string;
+    /** Tailwind gradient classes for the placeholder frame. */
+    tint: string;
+}
+
+/** Swipeable carousel cell — the "moments" reel. */
+export const experienceAlbum: ExperiencePhoto[] = [
+    { caption: "Demo night, front row nerves", tint: "from-primary to-secondary" },
+    { caption: "Whiteboard graveyard, 2am", tint: "from-secondary to-tertiary" },
+    { caption: "First mentee ships to prod", tint: "from-tertiary to-quaternary" },
+    { caption: "Meetup, mic in hand", tint: "from-quaternary to-primary" },
+    { caption: "Hackathon team, hour 47", tint: "from-primary to-tertiary" },
+];
+
+/** Draggable polaroid stack cell — scattered keepsakes. */
+export const experiencePolaroids: ExperiencePhoto[] = [
+    { caption: "sushi run", tint: "from-primary to-secondary" },
+    { caption: "game night", tint: "from-secondary to-quaternary" },
+    { caption: "morning miles", tint: "from-tertiary to-primary" },
+];

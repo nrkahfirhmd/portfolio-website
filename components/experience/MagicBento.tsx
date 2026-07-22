@@ -10,7 +10,14 @@ import {
     useSpring,
 } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import type { BentoSize, ExperienceEntry, ExperienceKind } from "@/lib/experience";
+import {
+    experienceAlbum,
+    experiencePolaroids,
+    type BentoSize,
+    type ExperienceEntry,
+    type ExperienceKind,
+    type ExperiencePhoto,
+} from "@/lib/experience";
 
 const revealEase = [0.22, 1, 0.36, 1] as const;
 
@@ -39,7 +46,9 @@ interface BentoGridProps {
 /** Story cards interleaved with playful cells at fixed grid positions. */
 type BentoCell =
     | { type: "entry"; entry: ExperienceEntry; index: number }
+    | { type: "album" }
     | { type: "pile" }
+    | { type: "polaroids" }
     | { type: "flip" };
 
 export default function BentoGrid({ chapterId, entries, extras = false }: BentoGridProps) {
@@ -50,8 +59,10 @@ export default function BentoGrid({ chapterId, entries, extras = false }: BentoG
     const cells: BentoCell[] = [];
     entries.forEach((entry, index) => {
         cells.push({ type: "entry", entry, index });
-        // The drag pile slots into the grid after the second story card.
-        if (extras && index === 1) cells.push({ type: "pile" });
+        // Playful cells slot into the grid at fixed positions between stories.
+        if (extras && index === 0) cells.push({ type: "album" });
+        if (extras && index === 2) cells.push({ type: "pile" });
+        if (extras && index === 4) cells.push({ type: "polaroids" });
     });
     if (extras) cells.push({ type: "flip" });
 
@@ -103,7 +114,9 @@ export default function BentoGrid({ chapterId, entries, extras = false }: BentoG
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-[10rem]">
                 {cells.map((cell) => {
+                    if (cell.type === "album") return <AlbumCell key="album" />;
                     if (cell.type === "pile") return <DragPileCell key="pile" />;
+                    if (cell.type === "polaroids") return <PolaroidCell key="polaroids" />;
                     if (cell.type === "flip") return <FlipCell key="flip" />;
                     return (
                         <BentoCard
@@ -323,6 +336,254 @@ function Cover({ entry, art }: { entry: ExperienceEntry; art: string }) {
 /* ------------------------------------------------------------------ */
 /* Playful cells                                                       */
 /* ------------------------------------------------------------------ */
+
+/** Shared photo surface: real image when set, captioned gradient otherwise. */
+function PhotoFrame({ photo, className = "" }: { photo: ExperiencePhoto; className?: string }) {
+    if (photo.image) {
+        return (
+            <Image
+                src={photo.image}
+                alt={photo.caption}
+                fill
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className={`object-cover ${className}`}
+            />
+        );
+    }
+    return (
+        <div
+            aria-hidden
+            className={`absolute inset-0 bg-gradient-to-br ${photo.tint} ${className}`}
+        >
+            <div
+                className="absolute inset-0 opacity-60"
+                style={{
+                    background:
+                        "repeating-linear-gradient(-45deg, transparent 0 12px, color-mix(in srgb, var(--color-background) 16%, transparent) 12px 14px)",
+                }}
+            />
+        </div>
+    );
+}
+
+/** Swipeable / clickable photo album — the "moments" reel. */
+function AlbumCell() {
+    const reduce = useReducedMotion();
+    const [index, setIndex] = useState(0);
+    // Direction drives the slide-in/out sign so swipes read as continuous.
+    const [direction, setDirection] = useState(0);
+    const count = experienceAlbum.length;
+
+    const paginate = useCallback(
+        (dir: number) => {
+            setDirection(dir);
+            setIndex((i) => (i + dir + count) % count);
+        },
+        [count]
+    );
+
+    const photo = experienceAlbum[index];
+
+    const slide = {
+        enter: (dir: number) => ({ x: reduce ? 0 : dir > 0 ? "100%" : "-100%", opacity: 0 }),
+        center: { x: 0, opacity: 1 },
+        exit: (dir: number) => ({ x: reduce ? 0 : dir > 0 ? "-100%" : "100%", opacity: 0 }),
+    };
+
+    return (
+        <motion.div
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.55, ease: revealEase }}
+            className="min-h-80 md:col-span-2 md:row-span-2"
+        >
+            <div
+                role="group"
+                aria-roledescription="carousel"
+                aria-label="Photo album — swipe or use the arrows"
+                className="relative flex h-full flex-col overflow-hidden border border-border bg-text"
+            >
+                {/* Photo stage. Draggable horizontally to flip pages. */}
+                <div className="relative flex-1 overflow-hidden">
+                    <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                        <motion.div
+                            key={index}
+                            custom={direction}
+                            variants={slide}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                                x: { type: "spring", stiffness: 300, damping: 30 },
+                                opacity: { duration: 0.2 },
+                            }}
+                            drag={reduce ? false : "x"}
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={0.6}
+                            onDragEnd={(_, info) => {
+                                if (info.offset.x < -60 || info.velocity.x < -400) paginate(1);
+                                else if (info.offset.x > 60 || info.velocity.x > 400) paginate(-1);
+                            }}
+                            className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
+                        >
+                            <PhotoFrame photo={photo} />
+                            <div
+                                aria-hidden
+                                className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-text/80 to-transparent"
+                            />
+                            <p className="pointer-events-none absolute bottom-3 left-4 right-4 z-10 font-heading text-xl leading-tight tracking-wide text-background">
+                                {photo.caption}
+                            </p>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    <span className="pointer-events-none absolute left-4 top-4 z-10 border border-background/40 bg-text/40 px-2 py-0.5 text-xs font-medium text-background">
+                        Album
+                    </span>
+
+                    {/* Prev / next controls (keyboard + non-swipe fallback). */}
+                    <button
+                        type="button"
+                        onClick={() => paginate(-1)}
+                        aria-label="Previous photo"
+                        className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center border border-border bg-surface/90 text-text transition-transform duration-150 hover:scale-110"
+                    >
+                        <Chevron dir="left" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => paginate(1)}
+                        aria-label="Next photo"
+                        className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center border border-border bg-surface/90 text-text transition-transform duration-150 hover:scale-110"
+                    >
+                        <Chevron dir="right" />
+                    </button>
+                </div>
+
+                {/* Dots. */}
+                <div className="flex items-center justify-center gap-1.5 bg-surface py-3">
+                    {experienceAlbum.map((p, i) => (
+                        <button
+                            key={p.caption}
+                            type="button"
+                            onClick={() => {
+                                setDirection(i > index ? 1 : -1);
+                                setIndex(i);
+                            }}
+                            aria-label={`Go to photo ${i + 1}`}
+                            aria-current={i === index}
+                            className={`h-2 cursor-pointer border border-border transition-all duration-200 ${
+                                i === index ? "w-5 bg-primary" : "w-2 bg-surface hover:bg-quaternary"
+                            }`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </motion.div>
+    );
+}
+
+function Chevron({ dir }: { dir: "left" | "right" }) {
+    return (
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+        >
+            {dir === "left" ? <path d="m15 18-6-6 6-6" /> : <path d="m9 18 6-6-6-6" />}
+        </svg>
+    );
+}
+
+/** Draggable polaroids scattered in a cell — pick them up, toss them around. */
+function PolaroidCell() {
+    const boundsRef = useRef<HTMLDivElement>(null);
+    const reduce = useReducedMotion();
+    // Track top z-order so the last-grabbed polaroid stays on top.
+    const [top, setTop] = useState<number | null>(null);
+
+    const spots = [
+        { rotate: -7, left: "8%", top: "16%" },
+        { rotate: 6, left: "40%", top: "10%" },
+        { rotate: -3, left: "24%", top: "44%" },
+    ];
+
+    return (
+        <motion.div
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.55, ease: revealEase }}
+            className="min-h-80 md:col-span-2 md:row-span-2"
+        >
+            <div
+                ref={boundsRef}
+                className="relative h-full overflow-hidden border border-border bg-secondary/30"
+            >
+                <p className="absolute right-4 top-4 z-0 max-w-32 text-right font-heading text-2xl leading-tight tracking-wide text-text">
+                    Keepsakes
+                </p>
+                <p className="absolute bottom-4 left-4 z-0 flex items-center gap-1.5 text-xs font-medium text-text-muted">
+                    <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                    >
+                        <path d="M5 9l-3 3 3 3" />
+                        <path d="M9 5l3-3 3 3" />
+                        <path d="M15 19l-3 3-3-3" />
+                        <path d="M19 9l3 3-3 3" />
+                        <path d="M2 12h20" />
+                        <path d="M12 2v20" />
+                    </svg>
+                    Drag the polaroids
+                </p>
+
+                {experiencePolaroids.map((photo, i) => {
+                    const spot = spots[i % spots.length];
+                    return (
+                        <motion.figure
+                            key={photo.caption}
+                            drag
+                            dragConstraints={boundsRef}
+                            dragElastic={0.12}
+                            onDragStart={() => setTop(i)}
+                            initial={{ rotate: spot.rotate }}
+                            whileHover={{ scale: 1.05, rotate: 0 }}
+                            whileDrag={{ scale: 1.12, rotate: 0 }}
+                            style={{
+                                left: spot.left,
+                                top: spot.top,
+                                zIndex: top === i ? 30 : 10 + i,
+                            }}
+                            className="absolute w-28 cursor-grab touch-none border border-border bg-surface p-2 shadow-[3px_3px_0_rgba(0,0,0,0.25)] active:cursor-grabbing"
+                        >
+                            <div className="relative aspect-square overflow-hidden">
+                                <PhotoFrame photo={photo} />
+                            </div>
+                            <figcaption className="pt-2 text-center font-heading text-lg leading-none tracking-wide text-text">
+                                {photo.caption}
+                            </figcaption>
+                        </motion.figure>
+                    );
+                })}
+            </div>
+        </motion.div>
+    );
+}
 
 const stickers = [
     { src: "/sushi.svg", alt: "Sushi sticker", rotate: -8, left: "12%", top: "22%" },
