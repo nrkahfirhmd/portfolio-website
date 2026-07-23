@@ -42,31 +42,72 @@ export const experienceChapters: ExperienceChapter[] = [
     {
         id: "career",
         number: "01",
-        title: "The Craft",
-        tagline: "The jobs that turned curiosity into a profession.",
+        title: "Main Quest",
+        tagline: "The experiences that turned passion into practice.",
         layout: "timeline",
         entries: [
             {
-                period: "2023 — Now",
-                title: "Software Engineer",
-                org: "Product team · Jakarta",
+                period: "March 2026 - Now",
+                title: "Junior iOS Developer",
+                org: "Apple Developer Academy @ BINUS, Bali",
                 kind: "career",
-                summary: "Shipping features people actually use.",
+                summary:
+                    "Selected from 15,000+ applicants to join the first international Apple Developer Academy in Asia, where I learned iOS development and product thinking through Challenge Based Learning.",
                 story:
-                    "I joined a small product team where every release lands in front of real users the same week. I learned to argue with data, cut scope without cutting quality, and treat the UI as part of the product's personality — not decoration.",
-                skills: ["React", "Next.js", "TypeScript", "Design systems"],
-                highlight: "From idea to production in weekly cycles.",
+                    "The Academy reshaped how I learn and build. Beyond developing iOS apps with Swift, I embraced a product-first mindset, learned the Product Development Lifecycle, and built four applications through Challenge Based Learning in a collaborative environment.",
+                skills: ["Swift", "SwiftUI", "Product Management"],
+                highlight: "Selected from 15,000+ applicants for the first international Apple Developer Academy in Asia.",
             },
             {
-                period: "2021 — 2023",
-                title: "Junior Developer",
-                org: "First real codebase",
+                period: "December 2025 - February 2026",
+                title: "System Engineer",
+                org: "Guriang Computational Facility · Padjadjaran University",
                 kind: "career",
-                summary: "Where tutorials ended and engineering began.",
+                summary:
+                    "Maintained and restored a high-performance computing server by upgrading system packages and deploying a Slurm cluster across six nodes.",
                 story:
-                    "My first professional codebase was older than my framework knowledge — and that was the best thing that could have happened. Legacy code taught me to read before I write, and that a boring, reliable fix beats a clever rewrite.",
-                skills: ["JavaScript", "REST APIs", "Git", "Debugging"],
+                    "Offered this project after a successful HPC course, I stepped into system engineering for the first time. Working directly with Ubuntu Server challenged me to adapt to a command-line environment while learning how to maintain production infrastructure and configure distributed computing systems.",
+                skills: ["Ubuntu", "High Performance Computing", "Slurm"],
+                highlight:
+                    "Deployed and tested a 6-node Slurm cluster while restoring a high-performance computing server.",
             },
+            {
+                period: "August 2025 - December 2025",
+                title: "Data Analyst & Automation",
+                org: "PT Tunas Ridean · Jakarta",
+                kind: "career",
+                summary:
+                    "Analyzed business processes and built automation tools that reduced manual work across multiple tax operations.",
+                story:
+                    "My first internship taught me how software can create real impact. I built automation tools used by Tax division, learned to iterate based on user feedback, and saw how AI and workflow automation can transform repetitive work into efficient processes.",
+                skills: ["Data Analysis", "Work Automation", "Website Extension"],
+                highlight:
+                    "Built automation solutions that reduced processing time by up to 97.5% across tax division operations.",
+            },
+            {
+                period: "September 2024 - January 2025",
+                title: "Machine Learning Engineer",
+                org: "Bangkit Academy · Remote",
+                kind: "career",
+                summary:
+                    "Completed a 900+ hour AI and Machine Learning program with a final grade of 91.7, building a strong foundation in modern AI technologies.",
+                story:
+                    "My first formal experience in AI. Through an intensive curriculum backed by leading tech companies, I learned the fundamentals of machine learning and applied them to build software solutions using TensorFlow, NLP, computer vision, and generative AI.",
+                skills: ["Tensorflow", "Time Series Forecasting", "AI Software Engineer"],
+                highlight:
+                    "Graduated with a 91.7 final grade after completing 900+ hours of AI and Machine Learning training.",
+            },
+            // {
+            //     period: "2026 ()",
+            //     title: "Junior iOS Developer",
+            //     org: "Apple Developer Academy @ BINUS, Bali · Jakarta",
+            //     kind: "career",
+            //     summary: "Shipping features people actually use.",
+            //     story:
+            //         "I joined a small product team where every release lands in front of real users the same week. I learned to argue with data, cut scope without cutting quality, and treat the UI as part of the product's personality — not decoration.",
+            //     skills: ["React", "Next.js", "TypeScript", "Design systems"],
+            //     highlight: "From idea to production in weekly cycles.",
+            // },
         ],
     },
     {
@@ -74,7 +115,7 @@ export const experienceChapters: ExperienceChapter[] = [
         number: "02",
         title: "Off the Clock",
         tagline:
-            "Volunteering, side quests, and communities — one big playground. Filter it, drag it, poke it.",
+            "A collection of stories worth exploring",
         layout: "bento",
         entries: [
             {
@@ -92,6 +133,7 @@ export const experienceChapters: ExperienceChapter[] = [
                 ],
                 skills: ["Mentoring", "Code review", "Public speaking"],
                 highlight: "Every mentee who ships their first project counts double.",
+                image: "/experiences/ada.png"
             },
             {
                 period: "2021",
@@ -181,13 +223,6 @@ export const experienceChapters: ExperienceChapter[] = [
             },
         ],
     },
-];
-
-export const experienceStats = [
-    { value: 4, suffix: "+", label: "Years building software" },
-    { value: 12, suffix: "+", label: "Projects shipped" },
-    { value: 20, suffix: "+", label: "People mentored" },
-    { value: 3, suffix: "", label: "Communities served" },
 ];
 
 /**

@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
     experienceChapters,
-    experienceStats,
     type ExperienceChapter,
     type ExperienceEntry,
     type ExperienceKind,
@@ -38,7 +37,6 @@ export default function ExperienceStory() {
         <div className="overflow-x-clip">
             <Intro />
             <Timeline chapters={experienceChapters} />
-            <StatsBand />
             <Outro />
         </div>
     );
@@ -65,15 +63,15 @@ function Intro() {
         },
     };
 
-    const headline = "Every skill here has an origin story.".split(" ");
+    const headline = "Every little thing in my life has an origin story and its own lore.".split(" ");
 
     return (
-        <header className="flex min-h-[70vh] flex-col justify-center gap-8 px-gutter py-16">
+        <header className="flex min-h-screen flex-col justify-center gap-8 px-gutter">
             <motion.h1
                 variants={introContainer}
                 initial="hidden"
                 animate="show"
-                className="max-w-3xl font-heading text-heading leading-[0.95] tracking-wide text-text"
+                className="max-w-4xl font-heading text-heading leading-[0.95] tracking-wide text-text"
             >
                 {headline.map((word, i) => (
                     <motion.span key={i} variants={introWord} className="inline-block">
@@ -89,9 +87,9 @@ function Intro() {
                 transition={{ duration: 0.6, delay: 1.4 }}
                 className="max-w-xl text-lg text-text-muted"
             >
-                Not just the job titles — the volunteering, the side quests, the
-                communities, and the late nights that shaped how I work. Scroll
-                through the chapters.
+                My career tells only part of the story. 
+                It's the side quests and experiences beyond work that have shaped how I think, create, and show up. 
+                Scroll through to get to know the human behind the work.
             </motion.p>
 
             <motion.div
@@ -99,7 +97,7 @@ function Intro() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.8 }}
                 aria-hidden
-                className="mt-8 flex items-center gap-3 text-sm text-text-muted"
+                className="mt-42 flex items-center gap-3 text-sm text-text-muted"
             >
                 <motion.svg
                     animate={reduce ? undefined : { y: [0, 8, 0] }}
@@ -181,7 +179,7 @@ function Chapter({ chapter }: { chapter: ExperienceChapter }) {
                 {chapter.number}
             </motion.span>
 
-            <div className="sticky top-0 z-20 -ml-2 bg-background/95 py-4 pl-2 backdrop-blur-sm">
+            <div className="sticky top-0 z-20 -ml-2 py-4 pl-2">
                 <motion.div
                     initial={{ opacity: 0, x: reduce ? 0 : -16 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -192,7 +190,7 @@ function Chapter({ chapter }: { chapter: ExperienceChapter }) {
                     <p className="text-sm font-medium uppercase tracking-widest text-text-muted">
                         Chapter {chapter.number}
                     </p>
-                    <h2 className="font-heading text-5xl tracking-wide text-text">
+                    <h2 className="mt-2 font-heading text-5xl tracking-wide text-text">
                         {chapter.title}
                     </h2>
                     <p className="max-w-lg text-text-muted">{chapter.tagline}</p>
@@ -297,40 +295,6 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
     );
 }
 
-/* ------------------------------------------------------------------ */
-/* Stats                                                               */
-/* ------------------------------------------------------------------ */
-
-function StatsBand() {
-    return (
-        <section
-            aria-label="Experience in numbers"
-            className="border-y border-border bg-quaternary"
-        >
-            <div className="grid grid-cols-2 gap-y-10 px-gutter py-16 md:grid-cols-4">
-                {experienceStats.map((stat, i) => (
-                    <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.5 }}
-                        transition={{ duration: 0.5, delay: i * 0.1, ease: revealEase }}
-                        className="flex flex-col items-center gap-1 text-center"
-                    >
-                        <span className="font-heading text-6xl tracking-wide text-text">
-                            <Counter value={stat.value} />
-                            {stat.suffix}
-                        </span>
-                        <span className="text-sm font-medium text-text-muted">
-                            {stat.label}
-                        </span>
-                    </motion.div>
-                ))}
-            </div>
-        </section>
-    );
-}
-
 function Counter({ value }: { value: number }) {
     const ref = useRef<HTMLSpanElement>(null);
     const inView = useInView(ref, { once: true, margin: "-20% 0px" });
@@ -376,7 +340,7 @@ function Outro() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="max-w-md text-text-muted"
             >
-                If any of these stories sound like the kind of work you need —
+                If any of these stories sound like the kind of work you need,
                 let&apos;s talk about writing the next one together.
             </motion.p>
 
