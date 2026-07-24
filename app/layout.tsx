@@ -17,7 +17,7 @@ const teko = Teko({
 });
 
 export const metadata: Metadata = {
-  title: "Kahfi's Portfolio",
+  title: "Kahfi R - Technology Orchestrator",
   description: "A gallery of works, experiences, and failures crafted through digital form",
 };
 
