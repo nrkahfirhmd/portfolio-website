@@ -61,8 +61,8 @@ export default function BentoGrid({ chapterId, entries, extras = false }: BentoG
         cells.push({ type: "entry", entry, index });
         // Playful cells slot into the grid at fixed positions between stories.
         if (extras && index === 0) cells.push({ type: "album" });
-        if (extras && index === 2) cells.push({ type: "pile" });
-        if (extras && index === 4) cells.push({ type: "polaroids" });
+        if (extras && index === 0) cells.push({ type: "pile" });
+        if (extras && index === 3) cells.push({ type: "polaroids" });
     });
     if (extras) cells.push({ type: "flip" });
 

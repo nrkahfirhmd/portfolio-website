@@ -119,107 +119,136 @@ export const experienceChapters: ExperienceChapter[] = [
         layout: "bento",
         entries: [
             {
-                period: "2022 — Now",
-                title: "Coding Mentor",
-                org: "Community bootcamp",
+                period: "2024",
+                title: "Practicum Assitant",
+                org: "Department of Computer Science Padjadjaran University",
                 kind: "volunteer",
                 size: "lg",
-                summary: "Teaching beginners the things I wish someone had told me.",
+                summary:
+                    "Learning that teaching is as much about patience and empathy as it is about code.",
                 story:
-                    "One evening a week I mentor career-switchers through their first projects. Explaining closures at 9pm to someone who started coding a month ago is the fastest way to find out what you actually understand.",
+                    "I stepped into the role of practicum assistant for Web Programming and Data Structures, responsible for guiding more than 40 students through two demanding courses. Preparing modules, delivering weekly sessions, reviewing assignments, and mentoring final projects taught me that explaining an idea clearly is often harder than understanding it yourself.",
                 body: [
-                    "The cohort is a mix: an accountant, a nurse, a barista — all betting a year of evenings on a new career. My job isn't to lecture; it's to sit next to their code and ask the questions a senior would ask, gently.",
-                    "The best sessions end with me saying almost nothing. Someone explains their own bug out loud, catches it mid-sentence, and fixes it. That moment — when the debugger becomes internal — is what I show up for.",
+                    "Across the semester, I taught topics ranging from HTML, CSS, JavaScript, PHP, APIs, web servers, and the CodeIgniter 4 framework to C++ pointers, linked lists, stacks, queues, and graphs. Beyond the lectures, I held consultation sessions, designed weekly exercises, and helped students overcome the bugs and roadblocks that inevitably appeared.",
+                    "Every student learned differently. Some needed technical direction, while others simply needed confidence to keep going. Adapting my communication, staying patient under pressure, and solving problems together became just as important as teaching programming itself. The experience shaped my leadership, emotional awareness, and ability to break complex ideas into something approachable.",
                 ],
-                skills: ["Mentoring", "Code review", "Public speaking"],
-                highlight: "Every mentee who ships their first project counts double.",
-                image: "/experiences/ada.png"
+                skills: ["Mentoring", "Code Review", "Public Speaking"],
+                highlight:
+                    "The most rewarding moments were watching students become confident enough to solve problems without needing my help.",
             },
+            // {
+            //     period: "2022 — Now",
+            //     title: "Coding Mentor",
+            //     org: "Community bootcamp",
+            //     kind: "volunteer",
+            //     size: "lg",
+            //     summary: "Teaching beginners the things I wish someone had told me.",
+            //     story:
+            //         "One evening a week I mentor career-switchers through their first projects. Explaining closures at 9pm to someone who started coding a month ago is the fastest way to find out what you actually understand.",
+            //     body: [
+            //         "The cohort is a mix: an accountant, a nurse, a barista — all betting a year of evenings on a new career. My job isn't to lecture; it's to sit next to their code and ask the questions a senior would ask, gently.",
+            //         "The best sessions end with me saying almost nothing. Someone explains their own bug out loud, catches it mid-sentence, and fixes it. That moment — when the debugger becomes internal — is what I show up for.",
+            //     ],
+            //     skills: ["Mentoring", "Code review", "Public speaking"],
+            //     highlight: "Every mentee who ships their first project counts double.",
+            //     image: "/experiences/ada.png"
+            // },
             {
-                period: "2021",
-                title: "Tech Volunteer",
-                org: "Local nonprofit",
-                kind: "volunteer",
-                size: "tall",
-                summary: "A website that helped a cause, not a metric.",
-                story:
-                    "I rebuilt a nonprofit's site so donations stopped requiring a phone call. Small budget, huge constraint list — it taught me that the simplest solution that works is a feature, not a compromise.",
-                body: [
-                    "No design team, no budget, one weekend a month. Every feature had to justify itself in donations or hours saved for the two staff members who ran everything.",
-                ],
-                skills: ["Web fundamentals", "Accessibility", "Working with non-tech teams"],
-            },
-            {
-                period: "2024 — Now",
+                period: "2025 — Now",
                 title: "This Portfolio",
-                org: "Ongoing side project",
+                org: "Product of Boredom",
                 kind: "project",
                 size: "lg",
-                summary: "The site you are scrolling right now.",
+                summary: "The site you are scrolling and playing around right now.",
                 story:
-                    "A playground for motion design, custom cursors, and opinions about color. Every animation here went through ten versions you will never see — which is exactly the point of a side project.",
+                    "Most portfolios focus on what someone has built. I wanted mine to explain why I built those things and how I think along the way. That's why this site is written as a story instead of a résumé, so visitors leave understanding not only my work, but the person behind it.",
                 body: [
-                    "It started as a résumé with a URL. Then the cursor got a personality, the nav became a collage, and the color theme learned to rotate on a sushi button. Scope creep — but the fun kind.",
-                    "Everything here is a bet that personality beats polish. If a component doesn't make me grin during testing, it gets rewritten until it does.",
+                    "Every interaction, animation, and paragraph exists for a reason. Rather than listing technologies and achievements, I wanted to create an experience that reflects how I approach problems: with curiosity, intention, and attention to detail. In many ways, this portfolio is a product as much as it is a personal website.",
+                    "Skills alone rarely make someone memorable. Two people can know the same framework, use the same tools, and build similar products. What makes the difference is how they think, communicate, and make decisions. This portfolio is my attempt to show those parts, not just tell you they exist."
                 ],
-                skills: ["Framer Motion", "Tailwind CSS", "Interaction design"],
+                skills: ["Storytelling", "Interaction Design"],
+                highlight:
+                    "Anyone can list their skills. I wanted to show the person using them.",
             },
             {
-                period: "2023",
-                title: "Hackathon Finalist",
-                org: "48-hour build",
+                period: "2024",
+                title: "Lead",
+                org: "Character Bulding Season 2024",
+                kind: "volunteer",
+                size: "tall",
+                summary:
+                    "Learning that leadership is often about balancing people before projects.",
+                story:
+                    "As Project Officer for Character Building Season, I led a committee of more than 70 people to design and deliver our department's orientation programme for incoming students. It was my first experience leading an organisation of this scale, where every decision had an impact on participants, committees, and university stakeholders alike.",
+                body: [
+                    "Together with the Human Resource Management team, I shaped the programme around three core values—PRIMER: Proactive, Innovative, and Responsive. Beyond coordinating the event, I learned how to align different expectations, make decisions under uncertainty, manage my own energy, and create an environment where over 90 freshmen felt supported throughout their transition into university life. By the end, 98% of participants successfully completed the programme."
+                ],
+                skills: ["Leadership", "Public Speaking", "Stakeholder Management"],
+                highlight:
+                    "The programme wasn't measured by how smoothly it ran, but by how confidently 90+ freshmen began their university journey.",
+                image: "/experiences/cbs.png"
+            },
+            {
+                period: "2025 - Now",
+                title: "Competitionist",
+                org: "Part of Pushing Myself to The Brink",
                 kind: "project",
                 size: "tall",
-                summary: "A working prototype and three hours of sleep.",
+                summary:
+                    "Using competitions as a playground to test ideas, challenge my limits, and measure how far I still have to go.",
                 story:
-                    "Two days, one team, zero scope discipline at the start. We cut half the features on day two and finished with something that demoed cleanly — my favorite lesson in ruthless prioritization.",
+                    "People often say, 'Maximise your potential.' For me, competitions are how I do that. They give me the freedom to build products, validate ideas, and solve problems that rarely fit within the boundaries of university courses or day-to-day work. Every competition is an excuse to experiment and, when I make it far enough, to learn from people who consistently perform at the highest level.",
                 body: [
-                    "Hour 30 was the turning point: we deleted the feature we loved most because it wasn't the feature the judges needed to see. It hurt. It worked.",
+                    "The truth is that qualifying as a finalist, let alone winning, has been far harder than I expected. But that's exactly why I keep coming back. Every rejection exposes a gap I hadn't seen before, whether it's in my technical skills, product thinking, teamwork, or storytelling. I'm still grinding, still iterating, and still chasing the next opportunity, not because I expect every attempt to succeed, but because my curiosity hasn't been satisfied yet."
                 ],
-                skills: ["Rapid prototyping", "Teamwork", "Pitching"],
-                highlight: "Top finalist out of dozens of teams.",
+                skills: ["Rapid Prototyping", "Teamwork", "Pitching", "Ideation"],
+                highlight:
+                    "The goal was never to collect trophies, it was to become someone capable of earning them.",
+                image: "/experiences/compe.png"
             },
+            // {
+            //     period: "2019 — 2021",
+            //     title: "Student Organization Lead",
+            //     org: "Campus tech club",
+            //     kind: "community",
+            //     size: "lg",
+            //     summary: "Herding volunteers is harder than herding processes.",
+            //     story:
+            //         "I ran events, budgets, and a team of people who could quit at any moment — because they were volunteers. It taught me that leadership is mostly logistics, and motivation is a design problem.",
+            //     body: [
+            //         "The club had thirty members, four committees, and exactly zero obligation to listen to me. Every event that happened, happened because someone felt ownership — my actual job was manufacturing that feeling.",
+            //     ],
+            //     skills: ["Leadership", "Event planning", "Budgeting"],
+            // },
             {
-                period: "2019 — 2021",
-                title: "Student Organization Lead",
-                org: "Campus tech club",
-                kind: "community",
-                size: "lg",
-                summary: "Herding volunteers is harder than herding processes.",
-                story:
-                    "I ran events, budgets, and a team of people who could quit at any moment — because they were volunteers. It taught me that leadership is mostly logistics, and motivation is a design problem.",
-                body: [
-                    "The club had thirty members, four committees, and exactly zero obligation to listen to me. Every event that happened, happened because someone felt ownership — my actual job was manufacturing that feeling.",
-                ],
-                skills: ["Leadership", "Event planning", "Budgeting"],
-            },
-            {
-                period: "2023",
-                title: "Meetup Speaker",
-                org: "Local dev community",
-                kind: "community",
+                period: "2026 - Now",
+                title: "Game Developer",
+                org: "Product of Boredom",
+                kind: "project",
                 size: "sm",
-                summary: "First talk, sweaty palms, great questions.",
+                summary:
+                    "Exploring game development by understanding why some games stay with us long after we stop playing them.",
                 story:
-                    "I gave a talk on frontend animation to a room of strangers. The slides were fine; the Q&A was better. Nothing sharpens an opinion like defending it in public.",
+                    "Game development is my newest obsession. It began with playing games simply for fun, but eventually I found myself asking a different question: why do some games become masterpieces while others are quickly forgotten? Breaking down those experiences led me to game design, where I could study the systems, emotions, and decisions that make a game truly memorable.",
                 body: [
-                    "Preparing the talk taught me more than giving it — you can't put a hand-wave on a slide. Every 'it just works' had to become a diagram.",
+                    "I'm still early in this journey, but every prototype is an experiment in creating meaningful experiences. More than building mechanics, I want to create the same sense of wonder, attachment, and lasting memories that the games I love have given me. If a player walks away remembering how they felt rather than what they clicked, I've done something right."
                 ],
-                skills: ["Public speaking", "Community"],
+                skills: ["Game Design", "Interaction Design", "Player Engagement"],
             },
             {
                 period: "Ongoing",
-                title: "Language Study",
-                org: "Self-directed",
-                kind: "community",
+                title: "Public Speaking Study",
+                org: "Part of Pushing Myself to The Brink",
+                kind: "project",
                 size: "sm",
-                summary: "窟 — because interfaces aren't the only systems worth learning.",
+                summary:
+                    "Studying communication as a skill to connect, influence, and adapt, not simply to speak with confidence.",
                 story:
-                    "Studying a new writing system rewires how you think about symbols, hierarchy, and meaning — which is secretly just typography homework.",
+                    "Public speaking started as a way to become more confident, but it quickly became something much deeper. The more I learned, the more I realised that speaking isn't about being heard, it's about making sure the message reaches the person on the other side.",
                 body: [
-                    "Stroke order is a design system. Radicals are components. Somewhere between flashcard #400 and #401 I realized I was just learning another kind of grid.",
+                    "Today, I study how words shape perception, how stories make ideas memorable, and how different audiences require different approaches. Every conversation is an opportunity to practise choosing better words, communicating with intention, and adapting to the people in front of me rather than expecting them to adapt to me."
                 ],
-                skills: ["Discipline", "Cross-cultural curiosity"],
+                skills: ["Public Speaking", "Communication"],
             },
         ],
     },
