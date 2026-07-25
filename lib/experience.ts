@@ -269,16 +269,16 @@ export interface ExperiencePhoto {
 
 /** Swipeable carousel cell — the "moments" reel. */
 export const experienceAlbum: ExperiencePhoto[] = [
-    { caption: "Demo night, front row nerves", tint: "from-primary to-secondary" },
-    { caption: "Whiteboard graveyard, 2am", tint: "from-secondary to-tertiary" },
-    { caption: "First mentee ships to prod", tint: "from-tertiary to-quaternary" },
-    { caption: "Meetup, mic in hand", tint: "from-quaternary to-primary" },
-    { caption: "Hackathon team, hour 47", tint: "from-primary to-tertiary" },
+    { caption: "1st Time as A Lead", image: "/experiences/album/gathering.png", tint: "from-primary to-secondary" },
+    { caption: "One of the memorable experience in College", image: "/experiences/album/po_cbs.png", tint: "from-secondary to-tertiary" },
+    { caption: "The best friends that accompanied me along the journey", image: "/experiences/album/bfr.png", tint: "from-tertiary to-quaternary" },
+    { caption: "Apple Developer Academy Kick-Off", image: "/experiences/album/academy.png", tint: "from-quaternary to-primary" },
+    { caption: "Currently Building: Omawe", image: "/experiences/album/omawe.png", tint: "from-primary to-tertiary" },
 ];
 
 /** Draggable polaroid stack cell — scattered keepsakes. */
 export const experiencePolaroids: ExperiencePhoto[] = [
-    { caption: "sushi run", tint: "from-primary to-secondary" },
-    { caption: "game night", tint: "from-secondary to-quaternary" },
-    { caption: "morning miles", tint: "from-tertiary to-primary" },
+    { caption: "hike", image: "/experiences/keepsakes/hike.png", tint: "from-primary to-secondary" },
+    { caption: "being a great friend", image: "/experiences/keepsakes/growing.png", tint: "from-secondary to-quaternary" },
+    { caption: "having fun", image: "/experiences/keepsakes/fun.png", tint: "from-tertiary to-primary" },
 ];

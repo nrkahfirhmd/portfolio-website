@@ -700,9 +700,7 @@ function FlipCell() {
                     </div>
                     <div className="absolute inset-0 flex items-center border border-border bg-surface p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                         <p className="text-sm leading-relaxed text-text">
-                            The stickers in the pile are real hobbies: sushi hunting,
-                            games, billiards, and slow morning runs. Balance is a skill
-                            too.
+                            I don't want to be known for one thing. I want to collect experiences that make me a better and more interesting person.
                         </p>
                     </div>
                 </motion.div>

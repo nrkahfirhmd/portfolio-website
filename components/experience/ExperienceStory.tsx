@@ -92,7 +92,7 @@ function Intro() {
                 Scroll through to get to know the human behind the work.
             </motion.p>
 
-            <motion.div
+            {/* <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.8 }}
@@ -115,7 +115,7 @@ function Intro() {
                     <path d="m19 12-7 7-7-7" />
                 </motion.svg>
                 <span>Chapter one begins below</span>
-            </motion.div>
+            </motion.div> */}
         </header>
     );
 }
