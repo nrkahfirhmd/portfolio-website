@@ -14,7 +14,7 @@
   
   /* Neutral */
   --color-surface: #FFFFFF;
-  --color-border: #000000;
+  --color-border: #E5E7EB;
   --color-text: #111827;
   --color-text-muted: #6B7280;
   --color-text-subtle: #C4C4C4;
@@ -28,7 +28,7 @@
 
   /* Spacing scale */
   --spacing-gutter: 2rem;
-  --spacing-sidebar: 245px;
+  --spacing-sidebar: 220px;
 }
 
 :root,
