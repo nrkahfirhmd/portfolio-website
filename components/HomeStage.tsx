@@ -132,19 +132,54 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ type: "spring", stiffness: 180, damping: 22 }}
                 >
-                    <Image
-                        src="/home/avatar.png"
-                        alt="Illustration of Kahfi"
-                        width={220}
-                        height={650}
-                        sizes="220px"
-                        loading="eager"
-                        fetchPriority="high"
-                        // Definite width + auto height keeps the aspect ratio and
-                        // satisfies next/image's one-dimension-modified warning.
-                        style={{ width: 220, height: "auto" }}
-                        className="select-none drop-shadow-[0_18px_24px_rgba(0,0,0,0.12)]"
-                    />
+                    <motion.button
+                        type="button"
+                        onClick={() => onSelect("Index")}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        aria-label="About Me — read my story"
+                        className="
+                            group
+                            relative
+                            block
+                            cursor-none
+                            rounded-sm
+                            outline-none
+                            focus-visible:ring-4
+                            focus-visible:ring-primary
+                            focus-visible:ring-offset-4
+                            focus-visible:ring-offset-background
+                        "
+                    >
+                        <Image
+                            src="/home/avatar.png"
+                            alt="Illustration of Kahfi"
+                            width={220}
+                            height={650}
+                            sizes="220px"
+                            loading="eager"
+                            fetchPriority="high"
+                            // Definite width + auto height keeps the aspect ratio and
+                            // satisfies next/image's one-dimension-modified warning.
+                            style={{ width: 220, height: "auto" }}
+                            className="
+                                select-none
+                                transition-[filter] duration-300
+                                drop-shadow-[4px_6px_0_var(--tertiary)]
+                                group-hover:drop-shadow-[10px_14px_0_var(--primary)]
+                                group-focus-visible:drop-shadow-[10px_14px_0_var(--primary)]
+                            "
+                        />
+
+                        <span className="mt-3 flex justify-center">
+                            <span className="relative inline-block">
+                                <span className="text-label font-semibold text-text transition-colors duration-200 group-hover:text-primary group-focus-visible:text-primary">
+                                    About Me
+                                </span>
+                                <span className="absolute -bottom-0.5 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-250 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                            </span>
+                        </span>
+                    </motion.button>
                 </motion.div>
             </div>
         </div>

@@ -15,5 +15,4 @@ export const navItems: NavItem[] = [
     },
     { label: "Experience" },
     { label: "Exploration" },
-    { label: "Lab" },
 ];
