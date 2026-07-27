@@ -4,6 +4,7 @@
   /* Fonts */
   --font-sans: var(--font-rubik), sans-serif;
   --font-heading: var(--font-teko), sans-serif;
+  --font-mono: var(--font-mono), monospace;
 
   /* Colors */
   --color-background: #F9FAFB;

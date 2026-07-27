@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Rubik, Teko } from "next/font/google";
+import { Rubik, Teko, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -16,6 +16,12 @@ const teko = Teko({
   display: "swap",
 });
 
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Kahfi R - Technology Orchestrator",
   description: "A gallery of works, experiences, and failures crafted through digital form",
@@ -29,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${rubik.variable} ${teko.variable} h-full antialiased`}
+      className={`${rubik.variable} ${teko.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col cursor-none">
         <ThemeProvider>
