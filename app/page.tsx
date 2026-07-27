@@ -155,7 +155,7 @@ export default function Home() {
                             exit={{ opacity: 0, y: -16 }}
                             transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
                         >
-                            <ContentPanel label={selected} />
+                            <ContentPanel label={selected} onNavigate={setSelected} />
                         </motion.div>
                     )}
                 </AnimatePresence>

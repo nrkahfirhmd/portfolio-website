@@ -2,7 +2,7 @@ import NotFound from "@/app/not-found";
 import AboutStory from "@/components/about/AboutStory";
 import ExperienceStory from "@/components/experience/ExperienceStory";
 import WorkProjects from "./WorkProjects";
-import { ProjectCategory, workCategories } from "@/lib/projects";
+import { type ProjectCategory, workCategories } from "@/lib/projects";
 
 interface Props {
     label: string;
