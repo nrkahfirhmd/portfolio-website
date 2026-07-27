@@ -14,12 +14,11 @@ import {
 } from "framer-motion";
 import { chapters, intro, outro, skills, stats } from "@/lib/about";
 import { useTheme } from "@/components/ThemeProvider";
+import { easeEntrance, springConfig, transition } from "@/lib/motion";
 
 /* ------------------------------------------------------------------ */
 /*  Motion primitives                                                  */
 /* ------------------------------------------------------------------ */
-
-const EASE = [0.16, 1, 0.3, 1] as const;
 
 const wordContainer: Variants = {
     hidden: {},
@@ -28,7 +27,7 @@ const wordContainer: Variants = {
 
 const wordChild: Variants = {
     hidden: { y: "115%" },
-    show: { y: 0, transition: { duration: 0.75, ease: EASE } },
+    show: { y: 0, transition: transition.reveal },
 };
 
 /** Heading whose words rise from behind a mask when scrolled into view. */
@@ -88,7 +87,7 @@ function FadeUp({
             ref={ref}
             initial={reduce ? false : { opacity: 0, y: 28 }}
             animate={inView || reduce ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE, delay }}
+            transition={{ ...transition.rise, delay }}
             className={className}
         >
             {children}
@@ -110,8 +109,8 @@ function Magnetic({
     const reduce = useReducedMotion();
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-    const sx = useSpring(x, { stiffness: 200, damping: 14 });
-    const sy = useSpring(y, { stiffness: 200, damping: 14 });
+    const sx = useSpring(x, springConfig.image);
+    const sy = useSpring(y, springConfig.image);
 
     function handleMove(e: React.MouseEvent<HTMLDivElement>) {
         if (reduce || !ref.current) return;
@@ -141,25 +140,31 @@ function Counter({ to, suffix }: { to: number; suffix: string }) {
     const ref = useRef<HTMLSpanElement>(null);
     const inView = useInView(ref, { once: true, margin: "-15% 0px" });
     const reduce = useReducedMotion();
-    const [display, setDisplay] = useState(0);
+    const [counted, setCounted] = useState(0);
+
+    // "Things to learn" is deliberately Infinity, which has no count-up to run
+    // and would render the literal string "Infinity". Show the glyph instead.
+    const unbounded = !Number.isFinite(to);
+    const counts = inView && !unbounded && !reduce;
 
     useEffect(() => {
-        if (!inView) return;
-        if (reduce) {
-            setDisplay(to);
-            return;
-        }
+        if (!counts) return;
         const controls = animate(0, to, {
             duration: 1.6,
-            ease: EASE,
-            onUpdate: (v) => setDisplay(Math.round(v)),
+            ease: easeEntrance,
+            // setState from an animation callback, not from the effect body —
+            // the count-up is the external system this effect subscribes to.
+            onUpdate: (v) => setCounted(Math.round(v)),
         });
         return () => controls.stop();
-    }, [inView, to, reduce]);
+    }, [counts, to]);
+
+    // Every case except the running count-up is a pure function of the props.
+    const shown = unbounded ? "∞" : reduce ? (inView ? to : 0) : counted;
 
     return (
         <span ref={ref}>
-            {display}
+            {shown}
             {suffix}
         </span>
     );
@@ -185,8 +190,8 @@ function Hero() {
     // Pointer parallax on the watermark.
     const px = useMotionValue(0);
     const py = useMotionValue(0);
-    const spx = useSpring(px, { stiffness: 60, damping: 18 });
-    const spy = useSpring(py, { stiffness: 60, damping: 18 });
+    const spx = useSpring(px, springConfig.drift);
+    const spy = useSpring(py, springConfig.drift);
 
     function handleMove(e: React.MouseEvent<HTMLElement>) {
         if (reduce || !ref.current) return;
@@ -205,7 +210,7 @@ function Hero() {
             <motion.span
                 aria-hidden
                 style={{ y: reduce ? 0 : kanjiY, opacity: kanjiOpacity, x: spx }}
-                className="pointer-events-none absolute right-[-4%] top-1/2 -translate-y-1/2 select-none font-heading text-[42vw] leading-none text-text"
+                className="pointer-events-none absolute right-[-4%] top-1/2 -translate-y-1/2 select-none font-heading text-watermark leading-none text-text"
             >
                 <motion.span style={{ y: spy }} className="inline-block">
                     {intro.kanji}
@@ -216,26 +221,29 @@ function Hero() {
                 <motion.p
                     initial={reduce ? false : { opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: EASE }}
+                    transition={transition.rise}
                     className="mb-8 flex items-center gap-3 font-sans text-mark uppercase tracking-[0.35em] text-text-muted"
                 >
                     <span className="inline-block h-3 w-3 bg-primary" />
                     {intro.role}
                 </motion.p>
 
-                <h1 className="font-heading text-[clamp(3rem,11vw,10rem)] font-bold uppercase leading-[0.82] tracking-wide text-text">
+                <h1 className="font-heading text-hero font-bold uppercase leading-[0.82] tracking-wide text-text">
                     {intro.tagline.map((line, i) => (
                         <span key={line} className="block overflow-hidden">
                             <motion.span
                                 initial={reduce ? false : { y: "110%" }}
                                 animate={{ y: 0 }}
                                 transition={{
-                                    duration: 0.9,
-                                    ease: EASE,
+                                    ...transition.reveal,
                                     delay: 0.15 + i * 0.12,
                                 }}
+                                // Middle line steps back rather than switching to
+                                // the accent: --primary on --background is 3.3:1
+                                // at best and 2.0:1 on the red theme, well under
+                                // the 4.5:1 this size of text still has to meet.
                                 className={`inline-block ${
-                                    i === 1 ? "text-primary" : ""
+                                    i === 1 ? "text-text-muted" : ""
                                 }`}
                             >
                                 {line}
@@ -249,13 +257,13 @@ function Hero() {
             <motion.div
                 initial={reduce ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.1, duration: 0.8 }}
+                transition={{ ...transition.rise, delay: 1.1 }}
                 className="absolute bottom-10 left-gutter z-10 flex items-center gap-3 font-sans text-sm uppercase tracking-[0.3em] text-text-muted"
             >
                 <motion.span
                     animate={reduce ? undefined : { y: [0, 8, 0] }}
                     transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                    className="inline-block h-8 w-[2px] bg-text"
+                    className="inline-block h-8 w-px bg-text"
                 />
                 {intro.scrollCue}
             </motion.div>
@@ -277,15 +285,16 @@ function Chapters() {
 
     return (
         <div ref={railRef} className="relative">
-            {/* Progress rail */}
-            <div className="pointer-events-none absolute left-gutter top-0 bottom-0 hidden w-[2px] bg-border/15 md:block">
+            {/* Progress rail — the storytelling pattern's progress indicator, and
+                the one place the accent still earns its keep on this page. */}
+            <div className="pointer-events-none absolute left-gutter top-0 bottom-0 hidden w-px bg-line md:block">
                 <motion.div
                     style={{ scaleY }}
                     className="absolute inset-0 origin-top bg-primary"
                 />
             </div>
 
-            {chapters.map((ch, i) => (
+            {chapters.map((ch) => (
                 <section
                     key={ch.heading}
                     className="relative grid min-h-[60vh] grid-cols-1 items-center gap-10 px-gutter md:grid-cols-[1fr_1.1fr] md:pl-24"
@@ -293,12 +302,12 @@ function Chapters() {
                     {/* Sticky kanji marker */}
                     <div className="md:sticky md:top-[24vh] md:self-start">
                         <FadeUp>
-                            <span className="mb-24 block font-sans text-label uppercase tracking-[0.35em] text-primary">
+                            <span className="mb-24 block font-sans text-label uppercase tracking-[0.35em] text-text-muted">
                                 {ch.kicker}
                             </span>
                             <span
                                 aria-hidden
-                                className="block select-none font-heading text-[clamp(6rem,16vw,13rem)] leading-none text-text"
+                                className="block select-none font-heading text-kanji leading-none text-text"
                             >
                                 {ch.kanji}
                             </span>
@@ -308,9 +317,9 @@ function Chapters() {
                     <div>
                         <RevealHeading
                             text={ch.heading}
-                            className="mb-8 text-[clamp(2rem,5vw,4rem)] text-text"
+                            className="mb-8 text-chapter text-text"
                         />
-                        <div className="max-w-xl space-y-5">
+                        <div className="max-w-prose space-y-5">
                             {ch.body.map((p, j) => (
                                 <FadeUp key={j} delay={0.1 + j * 0.08}>
                                     <p className="font-sans text-xl leading-relaxed text-text-muted">
@@ -331,7 +340,7 @@ function SkillsMarquee() {
     const row = [...skills, ...skills];
 
     return (
-        <section className="border-y-2 border-border py-14">
+        <section className="border-y border-line py-14">
             <FadeUp className="mb-8 px-gutter">
                 <p className="font-sans text-label uppercase tracking-[0.35em] text-text-muted">
                     Tools in the den
@@ -355,10 +364,12 @@ function SkillsMarquee() {
                             {row.map((skill, i) => (
                                 <span
                                     key={`${skill}-${i}`}
-                                    className="flex shrink-0 items-center gap-6 font-heading text-[clamp(1.6rem,3.5vw,3rem)] uppercase tracking-wide text-text"
+                                    className="flex shrink-0 items-center gap-6 font-heading text-chapter uppercase tracking-wide text-text"
                                 >
                                     {skill}
-                                    <span className="inline-block h-3 w-3 rotate-45 bg-primary" />
+                                    {/* Separator, not confetti — muted so the
+                                        eye reads the words, not the marks. */}
+                                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-text-subtle" />
                                 </span>
                             ))}
                         </div>
@@ -371,18 +382,18 @@ function SkillsMarquee() {
 
 function Stats() {
     return (
-        <section className="grid grid-cols-2 border-b-2 border-border md:grid-cols-4">
+        <section className="grid grid-cols-2 border-b border-line md:grid-cols-4">
             {stats.map((s, i) => (
                 <FadeUp
                     key={s.label}
                     delay={i * 0.08}
-                    className={`border-border px-gutter py-16 ${
-                        i % 2 === 0 ? "border-r-2" : ""
-                    } ${i !== 3 ? "md:border-r-2" : "md:border-r-0"} ${
-                        i < 2 ? "border-b-2 md:border-b-0" : ""
+                    className={`border-line px-gutter py-16 ${
+                        i % 2 === 0 ? "border-r" : ""
+                    } ${i !== 3 ? "md:border-r" : "md:border-r-0"} ${
+                        i < 2 ? "border-b md:border-b-0" : ""
                     }`}
                 >
-                    <div className="font-heading text-[clamp(3rem,7vw,6rem)] leading-none text-text">
+                    <div className="font-heading text-display leading-none text-text">
                         <Counter to={s.value} suffix={s.suffix} />
                     </div>
                     <p className="mt-3 font-sans text-base uppercase tracking-[0.2em] text-text-muted">
@@ -410,14 +421,14 @@ function ThemePlay() {
                 <button
                     onClick={cycleTheme}
                     aria-label="Change color theme"
-                    className="group flex h-24 w-full overflow-hidden border-2 border-border"
+                    className="group flex h-24 w-full overflow-hidden border border-line"
                 >
                     {swatches.map((c) => (
                         <motion.span
                             key={c}
                             className={`h-full flex-1 ${c}`}
                             whileHover={{ flex: 2.4 }}
-                            transition={{ duration: 0.35, ease: EASE }}
+                            transition={transition.shuffle}
                         />
                     ))}
                 </button>
@@ -431,7 +442,7 @@ function Outro() {
         <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-gutter text-center">
             <span
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none font-heading text-[38vw] leading-none text-text/[0.06]"
+                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none font-heading text-watermark leading-none text-text/[0.06]"
             >
                 {outro.kanji}
             </span>
@@ -439,13 +450,15 @@ function Outro() {
             <div className="relative z-10 flex flex-col items-center">
                 <RevealHeading
                     text={outro.heading}
-                    className="mb-8 text-[clamp(2.5rem,8vw,7rem)] text-text"
+                    className="mb-8 text-hero text-text"
                 />
                 <FadeUp>
-                    <p className="mb-4 max-w-4xl font-sans text-xl leading-relaxed text-text-muted">
+                    {/* max-w-prose, not max-w-4xl: at 56rem this quote ran past
+                        100 characters a line. */}
+                    <p className="mb-4 max-w-prose font-sans text-xl leading-relaxed text-text-muted">
                         {outro.body}
                     </p>
-                    <p className="mb-12 text-xl font-bold text-text-muted font-sans">
+                    <p className="mb-12 font-sans text-xl font-medium text-text-muted">
                         {outro.quoter}
                     </p>
                 </FadeUp>
@@ -454,7 +467,9 @@ function Outro() {
                     <Magnetic>
                         <a
                             href="mailto:nurkahfirahmada@gmail.com"
-                            className="inline-flex items-center gap-4 border-2 border-border bg-text px-10 py-5 font-heading text-2xl uppercase tracking-wide text-background transition-colors hover:bg-primary hover:text-text"
+                            // Same solid-ink pill as the "All projects" button on
+                            // the work page, scaled up for the closing CTA.
+                            className="inline-flex items-center gap-4 rounded-full bg-text px-10 py-5 font-heading text-2xl uppercase tracking-wide text-background transition-transform duration-(--duration-fast) hover:-translate-y-0.5"
                         >
                             {outro.cta}
                             <span aria-hidden>→</span>
@@ -472,14 +487,10 @@ function Outro() {
 export default function AboutStory() {
     return (
         <div className="relative">
-            {/* top theme bar (matches ContentPanel language) */}
-            <div className="sticky top-0 z-30 flex">
-                <span className="h-2 w-full bg-primary" />
-                <span className="h-2 w-full bg-secondary" />
-                <span className="h-2 w-full bg-tertiary" />
-                <span className="h-2 w-full bg-quaternary" />
-            </div>
-
+            {/* The four-colour bar that used to sit here is gone: it was the
+                loudest thing on the page, and the ContentPanel language it
+                claimed to match no longer has one. The theme is still shown —
+                and changed — by the ThemePlay swatches further down. */}
             <Hero />
             <Chapters />
             <SkillsMarquee />

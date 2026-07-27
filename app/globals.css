@@ -46,6 +46,15 @@
   --text-quote: 1.9rem;
   --text-display: clamp(3rem, 7vw, 6rem);
 
+  /* Editorial display scale — two statement sizes and one glyph size, rather
+     than a fresh clamp() per section. `hero` bookends the story (opening and
+     closing), `chapter` carries every section heading. */
+  --text-hero: clamp(3rem, 11vw, 10rem);
+  --text-chapter: clamp(2rem, 5vw, 4rem);
+  --text-kanji: clamp(6rem, 16vw, 13rem);
+  /* Background glyphs, sized to the viewport rather than the type scale. */
+  --text-watermark: 40vw;
+
   /* Spacing scale */
   --spacing-gutter: 2rem;
   --spacing-sidebar: 220px;
