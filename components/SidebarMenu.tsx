@@ -54,7 +54,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
             <header>
                 <div className="flex items-center justify-between">
                     <div className="flex items-baseline gap-3">
-                        <span className="font-heading text-4xl font-bold leading-none tracking-wide">
+                        <span className="font-heading text-glyph font-bold leading-none tracking-wide">
                             窟
                         </span>
                         <h1 className="font-heading text-mark font-medium tracking-widest">
@@ -90,7 +90,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                             className={`
                                 group relative flex w-full cursor-pointer items-center
                                 py-1 text-left font-heading text-nav tracking-wide
-                                transition-colors duration-200
+                                transition-colors duration-(--duration-fast)
                                 ${isSelected ? "text-text" : "text-text-muted hover:text-text"}
                             `}
                         >
@@ -98,7 +98,7 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
                             <span
                                 className={`
                                     absolute left-0 h-4 w-0.5 rounded-full bg-primary
-                                    transition-opacity duration-200
+                                    transition-opacity duration-(--duration-fast)
                                     ${isSelected ? "opacity-100" : "opacity-0"}
                                 `}
                             />
@@ -112,11 +112,11 @@ export default function SidebarMenu({ items, selected, onSelect }: Props) {
             <div className="mt-auto flex flex-col gap-1 pb-8 text-text-muted">
                 {/* Handle swaps to social links on hover */}
                 <div className="group relative flex h-6 items-center">
-                    <span className="font-heading text-label tracking-wide transition-opacity duration-200 group-hover:opacity-0">
+                    <span className="font-heading text-label tracking-wide transition-opacity duration-(--duration-fast) group-hover:opacity-0">
                         @nrkahfirhmd
                     </span>
 
-                    <div className="pointer-events-none absolute inset-0 flex items-center gap-4 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+                    <div className="pointer-events-none absolute inset-0 flex items-center gap-4 opacity-0 transition-opacity duration-(--duration-fast) group-hover:pointer-events-auto group-hover:opacity-100">
                         <a
                             href="https://linkedin.com/in/nrkahfirhmd"
                             target="_blank"

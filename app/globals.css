@@ -20,16 +20,57 @@
   --color-text-muted: #6B7280;
   --color-text-subtle: #C4C4C4;
 
+  /* Lines & fills — the hairline vocabulary. Everything is drawn with the
+     lightest rule that still reads; only the quote rail earns "strong". */
+  --color-line: rgb(0 0 0 / 0.06);
+  --color-line-strong: rgb(0 0 0 / 0.1);
+  --color-line-bold: rgb(0 0 0 / 0.2);
+  --color-fill-subtle: rgb(0 0 0 / 0.04);
+
+  /* Inverted code surface — the one dark island in the layout. */
+  --color-code: #1C1C1F;
+  --color-code-line: rgb(255 255 255 / 0.1);
+  --color-code-text: rgb(255 255 255 / 0.85);
+  --color-code-muted: rgb(255 255 255 / 0.4);
+  --color-code-chrome: rgb(255 255 255 / 0.15);
+
   /* Typography scale */
   --text-mark: 1.25rem;
   --text-label: 1.125rem;
   --text-caption: 1.5rem;
   --text-nav: 1.3rem;
   --text-heading: 4.5rem;
+  --text-glyph: 2.25rem;
+  --text-title: 2rem;
+  --text-section: 2.2rem;
+  --text-quote: 1.9rem;
+  --text-display: clamp(3rem, 7vw, 6rem);
 
   /* Spacing scale */
   --spacing-gutter: 2rem;
   --spacing-sidebar: 220px;
+
+  /* Radius — three steps: card, panel, inline. */
+  --radius-card: 1rem;
+  --radius-panel: 0.75rem;
+  --radius-inline: 0.375rem;
+
+  /* Elevation — cool-grey shadows tinted with --color-text, never neutral black. */
+  --shadow-card: 0 1px 2px rgb(17 24 39 / 0.05);
+  --shadow-card-hover: 0 20px 40px -16px rgb(17 24 39 / 0.22);
+  --shadow-float: 0 2px 10px -2px rgb(17 24 39 / 0.12);
+  --shadow-float-hover: 0 6px 16px -4px rgb(17 24 39 / 0.18);
+
+  /* Motion — one signature curve for entrances, a plain ease-out for the rest.
+     Durations have no Tailwind namespace, so they emit as plain vars and are
+     consumed with `duration-(--duration-fast)`. lib/motion.ts mirrors these in
+     seconds for Framer Motion. */
+  --ease-entrance: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 200ms;
+  --duration-base: 350ms;
+  --duration-mid: 500ms;
+  --duration-slow: 650ms;
+  --duration-hero: 700ms;
 }
 
 :root,

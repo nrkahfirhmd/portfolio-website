@@ -83,3 +83,28 @@ export const projects: Project[] = [
 ];
 
 export const workCategories: ProjectCategory[] = ["Software", "AI", "System"];
+
+/**
+ * Category color tokens. Each category borrows one step of the active theme
+ * palette; the accent is the only saturated ink on the surface, and the washes
+ * are the same hue diluted almost to nothing.
+ */
+export const categoryAccent: Record<ProjectCategory, string> = {
+    Software: "bg-primary",
+    AI: "bg-secondary",
+    System: "bg-tertiary",
+};
+
+/** Faint hero wash behind an article title. */
+export const categoryWash: Record<ProjectCategory, string> = {
+    Software: "from-primary/12",
+    AI: "from-secondary/12",
+    System: "from-tertiary/12",
+};
+
+/** Corner tint on a project card showcase. */
+export const categoryTint: Record<ProjectCategory, string> = {
+    Software: "from-primary/15",
+    AI: "from-secondary/15",
+    System: "from-tertiary/15",
+};

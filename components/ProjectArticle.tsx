@@ -15,20 +15,8 @@ import {
     type Block,
     type Inline,
 } from "@/lib/articles";
-import type { Project, ProjectCategory } from "@/lib/projects";
-
-const accentByCategory: Record<ProjectCategory, string> = {
-    Software: "bg-primary",
-    AI: "bg-secondary",
-    System: "bg-tertiary",
-};
-
-// Faint hero wash — a hint of category color over the neutral background.
-const coverBgByCategory: Record<ProjectCategory, string> = {
-    Software: "from-primary/12",
-    AI: "from-secondary/12",
-    System: "from-tertiary/12",
-};
+import { categoryAccent, categoryWash, type Project } from "@/lib/projects";
+import { riseIn, spring, transition } from "@/lib/motion";
 
 /* ---------- inline renderer ---------- */
 
@@ -53,7 +41,7 @@ function InlineRun({ nodes }: { nodes: Inline[] }) {
                     return (
                         <code
                             key={i}
-                            className="rounded-md border border-black/[0.06] bg-black/[0.04] px-1.5 py-0.5 font-mono text-[0.85em] text-text"
+                            className="rounded-inline border border-line bg-fill-subtle px-1.5 py-0.5 font-mono text-[0.85em] text-text"
                         >
                             {n.code}
                         </code>
@@ -92,25 +80,25 @@ function CodeBlock({ lang, code }: { lang: string; code: string }) {
     }
 
     return (
-        <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-[#1c1c1f]">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
+        <div className="overflow-hidden rounded-panel border border-line bg-code">
+            <div className="flex items-center justify-between border-b border-code-line px-4 py-2.5">
                 <div className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    <span className="ml-3 font-mono text-xs text-white/40">
+                    <span className="h-2.5 w-2.5 rounded-full bg-code-chrome" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-code-chrome" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-code-chrome" />
+                    <span className="ml-3 font-mono text-xs text-code-muted">
                         {lang}
                     </span>
                 </div>
                 <button
                     onClick={copy}
-                    className="cursor-pointer font-mono text-xs text-white/70 transition-colors hover:text-white"
+                    className="cursor-pointer font-mono text-xs text-code-text transition-colors hover:text-white"
                 >
                     {copied ? "Copied ✓" : "Copy"}
                 </button>
             </div>
             <pre className="overflow-x-auto p-4">
-                <code className="font-mono text-sm leading-relaxed text-white/85">
+                <code className="font-mono text-sm leading-relaxed text-code-text">
                     {code}
                 </code>
             </pre>
@@ -142,7 +130,7 @@ function BlockView({
                 <h2
                     data-heading={block.id}
                     id={block.id}
-                    className="scroll-mt-24 pt-4 font-heading text-[2.2rem] leading-tight tracking-wide text-text"
+                    className="scroll-mt-24 pt-4 font-heading text-section leading-tight tracking-wide text-text"
                 >
                     {block.text}
                 </h2>
@@ -156,8 +144,8 @@ function BlockView({
         case "quote":
             return (
                 <blockquote className="relative py-2 pl-6">
-                    <span className="absolute left-0 top-1 bottom-1 w-px bg-black/20" />
-                    <p className="font-heading text-[1.9rem] leading-snug tracking-wide text-text">
+                    <span className="absolute left-0 top-1 bottom-1 w-px bg-line-bold" />
+                    <p className="font-heading text-quote leading-snug tracking-wide text-text">
                         <InlineRun nodes={block.content} />
                     </p>
                     {block.cite && (
@@ -174,7 +162,7 @@ function BlockView({
                 <figure className="flex flex-col gap-2">
                     <button
                         onClick={() => onZoom(block.src, block.alt)}
-                        className="group relative block cursor-pointer overflow-hidden rounded-2xl border border-black/[0.06] bg-background"
+                        className="group relative block cursor-pointer overflow-hidden rounded-card border border-line bg-background"
                     >
                         <div className="flex h-72 items-center justify-center p-8">
                             <Image
@@ -182,10 +170,10 @@ function BlockView({
                                 alt={block.alt}
                                 width={420}
                                 height={280}
-                                className="h-full w-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                                className="h-full w-auto object-contain drop-shadow-xl transition-transform duration-(--duration-mid) group-hover:scale-105"
                             />
                         </div>
-                        <span className="absolute right-3 top-3 rounded-full border border-black/[0.06] bg-surface/90 px-2.5 py-0.5 font-mono text-xs text-text-muted backdrop-blur-sm">
+                        <span className="absolute right-3 top-3 rounded-full border border-line bg-surface/90 px-2.5 py-0.5 font-mono text-xs text-text-muted backdrop-blur-sm">
                             ⤢ zoom
                         </span>
                     </button>
@@ -226,7 +214,7 @@ function BlockView({
             const tone = calloutTone[block.tone];
             return (
                 <div
-                    className={`flex gap-4 rounded-xl border border-black/[0.06] ${tone.bg} p-4`}
+                    className={`flex gap-4 rounded-panel border border-line ${tone.bg} p-4`}
                 >
                     <span
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${tone.bar} font-heading text-background`}
@@ -265,7 +253,7 @@ function Toc({
             <p className="mb-3 font-mono text-xs uppercase tracking-widest text-text-subtle">
                 On this page
             </p>
-            <ul className="flex flex-col gap-1 border-l border-black/[0.08]">
+            <ul className="flex flex-col gap-1 border-l border-line-strong">
                 {headings.map((h) => {
                     const active = h.id === activeId;
                     return (
@@ -274,11 +262,7 @@ function Toc({
                                 <motion.span
                                     layoutId="toc-active"
                                     className={`absolute -left-px top-0 h-full w-0.5 ${accent}`}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 400,
-                                        damping: 32,
-                                    }}
+                                    transition={spring.rail}
                                 />
                             )}
                             <button
@@ -369,19 +353,19 @@ export default function ProjectArticle({ project, onClose }: Props) {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 40 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={transition.panel}
             className="fixed inset-0 z-30 bg-background md:left-sidebar"
         >
             {/* reading progress */}
             <motion.div
                 style={{ scaleX: scrollYProgress }}
-                className={`absolute left-0 top-0 z-20 h-1 w-full origin-left ${accentByCategory[project.category]}`}
+                className={`absolute left-0 top-0 z-20 h-1 w-full origin-left ${categoryAccent[project.category]}`}
             />
 
             {/* back button */}
             <button
                 onClick={onClose}
-                className="absolute left-6 top-5 z-20 flex cursor-pointer items-center gap-2 rounded-full border border-black/[0.06] bg-surface/80 px-4 py-2 text-sm font-medium text-text shadow-[0_2px_10px_-2px_rgba(17,24,39,0.12)] backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_16px_-4px_rgba(17,24,39,0.18)]"
+                className="absolute left-6 top-5 z-20 flex cursor-pointer items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-2 text-sm font-medium text-text shadow-float backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-float-hover"
             >
                 <span aria-hidden>←</span> Back to work
             </button>
@@ -390,15 +374,15 @@ export default function ProjectArticle({ project, onClose }: Props) {
             <div ref={scrollRef} className="h-full overflow-y-auto">
                 {/* hero */}
                 <header
-                    className={`relative overflow-hidden border-b border-black/[0.05] bg-gradient-to-b to-transparent ${coverBgByCategory[project.category]}`}
+                    className={`relative overflow-hidden border-b border-line bg-gradient-to-b to-transparent ${categoryWash[project.category]}`}
                 >
                     <motion.div
                         style={{ y: heroY }}
                         className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-gutter py-24 text-center"
                     >
-                        <span className="flex items-center gap-2 rounded-full border border-black/[0.06] bg-surface/70 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-text-muted backdrop-blur-sm">
+                        <span className="flex items-center gap-2 rounded-full border border-line bg-surface/70 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-text-muted backdrop-blur-sm">
                             <span
-                                className={`h-1.5 w-1.5 rounded-full ${accentByCategory[project.category]}`}
+                                className={`h-1.5 w-1.5 rounded-full ${categoryAccent[project.category]}`}
                             />
                             {project.category} · {project.year} · {article.readMinutes} min read
                         </span>
@@ -407,21 +391,16 @@ export default function ProjectArticle({ project, onClose }: Props) {
                             <motion.h1
                                 initial={{ y: "110%" }}
                                 animate={{ y: 0 }}
-                                transition={{
-                                    delay: 0.15,
-                                    duration: 0.7,
-                                    ease: [0.22, 1, 0.36, 1],
-                                }}
-                                className="font-heading text-[clamp(3rem,7vw,6rem)] leading-[0.9] tracking-wide text-text"
+                                transition={{ ...transition.reveal, delay: 0.15 }}
+                                className="font-heading text-display leading-[0.9] tracking-wide text-text"
                             >
                                 {project.title}
                             </motion.h1>
                         </div>
 
                         <motion.p
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4, duration: 0.6 }}
+                            {...riseIn()}
+                            transition={{ ...transition.rise, delay: 0.4 }}
                             className="max-w-2xl text-lg text-text/80"
                         >
                             {article.lede}
@@ -435,14 +414,14 @@ export default function ProjectArticle({ project, onClose }: Props) {
                         {article.blocks.map((block, i) => (
                             <motion.div
                                 key={i}
-                                initial={{ opacity: 0, y: 28 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={riseIn(28).initial}
+                                whileInView={riseIn(28).animate}
                                 viewport={{
                                     root: scrollRef,
                                     once: true,
                                     amount: 0.3,
                                 }}
-                                transition={{ duration: 0.5, ease: "easeOut" }}
+                                transition={transition.rise}
                             >
                                 <BlockView
                                     block={block}
@@ -451,7 +430,7 @@ export default function ProjectArticle({ project, onClose }: Props) {
                             </motion.div>
                         ))}
 
-                        <div className="mt-8 flex items-center justify-between border-t border-black/[0.06] pt-8">
+                        <div className="mt-8 flex items-center justify-between border-t border-line pt-8">
                             <span className="text-xs tabular-nums text-text-subtle">
                                 {project.stack.join(" · ")}
                             </span>
@@ -468,7 +447,7 @@ export default function ProjectArticle({ project, onClose }: Props) {
                         headings={headings}
                         activeId={activeId}
                         onJump={jump}
-                        accent={accentByCategory[project.category]}
+                        accent={categoryAccent[project.category]}
                     />
                 </div>
             </div>
@@ -497,7 +476,7 @@ export default function ProjectArticle({ project, onClose }: Props) {
                                 className="h-auto max-h-[80vh] w-auto object-contain drop-shadow-2xl"
                             />
                         </motion.div>
-                        <span className="absolute bottom-8 font-mono text-sm text-white/60">
+                        <span className="absolute bottom-8 font-mono text-sm text-code-muted">
                             click anywhere or press Esc to close
                         </span>
                     </motion.div>

@@ -12,11 +12,14 @@ import {
     type Variants,
 } from "framer-motion";
 import {
+    categoryAccent,
+    categoryTint,
     projects,
     workCategories,
     type Project,
     type ProjectCategory,
 } from "@/lib/projects";
+import { riseIn, spring, springConfig, transition } from "@/lib/motion";
 import ProjectArticle from "@/components/ProjectArticle";
 
 interface Props {
@@ -27,20 +30,6 @@ interface Props {
 }
 
 type Filter = ProjectCategory | "All";
-
-// Small accent dot per category — a whisper of color, not a loud band.
-const accentByCategory: Record<ProjectCategory, string> = {
-    Software: "bg-primary",
-    AI: "bg-secondary",
-    System: "bg-tertiary",
-};
-
-// Faint corner tint on the showcase — subtle, sits over a neutral base.
-const coverTintByCategory: Record<ProjectCategory, string> = {
-    Software: "from-primary/15",
-    AI: "from-secondary/15",
-    System: "from-tertiary/15",
-};
 
 /* ---------- header ---------- */
 
@@ -67,9 +56,8 @@ function Header({
                             initial={{ y: "110%" }}
                             animate={{ y: 0 }}
                             transition={{
+                                ...transition.reveal,
                                 delay: 0.05 + i * 0.08,
-                                duration: 0.7,
-                                ease: [0.22, 1, 0.36, 1],
                             }}
                             className="inline-block"
                         >
@@ -80,9 +68,8 @@ function Header({
             </div>
 
             <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35, duration: 0.6, ease: "easeOut" }}
+                {...riseIn()}
+                transition={{ ...transition.rise, delay: 0.35 }}
                 className="mt-4 max-w-xl text-text-muted"
             >
                 Things I&apos;ve designed, built, and broken — spanning product
@@ -92,9 +79,8 @@ function Header({
 
             {/* filter + live count */}
             <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.45, duration: 0.6, ease: "easeOut" }}
+                {...riseIn()}
+                transition={{ ...transition.rise, delay: 0.45 }}
                 className="mt-8 flex flex-wrap items-center gap-3"
             >
                 <div className="flex flex-wrap gap-2">
@@ -104,21 +90,17 @@ function Header({
                             <button
                                 key={f}
                                 onClick={() => setFilter(f)}
-                                className={`relative cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-200 ${
+                                className={`relative cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-colors duration-(--duration-fast) ${
                                     active
                                         ? "border-transparent text-background"
-                                        : "border-black/10 text-text-muted hover:border-black/20 hover:text-text"
+                                        : "border-line-strong text-text-muted hover:border-line-bold hover:text-text"
                                 }`}
                             >
                                 {active && (
                                     <motion.span
                                         layoutId="filter-pill"
                                         className="absolute inset-0 rounded-full bg-text"
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 400,
-                                            damping: 34,
-                                        }}
+                                        transition={spring.rail}
                                     />
                                 )}
                                 <span className="relative z-10">{f}</span>
@@ -134,7 +116,7 @@ function Header({
                             initial={{ y: -8, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: 8, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
+                            transition={transition.tick}
                             className="inline-block"
                         >
                             {String(count).padStart(2, "0")}
@@ -154,11 +136,7 @@ const cardVariants: Variants = {
     show: (i: number) => ({
         opacity: 1,
         y: 0,
-        transition: {
-            duration: 0.65,
-            ease: [0.22, 1, 0.36, 1],
-            delay: (i % 2) * 0.1,
-        },
+        transition: { ...transition.card, delay: (i % 2) * 0.1 },
     }),
 };
 
@@ -178,8 +156,8 @@ function ProjectCard({
     // Pointer parallax — image drifts toward the cursor inside the showcase.
     const px = useMotionValue(0);
     const py = useMotionValue(0);
-    const sx = useSpring(px, { stiffness: 150, damping: 18 });
-    const sy = useSpring(py, { stiffness: 150, damping: 18 });
+    const sx = useSpring(px, springConfig.pointer);
+    const sy = useSpring(py, springConfig.pointer);
     const imgX = useTransform(sx, [-0.5, 0.5], [-18, 18]);
     const imgY = useTransform(sy, [-0.5, 0.5], [-14, 14]);
 
@@ -213,13 +191,10 @@ function ProjectCard({
                 resetPointer();
             }}
             whileHover={reduce ? undefined : { y: -4 }}
-            transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            className="group relative block overflow-hidden rounded-2xl border border-black/[0.06] bg-surface"
-            style={{
-                boxShadow: hovered
-                    ? "0 20px 40px -16px rgba(17,24,39,0.22)"
-                    : "0 1px 2px rgba(17,24,39,0.05)",
-            }}
+            transition={spring.lift}
+            className={`group relative block overflow-hidden rounded-card border border-line bg-surface ${
+                hovered ? "shadow-card-hover" : "shadow-card"
+            }`}
         >
             {/* ---------- image showcase ---------- */}
             <div
@@ -229,13 +204,13 @@ function ProjectCard({
             >
                 {/* faint category tint in the corner */}
                 <div
-                    className={`absolute inset-0 bg-gradient-to-br to-transparent ${coverTintByCategory[project.category]}`}
+                    className={`absolute inset-0 bg-gradient-to-br to-transparent ${categoryTint[project.category]}`}
                 />
 
                 <motion.div
                     style={reduce ? undefined : { x: imgX, y: imgY }}
                     animate={{ scale: hovered ? 1.05 : 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 22 }}
+                    transition={spring.image}
                     className="absolute inset-0 flex items-center justify-center p-10"
                 >
                     <Image
@@ -259,7 +234,7 @@ function ProjectCard({
                 <div className="flex items-center justify-between text-xs">
                     <span className="flex items-center gap-2 font-medium uppercase tracking-wider text-text-muted">
                         <span
-                            className={`h-1.5 w-1.5 rounded-full ${accentByCategory[project.category]}`}
+                            className={`h-1.5 w-1.5 rounded-full ${categoryAccent[project.category]}`}
                         />
                         {project.category}
                     </span>
@@ -268,7 +243,7 @@ function ProjectCard({
                     </span>
                 </div>
 
-                <h2 className="font-heading text-[2rem] leading-none tracking-wide text-text">
+                <h2 className="font-heading text-title leading-none tracking-wide text-text">
                     {project.title}
                 </h2>
 
@@ -277,18 +252,18 @@ function ProjectCard({
                 </p>
 
                 {/* footer: stack + hover arrow */}
-                <div className="mt-2 flex items-center justify-between border-t border-black/[0.05] pt-4">
+                <div className="mt-2 flex items-center justify-between border-t border-line pt-4">
                     <span className="text-xs tabular-nums text-text-subtle">
                         {project.stack.join(" · ")}
                     </span>
                     <span className="flex items-center gap-1.5 text-xs font-medium text-text">
-                        <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        <span className="opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100">
                             View
                         </span>
                         <motion.span
                             initial={false}
                             animate={{ x: hovered ? 4 : 0 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            transition={spring.nudge}
                             aria-hidden
                         >
                             →
@@ -335,7 +310,7 @@ export default function WorkProjects({ activeCategory, onNavigate }: Props) {
                             key={project.id}
                             layout
                             exit={{ opacity: 0, scale: 0.92, y: 16 }}
-                            transition={{ duration: 0.35, ease: "easeInOut" }}
+                            transition={transition.shuffle}
                         >
                             <ProjectCard
                                 project={project}
