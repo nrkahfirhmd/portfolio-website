@@ -10,6 +10,7 @@ import {
     type MotionValue,
 } from "framer-motion";
 import type { FloatingItemData } from "@/lib/home";
+import { spring, transition } from "@/lib/motion";
 
 interface Props extends FloatingItemData {
     /** Shared, normalized (-0.5..0.5) cursor position from the page. */
@@ -18,20 +19,22 @@ interface Props extends FloatingItemData {
     onSelect: () => void;
 }
 
-const spring = { type: "spring" as const, stiffness: 260, damping: 20 };
+/** Idle bob travel and engaged lift, in px. Small on purpose — three of these
+ *  loop at once, and the collage should read as still until you reach for it. */
+const BOB_TRAVEL = 6;
+const LIFT = 6;
 
 /**
- * A collage sticker that drifts with the cursor (depth parallax), bobs on its
- * own idle loop, then straightens, lifts and reveals its hint when engaged.
- * Hover and keyboard focus drive the exact same `active` state, so the item
- * reads identically to mouse and keyboard users.
+ * A collage item that drifts with the cursor (depth parallax), bobs on its own
+ * idle loop, then lifts and reveals its hint when engaged. Hover and keyboard
+ * focus drive the exact same `active` state, so the item reads identically to
+ * mouse and keyboard users.
  */
 export default function FloatingItem({
     icon,
     label,
     hint,
     className,
-    rotation,
     width,
     depth,
     delay,
@@ -55,7 +58,7 @@ export default function FloatingItem({
             <motion.div
                 initial={{ opacity: 0, y: 40, scale: 0.85 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ ...spring, delay }}
+                transition={{ ...spring.lift, delay }}
             >
                 <motion.button
                     type="button"
@@ -64,17 +67,17 @@ export default function FloatingItem({
                     onHoverEnd={() => setActive(false)}
                     onFocus={() => setActive(true)}
                     onBlur={() => setActive(false)}
-                    whileTap={{ scale: 0.94 }}
+                    whileTap={{ scale: 0.97 }}
                     aria-label={`Open ${label} — ${hint}`}
                     className="
                         group
                         relative
                         cursor-none
-                        rounded-sm
+                        rounded-inline
                         outline-none
-                        focus-visible:ring-4
-                        focus-visible:ring-primary
-                        focus-visible:ring-offset-4
+                        focus-visible:ring-2
+                        focus-visible:ring-text
+                        focus-visible:ring-offset-2
                         focus-visible:ring-offset-background
                     "
                 >
@@ -92,28 +95,32 @@ export default function FloatingItem({
                     />
                     <motion.div
                         animate={
-                            active || reduce
-                                ? { y: -10, rotate: 0, scale: 1.08 }
-                                : { y: [0, -10, 0], rotate: rotation, scale: 1 }
+                            // Engaged wins over the idle loop. Under reduced
+                            // motion the item simply rests — it is never parked
+                            // in the lifted pose it can no longer animate out of.
+                            active
+                                ? { y: -LIFT, scale: 1.04 }
+                                : reduce
+                                  ? { y: 0, scale: 1 }
+                                  : { y: [0, -BOB_TRAVEL, 0], scale: 1 }
                         }
                         transition={
                             active || reduce
-                                ? spring
+                                ? spring.lift
                                 : {
                                       y: {
                                           duration: bob,
                                           repeat: Infinity,
                                           ease: "easeInOut",
                                       },
-                                      rotate: spring,
-                                      scale: spring,
+                                      scale: spring.lift,
                                   }
                         }
                         className="
-                            transition-[filter] duration-300
-                            drop-shadow-[4px_6px_0_var(--tertiary)]
-                            group-hover:drop-shadow-[10px_14px_0_var(--primary)]
-                            group-focus-visible:drop-shadow-[10px_14px_0_var(--primary)]
+                            drop-shadow-sticker
+                            transition-[filter] duration-(--duration-fast)
+                            group-hover:drop-shadow-sticker-hover
+                            group-focus-visible:drop-shadow-sticker-hover
                         "
                     >
                         <Image
@@ -131,9 +138,13 @@ export default function FloatingItem({
 
                     <div className="mt-3 flex flex-col items-center">
                         <span className="relative inline-block">
+                            {/* Muted at rest, full ink when engaged — the same
+                                two-step the sidebar nav uses. Accent is left to
+                                the rule below, which carries no text contrast
+                                requirement of its own. */}
                             <span
-                                className={`text-label font-semibold transition-colors duration-200 ${
-                                    active ? "text-primary" : "text-text"
+                                className={`text-label font-medium transition-colors duration-(--duration-fast) ${
+                                    active ? "text-text" : "text-text-muted"
                                 }`}
                             >
                                 {label}
@@ -144,7 +155,7 @@ export default function FloatingItem({
                                 className="absolute -bottom-0.5 left-0 h-0.5 w-full origin-left bg-primary"
                                 initial={false}
                                 animate={{ scaleX: active ? 1 : 0 }}
-                                transition={{ duration: 0.25, ease: "easeOut" }}
+                                transition={transition.tick}
                             />
                         </span>
 
@@ -157,7 +168,7 @@ export default function FloatingItem({
                                         initial={{ opacity: 0, y: -6 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -6 }}
-                                        transition={{ duration: 0.2, ease: "easeOut" }}
+                                        transition={transition.tick}
                                         className="absolute inset-x-0 top-1.5 whitespace-nowrap text-center text-sm text-text-muted"
                                     >
                                         {hint}

@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import FloatingItem from "@/components/FloatingItem";
 import { floatingItems, intro } from "@/lib/home";
+import { spring } from "@/lib/motion";
 
 /** Bounding box the collage occupies at scale 1, measured from lib/home offsets. */
 const DESIGN_WIDTH = 860;
@@ -79,15 +80,15 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
 
     return (
         <div className="relative flex h-full items-center justify-center overflow-hidden">
-            {/* Ambient theme wash — pure decoration, hidden from AT. */}
+            {/* Ambient theme wash — pure decoration, hidden from AT. A single
+                soft field behind the avatar: enough to show the theme has
+                changed, not enough to read as a shape of its own. */}
             <motion.div
                 aria-hidden
                 style={{ x: washX, y: washY }}
                 className="pointer-events-none absolute inset-0 -z-0"
             >
-                <div className="absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-quaternary/40 blur-3xl" />
-                <div className="absolute left-1/4 top-1/3 h-[40vmin] w-[40vmin] rounded-full bg-tertiary/30 blur-3xl" />
-                <div className="absolute right-1/4 bottom-1/4 h-[45vmin] w-[45vmin] rounded-full bg-secondary/25 blur-3xl" />
+                <div className="absolute left-1/2 top-1/2 h-[70vmin] w-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-quaternary/30 blur-3xl" />
             </motion.div>
 
             {/* One transform-origin for the entire collage. */}
@@ -103,12 +104,14 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
                 // composition visibly off-centre. Shift by half the difference.
                 className="relative z-10 w-[220px] origin-center translate-x-14"
             >
-                {/* Intro card — sticker-styled, occupies the empty upper-left. */}
+                {/* Intro card — occupies the empty upper-left. Squared off and
+                    set on a hairline, so it reads as a caption on the page
+                    rather than a sticker pasted onto it. */}
                 <motion.div
-                    initial={{ opacity: 0, y: 24, rotate: -6 }}
-                    animate={{ opacity: 1, y: 0, rotate: -3 }}
-                    transition={{ type: "spring", stiffness: 220, damping: 20, delay: 0.05 }}
-                    className="absolute left-0 top-0 w-64 -translate-x-[22rem] -translate-y-20 border-2 border-border bg-surface px-5 py-4 shadow-[6px_6px_0_var(--primary)]"
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...spring.lift, delay: 0.05 }}
+                    className="absolute left-0 top-0 w-64 -translate-x-[22rem] -translate-y-20 border-l border-line-bold bg-transparent pl-5"
                 >
                     <p className="whitespace-pre-line font-heading text-caption leading-tight tracking-wide text-text">
                         {intro.role}
@@ -130,24 +133,24 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
                     style={{ x: avatarX, y: avatarY }}
                     initial={{ opacity: 0, y: 60, scale: 0.94 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 180, damping: 22 }}
+                    transition={spring.image}
                 >
                     <motion.button
                         type="button"
                         onClick={() => onSelect("Index")}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         aria-label="About Me — read my story"
                         className="
                             group
                             relative
                             block
                             cursor-none
-                            rounded-sm
+                            rounded-inline
                             outline-none
-                            focus-visible:ring-4
-                            focus-visible:ring-primary
-                            focus-visible:ring-offset-4
+                            focus-visible:ring-2
+                            focus-visible:ring-text
+                            focus-visible:ring-offset-2
                             focus-visible:ring-offset-background
                         "
                     >
@@ -164,19 +167,19 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
                             style={{ width: 220, height: "auto" }}
                             className="
                                 select-none
-                                transition-[filter] duration-300
-                                drop-shadow-[4px_6px_0_var(--tertiary)]
-                                group-hover:drop-shadow-[10px_14px_0_var(--primary)]
-                                group-focus-visible:drop-shadow-[10px_14px_0_var(--primary)]
+                                drop-shadow-lift
+                                transition-[filter] duration-(--duration-fast)
+                                group-hover:drop-shadow-lift-hover
+                                group-focus-visible:drop-shadow-lift-hover
                             "
                         />
 
                         <span className="mt-3 flex justify-center">
                             <span className="relative inline-block">
-                                <span className="text-label font-semibold text-text transition-colors duration-200 group-hover:text-primary group-focus-visible:text-primary">
+                                <span className="text-label font-medium text-text-muted transition-colors duration-(--duration-fast) group-hover:text-text group-focus-visible:text-text">
                                     About Me
                                 </span>
-                                <span className="absolute -bottom-0.5 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-250 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                                <span className="absolute -bottom-0.5 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-(--duration-fast) ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
                             </span>
                         </span>
                     </motion.button>

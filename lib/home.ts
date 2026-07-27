@@ -6,8 +6,6 @@ export interface FloatingItemData {
     hint: string;
     /** Absolute placement relative to the avatar, inside the scaled stage. */
     className: string;
-    /** Resting tilt (deg). Straightens to 0 on hover/focus. */
-    rotation: number;
     width: number;
     /** Parallax travel in px across the full viewport. Higher = nearer the eye. */
     depth: number;
@@ -23,7 +21,6 @@ export const floatingItems: FloatingItemData[] = [
         label: "Work",
         hint: "Things I shipped",
         className: "left-0 top-1/2 -translate-x-70 -translate-y-1/2",
-        rotation: 7,
         width: 250,
         depth: 46,
         delay: 0.15,
@@ -34,7 +31,6 @@ export const floatingItems: FloatingItemData[] = [
         label: "Experience",
         hint: "Where I've been",
         className: "right-0 top-1 translate-x-60 translate-y-1/4",
-        rotation: -8,
         width: 250,
         depth: 34,
         delay: 0.25,
@@ -45,7 +41,6 @@ export const floatingItems: FloatingItemData[] = [
         label: "Exploration",
         hint: "Side quests",
         className: "right-0 top-1/2 translate-x-40 translate-y-1/4",
-        rotation: -12,
         width: 100,
         depth: 62,
         delay: 0.35,

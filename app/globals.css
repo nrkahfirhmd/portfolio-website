@@ -61,6 +61,17 @@
   --shadow-float: 0 2px 10px -2px rgb(17 24 39 / 0.12);
   --shadow-float-hover: 0 6px 16px -4px rgb(17 24 39 / 0.18);
 
+  /* Elevation for cut-out imagery, which has no box to cast from. Same cool
+     grey as --shadow-*, so the collage sits on the page like the cards do. */
+  --drop-shadow-lift: 0 8px 16px rgb(17 24 39 / 0.1);
+  --drop-shadow-lift-hover: 0 18px 28px rgb(17 24 39 / 0.16);
+
+  /* Hard offset shadow for the floating items. Deliberately not the soft
+     --drop-shadow-lift: these read as stickers on the page, and the colour is
+     the theme's own, so switching themes moves the shadow with it. */
+  --drop-shadow-sticker: 4px 6px 0 var(--tertiary);
+  --drop-shadow-sticker-hover: 10px 14px 0 var(--primary);
+
   /* Motion — one signature curve for entrances, a plain ease-out for the rest.
      Durations have no Tailwind namespace, so they emit as plain vars and are
      consumed with `duration-(--duration-fast)`. lib/motion.ts mirrors these in
