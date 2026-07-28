@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { springConfig } from "@/lib/motion";
 
 /**
  * The "0" of the 404, rendered as an eye whose pupil tracks the cursor.
@@ -13,8 +14,8 @@ export default function EyeZero() {
 
     const px = useMotionValue(0);
     const py = useMotionValue(0);
-    const pupilX = useSpring(px, { stiffness: 300, damping: 20 });
-    const pupilY = useSpring(py, { stiffness: 300, damping: 20 });
+    const pupilX = useSpring(px, springConfig.rail);
+    const pupilY = useSpring(py, springConfig.rail);
 
     useEffect(() => {
         if (reduce) return;
@@ -41,7 +42,7 @@ export default function EyeZero() {
     return (
         <div
             ref={ref}
-            className="relative aspect-square h-[0.82em] rounded-full bg-primary shadow-[8px_8px_0_rgba(0,0,0,0.12)]"
+            className="relative aspect-square h-[0.82em] rounded-full bg-primary shadow-card-hover"
         >
             {/* Eye white */}
             <div className="absolute inset-[16%] rounded-full bg-surface">

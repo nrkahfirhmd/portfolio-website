@@ -52,6 +52,8 @@
   --text-hero: clamp(3rem, 11vw, 10rem);
   --text-chapter: clamp(2rem, 5vw, 4rem);
   --text-kanji: clamp(6rem, 16vw, 13rem);
+  /* The 404's numerals, which are the whole page rather than a heading on it. */
+  --text-numeral: clamp(6rem, 24vw, 17rem);
   /* Background glyphs, sized to the viewport rather than the type scale. */
   --text-watermark: 40vw;
 

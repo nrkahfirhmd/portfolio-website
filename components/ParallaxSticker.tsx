@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { recolorSvg } from "@/helper/recolorSvg";
 import type { StickerItem } from "@/lib/notFound";
+import { spring } from "@/lib/motion";
 
 interface Props extends StickerItem {
     /** Shared, normalized (-0.5..0.5) cursor position from the page. */
@@ -71,12 +72,14 @@ export default function ParallaxSticker({
                 <motion.div
                     initial={{ opacity: 0, scale: 0.6, rotate: rotation }}
                     animate={{ opacity: svg ? 1 : 0, scale: 1, rotate: rotation }}
-                    transition={{ type: "spring", stiffness: 120, damping: 12, delay: 0.2 }}
+                    transition={{ ...spring.bouncy, delay: 0.2 }}
                     whileHover={{ rotate: 0, scale: 1.08 }}
                     whileTap={{ scale: 0.92 }}
                     role="img"
                     aria-label={alt}
-                    className="aspect-square select-none drop-shadow-[6px_10px_14px_rgba(0,0,0,0.14)] [&>svg]:h-full [&>svg]:w-full"
+                    // Same offset shadow as the home stage's floating items —
+                    // stickers get the sticker shadow, wherever they appear.
+                    className="aspect-square select-none drop-shadow-sticker [&>svg]:h-full [&>svg]:w-full"
                     dangerouslySetInnerHTML={{ __html: svg }}
                 />
             </motion.div>

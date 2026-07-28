@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { spring } from "@/lib/motion";
 
 interface Props {
     children: React.ReactNode;
@@ -32,7 +33,7 @@ export default function DraggableDigit({ children, rotation, delay = 0 }: Props)
             <motion.span
                 initial={{ y: -120, opacity: 0, rotate: rotation * 2 }}
                 animate={{ y: 0, opacity: 1, rotate: rotation }}
-                transition={{ type: "spring", stiffness: 260, damping: 18, delay }}
+                transition={{ ...spring.bouncy, delay }}
                 whileHover={{ rotate: 0, scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="block select-none"

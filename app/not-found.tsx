@@ -12,8 +12,7 @@ import EyeZero from "@/components/EyeZero";
 import MagneticButton from "@/components/MagneticButton";
 import ParallaxSticker from "@/components/ParallaxSticker";
 import { stickers } from "@/lib/notFound";
-
-const digitSpring = { type: "spring" as const, stiffness: 260, damping: 18 };
+import { spring, springConfig, transition } from "@/lib/motion";
 
 export default function NotFound() {
     const reduce = useReducedMotion();
@@ -21,8 +20,8 @@ export default function NotFound() {
     // Normalized cursor position shared with every parallax sticker.
     const pointerX = useMotionValue(0);
     const pointerY = useMotionValue(0);
-    const smoothX = useSpring(pointerX, { stiffness: 90, damping: 20 });
-    const smoothY = useSpring(pointerY, { stiffness: 90, damping: 20 });
+    const smoothX = useSpring(pointerX, springConfig.drift);
+    const smoothY = useSpring(pointerY, springConfig.drift);
 
     function handlePointer(e: React.PointerEvent<HTMLElement>) {
         if (reduce) return;
@@ -35,20 +34,9 @@ export default function NotFound() {
             onPointerMove={handlePointer}
             className="relative flex min-h-screen flex-col overflow-hidden bg-background"
         >
-            {/* Animated 4-color band motif (matches ContentPanel) */}
-            <div className="flex shrink-0">
-                {["bg-primary", "bg-secondary", "bg-tertiary", "bg-quaternary"].map(
-                    (c, i) => (
-                        <motion.span
-                            key={c}
-                            className={`h-3 w-full origin-left ${c}`}
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            transition={{ duration: 0.5, delay: 0.1 * i, ease: "easeOut" }}
-                        />
-                    )
-                )}
-            </div>
+            {/* The four-colour band that used to sit here is gone, as on the
+                about page: the pattern for this page is a single column with no
+                nav clutter, and the band was competing with the numerals. */}
 
             {/* Floating draggable stickers */}
             {stickers.map((s) => (
@@ -62,8 +50,14 @@ export default function NotFound() {
 
             {/* Center stage */}
             <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-gutter text-center">
-                {/* 404 — draggable 4s, cursor-tracking eye 0 */}
-                <div className="flex select-none items-center justify-center font-heading leading-none text-[clamp(6rem,24vw,17rem)] text-text">
+                {/* 404 — draggable 4s, cursor-tracking eye 0. Hidden from AT:
+                    the "0" is a graphic with no text, so a screen reader would
+                    otherwise announce a bare "4 4". The heading below carries
+                    the code instead. */}
+                <div
+                    aria-hidden
+                    className="flex select-none items-center justify-center font-heading text-numeral leading-none text-text"
+                >
                     <DraggableDigit rotation={-6} delay={0.05}>
                         4
                     </DraggableDigit>
@@ -71,7 +65,7 @@ export default function NotFound() {
                     <motion.div
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ ...digitSpring, delay: 0.15 }}
+                        transition={{ ...spring.bouncy, delay: 0.15 }}
                         className="mx-[0.04em]"
                     >
                         <EyeZero />
@@ -85,47 +79,49 @@ export default function NotFound() {
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.5 }}
+                    transition={{ ...transition.rise, delay: 0.4 }}
                     className="mt-4 max-w-lg font-heading text-caption tracking-wide text-text"
                 >
+                    <span className="sr-only">404 — </span>
                     This page wandered off the gallery.
                 </motion.h1>
 
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5, duration: 0.5 }}
+                    transition={{ ...transition.rise, delay: 0.5 }}
                     className="mt-2 max-w-md text-text-muted"
                 >
                     Drag the digits, poke the stickers — or head back to solid ground.
                 </motion.p>
 
-                {/* Magnetic CTA + secondary link */}
+                {/* Single magnetic CTA. The old secondary link read "or explore
+                    the work" but pointed at "/" as well — one destination, so
+                    one button, which is also what this page's pattern wants. */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.5 }}
-                    className="mt-9 flex flex-col items-center gap-4 sm:flex-row"
+                    transition={{ ...transition.rise, delay: 0.6 }}
+                    className="mt-9 flex justify-center"
                 >
                     <MagneticButton className="cursor-none">
                         <Link
                             href="/"
-                            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-border bg-text px-8 py-3.5 font-heading text-nav tracking-wide text-background"
+                            // Solid ink, no border, lift on hover — the same CTA
+                            // as the work and about pages. The old primary wipe
+                            // put --background text on --primary: 3.3:1 at best,
+                            // 2.0:1 on the red theme.
+                            className="group inline-flex items-center gap-2 rounded-full bg-text px-8 py-3.5 font-heading text-nav tracking-wide text-background transition-transform duration-(--duration-fast) hover:-translate-y-0.5"
                         >
-                            <span className="absolute inset-0 -translate-x-full bg-primary transition-transform duration-300 ease-out group-hover:translate-x-0" />
-                            <span className="relative">Back to home</span>
-                            <span className="relative transition-transform duration-300 group-hover:translate-x-1">
+                            Back to home
+                            <span
+                                aria-hidden
+                                className="transition-transform duration-(--duration-fast) group-hover:translate-x-1"
+                            >
                                 →
                             </span>
                         </Link>
                     </MagneticButton>
-
-                    <Link
-                        href="/"
-                        className="cursor-none text-label text-text-muted underline-offset-4 transition-colors hover:text-text hover:underline"
-                    >
-                        or explore the work
-                    </Link>
                 </motion.div>
             </div>
         </main>

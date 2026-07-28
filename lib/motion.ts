@@ -35,6 +35,8 @@ export const springConfig = {
     pointer: { stiffness: 150, damping: 18 },
     /** Slow, wide travel — watermarks and other far-background parallax. */
     drift: { stiffness: 60, damping: 18 },
+    /** Under-damped on purpose: the toys that overshoot and settle. */
+    bouncy: { stiffness: 260, damping: 18 },
 } satisfies Record<string, SpringOptions>;
 
 /** The same springs as `transition` props. */
@@ -45,6 +47,7 @@ export const spring = {
     image: { type: "spring", ...springConfig.image },
     pointer: { type: "spring", ...springConfig.pointer },
     drift: { type: "spring", ...springConfig.drift },
+    bouncy: { type: "spring", ...springConfig.bouncy },
 } satisfies Record<string, Transition>;
 
 /** Entrance transitions, composed from the tokens above. */
