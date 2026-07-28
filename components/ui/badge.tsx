@@ -2,7 +2,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = {
-    default: "bg-primary text-background",
+    // text-text, not text-background: --background on --primary is 3.3:1 on the
+    // green theme and 2.0:1 on the red one, under the 4.5:1 this text needs.
+    default: "bg-primary text-text",
     secondary: "bg-secondary text-text",
     tertiary: "bg-tertiary text-text",
     quaternary: "bg-quaternary text-text",
@@ -20,7 +22,7 @@ function Badge({
         <span
             data-slot="badge"
             className={cn(
-                "inline-flex items-center border border-border px-2.5 py-0.5 text-xs font-medium tracking-wide",
+                "inline-flex items-center rounded-full border border-line px-2.5 py-0.5 text-xs font-medium tracking-wide",
                 badgeVariants[variant],
                 className
             )}

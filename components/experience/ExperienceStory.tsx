@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import {
-    animate,
     motion,
-    useInView,
     useReducedMotion,
     useScroll,
     useSpring,
@@ -20,9 +18,7 @@ import {
     type ExperienceEntry,
     type ExperienceKind,
 } from "@/lib/experience";
-
-/** Reveal ease shared by every scroll-triggered entrance. */
-const revealEase = [0.22, 1, 0.36, 1] as const;
+import { spring, springConfig, transition } from "@/lib/motion";
 
 /** Each kind of experience gets its own theme color, matching the menu palette. */
 const kindMeta: Record<ExperienceKind, { label: string; dot: string; accent: string }> = {
@@ -59,7 +55,7 @@ function Intro() {
         show: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.55, ease: revealEase },
+            transition: transition.rise,
         },
     };
 
@@ -87,9 +83,10 @@ function Intro() {
                 transition={{ duration: 0.6, delay: 1.4 }}
                 className="max-w-xl text-lg text-text-muted"
             >
-                My career tells only part of the story. 
-                It's the side quests and experiences beyond work that have shaped how I think, create, and show up. 
-                Scroll through to get to know the human behind the work.
+                My career tells only part of the story. It&apos;s the side quests
+                and experiences beyond work that have shaped how I think, create,
+                and show up. Scroll through to get to know the human behind the
+                work.
             </motion.p>
 
             {/* <motion.div
@@ -133,20 +130,21 @@ function Timeline({ chapters }: { chapters: ExperienceChapter[] }) {
         target: spineRef,
         offset: ["start 0.8", "end 0.7"],
     });
-    const scaleY = useSpring(scrollYProgress, { stiffness: 60, damping: 20, mass: 0.4 });
+    const scaleY = useSpring(scrollYProgress, { ...springConfig.drift, mass: 0.4 });
 
     return (
         <div ref={spineRef} className="relative px-gutter pb-24">
             {/* Track: always visible so the reader knows how far the story goes. */}
             <div
                 aria-hidden
-                className="absolute left-[calc(var(--spacing-gutter)+7px)] top-0 h-full w-[2px] bg-text-subtle/50"
+                className="absolute left-[calc(var(--spacing-gutter)+7px)] top-0 h-full w-px bg-line"
             />
-            {/* Progress: fills the track in sync with scroll position. */}
+            {/* Progress: fills the track in sync with scroll position. The one
+                place the accent is spent on this page, same as the about rail. */}
             <motion.div
                 aria-hidden
                 style={{ scaleY: reduce ? 1 : scaleY }}
-                className="absolute left-[calc(var(--spacing-gutter)+7px)] top-0 h-full w-[2px] origin-top bg-primary"
+                className="absolute left-[calc(var(--spacing-gutter)+7px)] top-0 h-full w-px origin-top bg-primary"
             />
 
             <div className="flex flex-col gap-24">
@@ -174,7 +172,9 @@ function Chapter({ chapter }: { chapter: ExperienceChapter }) {
             <motion.span
                 aria-hidden
                 style={reduce ? undefined : { y: ghostY }}
-                className="pointer-events-none absolute -top-10 right-0 select-none font-heading text-[9rem] leading-none text-transparent opacity-40 [-webkit-text-stroke:2px_var(--color-text-subtle)] md:text-[14rem]"
+                // Outline weight down to a hairline and the two breakpoint sizes
+                // collapsed into the shared clamp used by the about page glyphs.
+                className="pointer-events-none absolute -top-10 right-0 select-none font-heading text-kanji leading-none text-transparent opacity-40 [-webkit-text-stroke:1px_var(--color-text-subtle)]"
             >
                 {chapter.number}
             </motion.span>
@@ -184,13 +184,13 @@ function Chapter({ chapter }: { chapter: ExperienceChapter }) {
                     initial={{ opacity: 0, x: reduce ? 0 : -16 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, amount: 0.6 }}
-                    transition={{ duration: 0.5, ease: revealEase }}
+                    transition={transition.rise}
                     className="pl-10 md:pl-14"
                 >
                     <p className="text-sm font-medium uppercase tracking-widest text-text-muted">
                         Chapter {chapter.number}
                     </p>
-                    <h2 className="mt-2 font-heading text-5xl tracking-wide text-text">
+                    <h2 className="mt-2 font-heading text-chapter tracking-wide text-text">
                         {chapter.title}
                     </h2>
                     <p className="max-w-lg text-text-muted">{chapter.tagline}</p>
@@ -223,7 +223,7 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
 
     const skillItem = {
         hidden: reduce ? { opacity: 0 } : { opacity: 0, y: 8 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: revealEase } },
+        show: { opacity: 1, y: 0, transition: transition.shuffle },
     };
 
     return (
@@ -231,7 +231,7 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, ease: revealEase }}
+            transition={transition.rise}
             className="relative pl-10 md:pl-14"
         >
             {/* Dot on the spine, popping in with the card. */}
@@ -240,11 +240,11 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true, amount: 0.25 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-                className={`absolute left-0 top-8 h-4 w-4 border-2 border-border ${meta.dot}`}
+                transition={{ ...spring.bouncy, delay: 0.15 }}
+                className={`absolute left-0 top-8 h-3 w-3 rounded-full border border-line ${meta.dot}`}
             />
 
-            <Card className="group transition-all duration-200 hover:-translate-y-1 hover:shadow-[8px_8px_0_0_var(--color-border)]">
+            <Card className="group transition-all duration-(--duration-fast) hover:-translate-y-1 hover:shadow-card-hover">
                 <CardContent className="flex flex-col gap-4">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className="font-heading text-mark tracking-wide text-text">
@@ -252,14 +252,14 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
                         </span>
                         <Badge
                             variant="outline"
-                            className={`border-l-4 ${meta.accent}`}
+                            className={`border-l-2 ${meta.accent}`}
                         >
                             {meta.label}
                         </Badge>
                     </div>
 
                     <div>
-                        <h3 className="font-heading text-4xl leading-none tracking-wide text-text">
+                        <h3 className="font-heading text-title leading-none tracking-wide text-text">
                             {entry.title}
                         </h3>
                         <p className="text-sm font-medium text-text-muted">{entry.org}</p>
@@ -270,7 +270,7 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
 
                     {entry.highlight && (
                         <blockquote
-                            className={`border-l-4 ${meta.accent} pl-4 text-sm font-medium italic text-text`}
+                            className={`border-l-2 ${meta.accent} pl-4 text-sm font-medium italic text-text`}
                         >
                             {entry.highlight}
                         </blockquote>
@@ -295,25 +295,6 @@ function Entry({ entry }: { entry: ExperienceEntry }) {
     );
 }
 
-function Counter({ value }: { value: number }) {
-    const ref = useRef<HTMLSpanElement>(null);
-    const inView = useInView(ref, { once: true, margin: "-20% 0px" });
-    const reduce = useReducedMotion();
-    const [display, setDisplay] = useState(0);
-
-    useEffect(() => {
-        if (!inView || reduce) return;
-        const controls = animate(0, value, {
-            duration: 1.4,
-            ease: "easeOut",
-            onUpdate: (v) => setDisplay(Math.round(v)),
-        });
-        return () => controls.stop();
-    }, [inView, reduce, value]);
-
-    return <span ref={ref}>{reduce ? value : display}</span>;
-}
-
 /* ------------------------------------------------------------------ */
 /* Outro                                                               */
 /* ------------------------------------------------------------------ */
@@ -327,8 +308,8 @@ function Outro() {
                 initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.6, ease: revealEase }}
-                className="max-w-2xl font-heading text-6xl leading-none tracking-wide text-text"
+                transition={transition.rise}
+                className="max-w-2xl font-heading text-display leading-none tracking-wide text-text"
             >
                 The next chapter is unwritten.
             </motion.h2>
@@ -348,7 +329,9 @@ function Outro() {
                 onClick={() => {
                     window.location.href = "mailto:nurkahfirahmada@gmail.com";
                 }}
-                className="cursor-pointer border border-border bg-primary px-8 py-3 font-heading text-nav tracking-wide text-background transition-shadow duration-200 hover:shadow-[6px_6px_0_0_var(--color-border)]"
+                // Solid ink, not --primary: --background text on --primary is
+                // 3.3:1 green and 2.0:1 red. Matches the CTA on every other page.
+                className="cursor-pointer rounded-full bg-text px-8 py-3 font-heading text-nav tracking-wide text-background transition-transform duration-(--duration-fast) hover:-translate-y-0.5"
             >
                 Start a conversation
             </MagneticButton>

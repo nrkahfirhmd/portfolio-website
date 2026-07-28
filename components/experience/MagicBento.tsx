@@ -18,8 +18,7 @@ import {
     type ExperienceKind,
     type ExperiencePhoto,
 } from "@/lib/experience";
-
-const revealEase = [0.22, 1, 0.36, 1] as const;
+import { spring, springConfig, transition } from "@/lib/motion";
 
 const kindMeta: Record<ExperienceKind, { label: string; art: string }> = {
     career: { label: "Career", art: "from-primary via-secondary to-tertiary" },
@@ -158,10 +157,13 @@ function FilterChip({
             type="button"
             onClick={onClick}
             aria-pressed={active}
-            className={`cursor-pointer border border-border px-4 py-1.5 font-heading text-label tracking-wide transition-colors duration-200 ${
+            // Solid-ink active pill, matching the work page's category filters.
+            // The old bg-primary/text-background pair failed contrast on two of
+            // the three themes.
+            className={`cursor-pointer rounded-full border px-4 py-1.5 font-heading text-label tracking-wide transition-colors duration-(--duration-fast) ${
                 active
-                    ? "bg-primary text-background"
-                    : "bg-surface text-text-muted hover:bg-quaternary hover:text-text"
+                    ? "border-transparent bg-text text-background"
+                    : "border-line bg-surface text-text-muted hover:text-text"
             }`}
         >
             {label}
@@ -189,8 +191,8 @@ function BentoCard({ entry, layoutId, index, dimmed = false, onOpen }: BentoCard
     // Tilt: the card leans toward the cursor, springs back on leave.
     const rotateX = useMotionValue(0);
     const rotateY = useMotionValue(0);
-    const springX = useSpring(rotateX, { stiffness: 200, damping: 20 });
-    const springY = useSpring(rotateY, { stiffness: 200, damping: 20 });
+    const springX = useSpring(rotateX, springConfig.image);
+    const springY = useSpring(rotateY, springConfig.image);
 
     function handleMove(e: React.PointerEvent<HTMLDivElement>) {
         const el = ref.current;
@@ -218,13 +220,13 @@ function BentoCard({ entry, layoutId, index, dimmed = false, onOpen }: BentoCard
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, delay: index * 0.08, ease: revealEase }}
+            transition={{ ...transition.rise, delay: index * 0.08 }}
             className={sizeClass[entry.size ?? "sm"]}
         >
             <motion.div
                 layoutId={layoutId}
                 animate={{ opacity: dimmed ? 0.35 : 1, scale: dimmed ? 0.97 : 1 }}
-                transition={{ duration: 0.3, ease: revealEase }}
+                transition={transition.shuffle}
                 style={reduce ? undefined : { rotateX: springX, rotateY: springY, transformPerspective: 900 }}
                 className="h-full"
             >
@@ -243,7 +245,7 @@ function BentoCard({ entry, layoutId, index, dimmed = false, onOpen }: BentoCard
                     }}
                     onPointerMove={handleMove}
                     onPointerLeave={handleLeave}
-                    className="group relative flex h-full cursor-pointer flex-col justify-end overflow-hidden border border-border bg-surface text-left transition-shadow duration-200 hover:shadow-[8px_8px_0_0_var(--color-border)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="group relative flex h-full cursor-pointer flex-col justify-end overflow-hidden rounded-card border border-line bg-surface text-left transition-shadow duration-(--duration-fast) hover:shadow-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
                     <Cover entry={entry} art={meta.art} />
 
@@ -276,7 +278,7 @@ function BentoCard({ entry, layoutId, index, dimmed = false, onOpen }: BentoCard
                         <p className="line-clamp-2 max-w-md text-sm text-text-muted">
                             {entry.summary}
                         </p>
-                        <span className="flex items-center gap-1.5 text-sm font-medium text-text opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                        <span className="flex items-center gap-1.5 text-sm font-medium text-text opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100">
                             Read the story
                             <svg
                                 width="14"
@@ -395,14 +397,14 @@ function AlbumCell() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, ease: revealEase }}
+            transition={transition.rise}
             className="min-h-80 md:col-span-2 md:row-span-2"
         >
             <div
                 role="group"
                 aria-roledescription="carousel"
                 aria-label="Photo album — swipe or use the arrows"
-                className="relative flex h-full flex-col overflow-hidden border border-border bg-text"
+                className="relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-text"
             >
                 {/* Photo stage. Draggable horizontally to flip pages. */}
                 <div className="relative flex-1 overflow-hidden">
@@ -415,8 +417,8 @@ function AlbumCell() {
                             animate="center"
                             exit="exit"
                             transition={{
-                                x: { type: "spring", stiffness: 300, damping: 30 },
-                                opacity: { duration: 0.2 },
+                                x: spring.rail,
+                                opacity: transition.tick,
                             }}
                             drag={reduce ? false : "x"}
                             dragConstraints={{ left: 0, right: 0 }}
@@ -438,7 +440,7 @@ function AlbumCell() {
                         </motion.div>
                     </AnimatePresence>
 
-                    <span className="pointer-events-none absolute left-4 top-4 z-10 border border-background/40 bg-text/40 px-2 py-0.5 text-xs font-medium text-background">
+                    <span className="pointer-events-none absolute left-4 top-4 z-10 rounded-full bg-text/70 px-2 py-0.5 text-xs font-medium text-background">
                         Album
                     </span>
 
@@ -447,7 +449,7 @@ function AlbumCell() {
                         type="button"
                         onClick={() => paginate(-1)}
                         aria-label="Previous photo"
-                        className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center border border-border bg-surface/90 text-text transition-transform duration-150 hover:scale-110"
+                        className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-line bg-surface/90 text-text transition-transform duration-(--duration-fast) hover:scale-110"
                     >
                         <Chevron dir="left" />
                     </button>
@@ -455,7 +457,7 @@ function AlbumCell() {
                         type="button"
                         onClick={() => paginate(1)}
                         aria-label="Next photo"
-                        className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center border border-border bg-surface/90 text-text transition-transform duration-150 hover:scale-110"
+                        className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-line bg-surface/90 text-text transition-transform duration-(--duration-fast) hover:scale-110"
                     >
                         <Chevron dir="right" />
                     </button>
@@ -473,7 +475,7 @@ function AlbumCell() {
                             }}
                             aria-label={`Go to photo ${i + 1}`}
                             aria-current={i === index}
-                            className={`h-2 cursor-pointer border border-border transition-all duration-200 ${
+                            className={`h-2 cursor-pointer rounded-full border border-line transition-all duration-(--duration-fast) ${
                                 i === index ? "w-5 bg-primary" : "w-2 bg-surface hover:bg-quaternary"
                             }`}
                         />
@@ -520,12 +522,12 @@ function PolaroidCell() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, ease: revealEase }}
+            transition={transition.rise}
             className="min-h-80 md:col-span-2 md:row-span-2"
         >
             <div
                 ref={boundsRef}
-                className="relative h-full overflow-hidden border border-border bg-secondary/30"
+                className="relative h-full overflow-hidden rounded-card border border-line bg-secondary/30"
             >
                 <p className="absolute right-4 top-4 z-0 max-w-32 text-right font-heading text-2xl leading-tight tracking-wide text-text">
                     Keepsakes
@@ -569,7 +571,7 @@ function PolaroidCell() {
                                 top: spot.top,
                                 zIndex: top === i ? 30 : 10 + i,
                             }}
-                            className="absolute w-28 cursor-grab touch-none border border-border bg-surface p-2 shadow-[3px_3px_0_rgba(0,0,0,0.25)] active:cursor-grabbing"
+                            className="absolute w-28 cursor-grab touch-none rounded-panel border border-line bg-surface p-2 shadow-card-hover active:cursor-grabbing"
                         >
                             <div className="relative aspect-square overflow-hidden">
                                 <PhotoFrame photo={photo} />
@@ -602,12 +604,12 @@ function DragPileCell() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, ease: revealEase }}
+            transition={transition.rise}
             className="min-h-80 md:col-span-2 md:row-span-2"
         >
             <div
                 ref={boundsRef}
-                className="relative h-full overflow-hidden border border-border bg-quaternary/60"
+                className="relative h-full overflow-hidden rounded-card border border-line bg-quaternary/60"
             >
                 <p className="absolute left-5 top-5 z-0 max-w-40 font-heading text-2xl leading-tight tracking-wide text-text">
                     Off-duty inventory
@@ -652,7 +654,7 @@ function DragPileCell() {
                             width={64}
                             height={64}
                             draggable={false}
-                            className="pointer-events-none h-full w-full drop-shadow-[3px_3px_0_rgba(0,0,0,0.25)]"
+                            className="pointer-events-none h-full w-full drop-shadow-card-hover"
                         />
                     </motion.div>
                 ))}
@@ -671,7 +673,7 @@ function FlipCell() {
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 0.55, ease: revealEase }}
+            transition={transition.rise}
             className="min-h-56 md:col-span-2 [perspective:900px]"
         >
             <button
@@ -686,21 +688,23 @@ function FlipCell() {
                     transition={
                         reduce
                             ? { duration: 0 }
-                            : { type: "spring", stiffness: 220, damping: 22 }
+                            : spring.image
                     }
                     className="relative h-full w-full [transform-style:preserve-3d]"
                 >
-                    <div className="absolute inset-0 flex flex-col items-start justify-between border border-border bg-primary p-5 [backface-visibility:hidden]">
-                        <span className="font-heading text-3xl leading-none tracking-wide text-background">
+                    <div className="absolute inset-0 flex flex-col items-start justify-between rounded-card border border-line bg-primary p-5 [backface-visibility:hidden]">
+                        <span className="font-heading text-title leading-none tracking-wide text-text">
                             Fun fact
                         </span>
-                        <span className="text-sm font-medium text-background/80">
+                        <span className="text-sm font-medium text-text/80">
                             Tap to flip
                         </span>
                     </div>
-                    <div className="absolute inset-0 flex items-center border border-border bg-surface p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                    <div className="absolute inset-0 flex items-center rounded-card border border-line bg-surface p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                         <p className="text-sm leading-relaxed text-text">
-                            I don't want to be known for one thing. I want to collect experiences that make me a better and more interesting person.
+                            I don&apos;t want to be known for one thing. I want to
+                            collect experiences that make me a better and more
+                            interesting person.
                         </p>
                     </div>
                 </motion.div>
@@ -728,7 +732,7 @@ function BentoArticle({ entry, layoutId, onClose }: BentoArticleProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
+                transition={transition.tick}
                 onClick={onClose}
                 className="fixed inset-0 z-50 bg-text/40 backdrop-blur-sm"
             />
@@ -739,9 +743,9 @@ function BentoArticle({ entry, layoutId, onClose }: BentoArticleProps) {
                     role="dialog"
                     aria-modal="true"
                     aria-label={entry.title}
-                    className="pointer-events-auto relative flex max-h-full w-full max-w-3xl flex-col overflow-hidden border border-border bg-surface shadow-[12px_12px_0_0_var(--color-border)]"
+                    className="pointer-events-auto relative flex max-h-full w-full max-w-3xl flex-col overflow-hidden rounded-card border border-line bg-surface shadow-card-hover"
                 >
-                    <div className="relative h-48 shrink-0 overflow-hidden border-b border-border md:h-64">
+                    <div className="relative h-48 shrink-0 overflow-hidden border-b border-line md:h-64">
                         {entry.image ? (
                             <Image
                                 src={entry.image}
@@ -762,7 +766,7 @@ function BentoArticle({ entry, layoutId, onClose }: BentoArticleProps) {
                             type="button"
                             onClick={onClose}
                             aria-label="Close story"
-                            className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center border border-border bg-surface text-text transition-transform duration-150 hover:scale-110"
+                            className="absolute right-4 top-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-line bg-surface text-text transition-transform duration-(--duration-fast) hover:scale-110"
                         >
                             <svg
                                 width="16"
@@ -784,7 +788,7 @@ function BentoArticle({ entry, layoutId, onClose }: BentoArticleProps) {
                         <motion.div
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.4, delay: 0.15, ease: revealEase }}
+                            transition={{ ...transition.rise, delay: 0.15 }}
                             className="flex flex-col gap-5"
                         >
                             <div className="flex flex-wrap items-center gap-3">
@@ -795,7 +799,7 @@ function BentoArticle({ entry, layoutId, onClose }: BentoArticleProps) {
                             </div>
 
                             <div>
-                                <h3 className="font-heading text-5xl leading-none tracking-wide text-text">
+                                <h3 className="font-heading text-chapter leading-none tracking-wide text-text">
                                     {entry.title}
                                 </h3>
                                 <p className="mt-1 text-sm font-medium text-text-muted">
