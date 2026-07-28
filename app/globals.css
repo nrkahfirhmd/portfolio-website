@@ -60,6 +60,9 @@
   /* Spacing scale */
   --spacing-gutter: 2rem;
   --spacing-sidebar: 220px;
+  /* The sidebar's mobile form: a fixed bar across the top instead of a rail
+     down the side. Consumers add env(safe-area-inset-top) on top of this. */
+  --spacing-topbar: 4rem;
 
   /* Radius — three steps: card, panel, inline. */
   --radius-card: 1rem;
