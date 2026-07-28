@@ -53,6 +53,10 @@ export default function Home() {
 
     function handlePointer(e: React.PointerEvent<HTMLElement>) {
         if (reduce || selected) return;
+        // Touch and pen emit pointermove too, but a finger is a press, not a
+        // hover: driving the parallax from it makes the collage lurch out from
+        // under the very item being tapped. Depth is a mouse affordance.
+        if (e.pointerType !== "mouse") return;
 
         const { innerWidth: w, innerHeight: h } = window;
         // A zero-sized viewport (offscreen tab, some embedded contexts) would
@@ -66,7 +70,9 @@ export default function Home() {
     return (
         <main
             onPointerMove={handlePointer}
-            className="relative min-h-screen overflow-hidden bg-background"
+            // dvh, not vh: mobile browsers resolve vh against the viewport with
+            // the toolbars retracted, which parks the footer behind them.
+            className="relative min-h-dvh overflow-hidden bg-background"
         >
             {/* Shell: full-bleed collage, then collapses into the sidebar rail.
                 `w-full` is a load-bearing baseline, not decoration — this element
@@ -83,7 +89,7 @@ export default function Home() {
                         : "rgba(0, 0, 0, 0)",
                 }}
                 transition={shellTransition}
-                className="fixed left-0 top-0 z-40 h-screen w-full overflow-hidden border-r bg-background"
+                className="fixed left-0 top-0 z-40 h-dvh w-full overflow-hidden border-r bg-background"
             >
                 <AnimatePresence>
                     {!selected && (
@@ -144,7 +150,7 @@ export default function Home() {
             <motion.div
                 animate={{ marginLeft: selected ? "var(--spacing-sidebar)" : 0 }}
                 transition={shellTransition}
-                className="min-h-screen"
+                className="min-h-dvh"
             >
                 <AnimatePresence mode="wait">
                     {selected && (

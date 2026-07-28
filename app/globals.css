@@ -160,6 +160,20 @@ body {
   @apply bg-background text-text font-sans;
 }
 
+/* A touch device has no cursor to stand in for, so the dot has nothing to
+   track — it would simply park itself wherever the last tap landed. Hide it,
+   and give back the pointer that `cursor-none` took away for its sake. */
+@media (pointer: coarse) {
+  .cursor-dot {
+    display: none;
+  }
+
+  body,
+  .cursor-none {
+    cursor: auto;
+  }
+}
+
 /* Framer Motion honours this via useReducedMotion; this catches the CSS
    transitions and any animation it doesn't own. */
 @media (prefers-reduced-motion: reduce) {

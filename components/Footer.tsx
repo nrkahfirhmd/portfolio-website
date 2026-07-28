@@ -50,7 +50,9 @@ export default function Footer() {
 
     return (
         <footer className="absolute inset-x-0 bottom-0 z-50">
-            <div className="flex justify-between px-gutter py-4">
+            {/* pb clears the home indicator, which would otherwise sit on top of
+                the city/time row. */}
+            <div className="flex justify-between px-gutter py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
                 <span className="font-bold text-text font-heading text-mark tracking-wide">LAB</span>
 
                 <div className="flex items-center gap-2 text-sm text-text-muted">

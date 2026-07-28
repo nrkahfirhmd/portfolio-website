@@ -35,6 +35,7 @@ export default function FloatingItem({
     label,
     hint,
     className,
+    widthClassName,
     width,
     depth,
     delay,
@@ -131,8 +132,10 @@ export default function FloatingItem({
                             sizes={`${width}px`}
                             // Definite width + auto height: the height prop is a
                             // placeholder, so each asset keeps its own aspect ratio.
-                            style={{ width, height: "auto" }}
-                            className="select-none"
+                            // Width is a class rather than an inline style so it
+                            // can carry a breakpoint; `width` stays the intrinsic
+                            // hint next/image needs.
+                            className={`select-none h-auto ${widthClassName}`}
                         />
                     </motion.div>
 

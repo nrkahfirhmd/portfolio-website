@@ -12,45 +12,75 @@ import FloatingItem from "@/components/FloatingItem";
 import { floatingItems, intro } from "@/lib/home";
 import { spring } from "@/lib/motion";
 
-/** Bounding box the collage occupies at scale 1, measured from lib/home offsets. */
-const DESIGN_WIDTH = 860;
-const DESIGN_HEIGHT = 980;
+/**
+ * Bounding box each arrangement occupies at scale 1, plus the room its chrome
+ * (navbar and footer) needs, measured from the offsets in lib/home.
+ *
+ * There are two because one is not enough: the wide collage is 860px across but
+ * only 980 tall, so on a portrait phone it is width-bound and scales to ~0.36 —
+ * legible type collapses to 6px while two thirds of the viewport height sits
+ * empty. The portrait box is the same pieces restacked into a 340×550 column,
+ * which fits a phone at or near scale 1.
+ */
+/**
+ * `offsetX`/`offsetY` re-centre the composition on the avatar, which is the only
+ * in-flow child and therefore the only thing the flex parent knows how to
+ * centre. Each is half the difference between the overhang on opposing sides:
+ * the wide collage reaches 352px left of the avatar but 240px right, and both
+ * hang the intro card above it — 80px wide, 100px portrait — with nothing below.
+ */
+const DESIGN = {
+    portrait: { width: 390, height: 555, chromeX: 32, chromeY: 140, offsetX: -14, offsetY: 50 },
+    wide: { width: 860, height: 980, chromeX: 64, chromeY: 150, offsetX: 56, offsetY: 40 },
+};
 
-/** Room reserved for the navbar and footer that bracket the stage. */
-const CHROME_X = 64;
-const CHROME_Y = 150;
+/** Must match the `md:` layer in the collage's offsets — they switch together. */
+const WIDE_QUERY = "(min-width: 768px)";
 
 /** Floor the scale: a viewport smaller than the chrome would otherwise yield a
  *  negative factor, which mirrors and collapses the whole collage. */
 const MIN_SCALE = 0.3;
 
 /**
- * Fits the fixed-size collage to the viewport. The composition is scaled as a
- * whole rather than re-laid out per breakpoint, so its proportions survive
- * every screen without a second set of offsets to keep in sync.
+ * Fits the active arrangement to the viewport. Within a breakpoint the
+ * composition is scaled as a whole rather than re-laid out, so its proportions
+ * survive every screen size on only two sets of offsets.
  */
 function useStageScale() {
-    const [scale, setScale] = useState(1);
+    const [fit, setFit] = useState({ scale: 1, box: DESIGN.wide });
 
     useEffect(() => {
-        const update = () =>
-            setScale(
-                Math.max(
-                    MIN_SCALE,
-                    Math.min(
-                        1,
-                        (window.innerWidth - CHROME_X) / DESIGN_WIDTH,
-                        (window.innerHeight - CHROME_Y) / DESIGN_HEIGHT
-                    )
+        const wide = window.matchMedia(WIDE_QUERY);
+
+        const update = () => {
+            const box = wide.matches ? DESIGN.wide : DESIGN.portrait;
+            const scale = Math.max(
+                MIN_SCALE,
+                Math.min(
+                    1,
+                    (window.innerWidth - box.chromeX) / box.width,
+                    // innerHeight, not 100vh: on mobile Safari it excludes the
+                    // retracted toolbars, so the collage is measured against
+                    // the height actually on screen and never sits under them.
+                    (window.innerHeight - box.chromeY) / box.height
                 )
             );
 
+            setFit((prev) =>
+                prev.scale === scale && prev.box === box ? prev : { scale, box }
+            );
+        };
+
         update();
         window.addEventListener("resize", update);
-        return () => window.removeEventListener("resize", update);
+        window.addEventListener("orientationchange", update);
+        return () => {
+            window.removeEventListener("resize", update);
+            window.removeEventListener("orientationchange", update);
+        };
     }, []);
 
-    return scale;
+    return fit;
 }
 
 interface Props {
@@ -62,13 +92,13 @@ interface Props {
 
 /**
  * The landing collage: avatar centre-stage, sticker shortcuts orbiting it, all
- * drifting against the cursor at different depths. The whole composition is
- * scaled per breakpoint rather than re-positioned, so the collage keeps its
- * proportions from 375px up without four sets of offsets to maintain.
+ * drifting against the cursor at different depths. Two arrangements — a wide
+ * one and a portrait one that stacks the same pieces into a column — each
+ * scaled as a whole, so the collage keeps its proportions from 320px up.
  */
 export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
     const reduce = useReducedMotion();
-    const scale = useStageScale();
+    const { scale, box } = useStageScale();
 
     // Avatar sits deepest, so it moves least — sells the layering.
     const avatarX = useTransform(pointerX, (v) => (reduce ? 0 : v * 18));
@@ -98,20 +128,30 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
             <div
                 // --stage-scale lets descendants size a hit area in physical px
                 // despite living inside this scaled subtree.
-                style={{ scale, "--stage-scale": scale } as React.CSSProperties}
-                // translate-x-14: the collage overhangs 352px left of the avatar
-                // but only 240px right, so centring the avatar would leave the
-                // composition visibly off-centre. Shift by half the difference.
-                className="relative z-10 w-[220px] origin-center translate-x-14"
+                style={
+                    {
+                        scale,
+                        "--stage-scale": scale,
+                        // Multiplied by `scale` by hand: `translate` and `scale`
+                        // are separate CSS properties and translate resolves
+                        // first, so an offset left in design units would stay a
+                        // flat pixel count while the collage it re-centres shrank
+                        // around it.
+                        translate: `${box.offsetX * scale}px ${box.offsetY * scale}px`,
+                    } as React.CSSProperties
+                }
+                className="relative z-10 w-[140px] origin-center md:w-[220px]"
             >
-                {/* Intro card — occupies the empty upper-left. Squared off and
+                {/* Intro card — occupies the empty upper-left of the wide
+                    collage, and sits directly above the avatar in the portrait
+                    one, where there is no left margin to occupy. Squared off and
                     set on a hairline, so it reads as a caption on the page
                     rather than a sticker pasted onto it. */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...spring.lift, delay: 0.05 }}
-                    className="absolute left-0 top-0 w-64 -translate-x-[22rem] -translate-y-20 border-l border-line-bold bg-transparent pl-5"
+                    className="absolute -left-[110px] top-0 w-[260px] -translate-y-[100px] border-l border-line-bold bg-transparent pl-5 md:left-0 md:w-64 md:-translate-x-[22rem] md:-translate-y-20"
                 >
                     <p className="whitespace-pre-line font-heading text-caption leading-tight tracking-wide text-text">
                         {intro.role}
@@ -164,8 +204,11 @@ export default function HomeStage({ pointerX, pointerY, onSelect }: Props) {
                             fetchPriority="high"
                             // Definite width + auto height keeps the aspect ratio and
                             // satisfies next/image's one-dimension-modified warning.
-                            style={{ width: 220, height: "auto" }}
+                            // w-full defers that width to the stage container,
+                            // which is the one place the breakpoint is declared.
                             className="
+                                h-auto
+                                w-full
                                 select-none
                                 drop-shadow-lift
                                 transition-[filter] duration-(--duration-fast)

@@ -30,6 +30,7 @@ export default function CustomCursor() {
     return (
         <motion.div
             className="
+                cursor-dot
                 pointer-events-none
                 fixed
                 left-0
