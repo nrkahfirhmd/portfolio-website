@@ -204,13 +204,28 @@ function Hero() {
         <section
             ref={ref}
             onMouseMove={handleMove}
-            className="relative flex min-h-screen flex-col justify-center overflow-hidden px-gutter"
+            // The mobile panel sits below a fixed top bar, so a full viewport
+            // here would push its own height past what is left to fill and add
+            // a bar's worth of dead scroll. dvh, not vh, so a retracted browser
+            // toolbar doesn't do the same thing again.
+            // Centring one small block in a phone viewport spends the leftover
+            // height as two equal voids above and below it — space that reads as
+            // a mistake rather than a decision. Anchored instead: eyebrow at the
+            // top, headline at the bottom, one deliberate column of air between
+            // them for the watermark to live in. Desktop keeps the centred
+            // composition, which has the width to justify it.
+            className="relative flex min-h-[calc(100dvh-var(--spacing-topbar)-env(safe-area-inset-top))] flex-col justify-between overflow-hidden px-gutter pb-28 pt-14 md:min-h-dvh md:justify-center md:py-0"
         >
-            {/* Giant kanji watermark */}
+            {/* Giant kanji watermark. On mobile it sits in the gap between the
+                eyebrow and the headline — the space the anchored layout opens
+                up — instead of directly behind the words, where it was reading
+                as noise across the middle two lines. */}
             <motion.span
                 aria-hidden
                 style={{ y: reduce ? 0 : kanjiY, opacity: kanjiOpacity, x: spx }}
-                className="pointer-events-none absolute right-[-4%] top-1/2 -translate-y-1/2 select-none font-heading text-watermark leading-none text-text"
+                // 22%, not less: at 320px the eyebrow runs to three lines and
+                // anything higher puts the glyph behind them.
+                className="pointer-events-none absolute right-[-10%] top-[22%] translate-y-0 select-none font-heading text-[54vw] leading-none text-text md:right-[-4%] md:top-1/2 md:-translate-y-1/2 md:text-watermark"
             >
                 <motion.span style={{ y: spy }} className="inline-block">
                     {intro.kanji}
@@ -222,13 +237,30 @@ function Hero() {
                     initial={reduce ? false : { opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={transition.rise}
-                    className="mb-8 flex items-center gap-3 font-sans text-mark uppercase tracking-[0.35em] text-text-muted"
+                    // 20px all-caps at 0.35em ran to four lines in a phone's
+                    // measure — a label that reads as a paragraph. Smaller and
+                    // less tracked-out until there is width to spend on it.
+                    //
+                    // items-start, not items-center: against two lines the mark
+                    // floated at the midpoint, attached to neither of them.
+                    className="flex items-start gap-3 font-sans text-sm uppercase leading-relaxed tracking-[0.15em] text-text-muted md:mb-8 md:items-center md:text-mark md:tracking-[0.35em]"
                 >
-                    <span className="inline-block h-3 w-3 bg-primary" />
+                    <span className="mt-1.5 inline-block h-3 w-3 shrink-0 bg-primary md:mt-0" />
                     {intro.role}
                 </motion.p>
+            </motion.div>
 
-                <h1 className="font-heading text-hero font-bold uppercase leading-[0.82] tracking-wide text-text">
+            <motion.div style={{ y: reduce ? 0 : titleY }} className="relative z-10">
+                {/* 0.82 is set for one line per tagline entry. On a phone every
+                    entry wraps, and at that leading the wrapped lines run into
+                    each other — so the mobile value only has to clear its own
+                    ascenders.
+
+                    The mobile size tracks the viewport rather than sitting on
+                    the 3rem floor: at 48px the last line filled the measure to
+                    the pixel on a 390px screen and read as jammed, not
+                    full-bleed. Scaling it leaves a rag on the right. */}
+                <h1 className="font-heading text-[clamp(2.25rem,11.2vw,3rem)] font-bold uppercase leading-[0.95] tracking-wide text-balance text-text md:text-hero md:leading-[0.82]">
                     {intro.tagline.map((line, i) => (
                         <span key={line} className="block overflow-hidden">
                             <motion.span
@@ -297,32 +329,40 @@ function Chapters() {
             {chapters.map((ch) => (
                 <section
                     key={ch.heading}
-                    className="relative grid min-h-[60vh] grid-cols-1 items-center gap-10 px-gutter md:grid-cols-[1fr_1.1fr] md:pl-24"
+                    // Single column has nothing to centre against, so the 60vh
+                    // floor only stretches the gap between chapters. Height
+                    // comes from the prose, and padding does the separating.
+                    className="relative grid grid-cols-1 items-center gap-6 px-gutter py-16 md:min-h-[60vh] md:grid-cols-[1fr_1.1fr] md:gap-10 md:py-0 md:pl-24"
                 >
                     {/* Sticky kanji marker */}
                     <div className="md:sticky md:top-[24vh] md:self-start">
                         <FadeUp>
-                            <span className="mb-24 block font-sans text-label uppercase tracking-[0.35em] text-text-muted">
-                                {ch.kicker}
-                            </span>
-                            <span
-                                aria-hidden
-                                className="block select-none font-heading text-kanji leading-none text-text"
-                            >
-                                {ch.kanji}
-                            </span>
+                            {/* Stacked with a 96px void between them, the marker
+                                cost most of a phone screen before the chapter
+                                even started. Side by side it is one line. */}
+                            <div className="flex items-baseline gap-4 md:block">
+                                <span className="block font-sans text-label uppercase tracking-[0.35em] text-text-muted md:mb-24">
+                                    {ch.kicker}
+                                </span>
+                                <span
+                                    aria-hidden
+                                    className="block select-none font-heading text-[3.5rem] leading-none text-text md:text-kanji"
+                                >
+                                    {ch.kanji}
+                                </span>
+                            </div>
                         </FadeUp>
                     </div>
 
                     <div>
                         <RevealHeading
                             text={ch.heading}
-                            className="mb-8 text-chapter text-text"
+                            className="mb-5 text-chapter text-text md:mb-8"
                         />
                         <div className="max-w-prose space-y-5">
                             {ch.body.map((p, j) => (
                                 <FadeUp key={j} delay={0.1 + j * 0.08}>
-                                    <p className="font-sans text-xl leading-relaxed text-text-muted">
+                                    <p className="font-sans text-lg leading-relaxed text-text-muted md:text-xl">
                                         {p}
                                     </p>
                                 </FadeUp>
@@ -340,8 +380,8 @@ function SkillsMarquee() {
     const row = [...skills, ...skills];
 
     return (
-        <section className="border-y border-line py-14">
-            <FadeUp className="mb-8 px-gutter">
+        <section className="border-y border-line py-10 md:py-14">
+            <FadeUp className="mb-6 px-gutter md:mb-8">
                 <p className="font-sans text-label uppercase tracking-[0.35em] text-text-muted">
                     Tools in the den
                 </p>
@@ -364,7 +404,7 @@ function SkillsMarquee() {
                             {row.map((skill, i) => (
                                 <span
                                     key={`${skill}-${i}`}
-                                    className="flex shrink-0 items-center gap-6 font-heading text-chapter uppercase tracking-wide text-text"
+                                    className="flex shrink-0 items-center gap-4 font-heading text-chapter uppercase tracking-wide text-text md:gap-6"
                                 >
                                     {skill}
                                     {/* Separator, not confetti — muted so the
@@ -387,7 +427,7 @@ function Stats() {
                 <FadeUp
                     key={s.label}
                     delay={i * 0.08}
-                    className={`border-line px-gutter py-16 ${
+                    className={`border-line px-gutter py-10 md:py-16 ${
                         i % 2 === 0 ? "border-r" : ""
                     } ${i !== 3 ? "md:border-r" : "md:border-r-0"} ${
                         i < 2 ? "border-b md:border-b-0" : ""
@@ -396,7 +436,9 @@ function Stats() {
                     <div className="font-heading text-display leading-none text-text">
                         <Counter to={s.value} suffix={s.suffix} />
                     </div>
-                    <p className="mt-3 font-sans text-base uppercase tracking-[0.2em] text-text-muted">
+                    {/* Two columns inside a phone leave ~123px per label; at
+                        16px/0.2em the longest one broke to three lines. */}
+                    <p className="mt-3 font-sans text-sm uppercase tracking-[0.12em] text-text-muted md:text-base md:tracking-[0.2em]">
                         {s.label}
                     </p>
                 </FadeUp>
@@ -411,7 +453,7 @@ function ThemePlay() {
     const swatches = ["bg-primary", "bg-secondary", "bg-tertiary", "bg-quaternary"];
 
     return (
-        <section className="px-gutter py-24">
+        <section className="px-gutter py-16 md:py-24">
             <FadeUp className="mb-6">
                 <p className="font-sans text-label uppercase tracking-[0.35em] text-text-muted">
                     Pick a mood — the whole cave shifts
@@ -428,6 +470,10 @@ function ThemePlay() {
                             key={c}
                             className={`h-full flex-1 ${c}`}
                             whileHover={{ flex: 2.4 }}
+                            // A finger never hovers, so without this the swatches
+                            // are inert on touch and the tap has no feedback at
+                            // all beyond the theme changing underneath it.
+                            whileTap={{ flex: 2.4 }}
                             transition={transition.shuffle}
                         />
                     ))}
@@ -439,10 +485,14 @@ function ThemePlay() {
 
 function Outro() {
     return (
-        <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-gutter text-center">
+        <section className="relative flex min-h-[70dvh] flex-col items-center justify-center overflow-hidden px-gutter py-20 text-center md:min-h-[90dvh] md:py-0">
+            {/* Centred on the section, this landed square on top of the quote —
+                seven lines of body copy with a glyph running through them. It
+                sits above the quote instead, where the only thing it shares
+                space with is the display-size heading. */}
             <span
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none font-heading text-watermark leading-none text-text/[0.06]"
+                className="pointer-events-none absolute left-1/2 top-[3%] -translate-x-1/2 translate-y-0 select-none font-heading text-watermark leading-none text-text/[0.06] md:top-1/2 md:-translate-y-1/2"
             >
                 {outro.kanji}
             </span>
@@ -450,15 +500,17 @@ function Outro() {
             <div className="relative z-10 flex flex-col items-center">
                 <RevealHeading
                     text={outro.heading}
-                    className="mb-8 text-hero text-text"
+                    className="mb-6 text-hero text-text md:mb-8"
                 />
                 <FadeUp>
                     {/* max-w-prose, not max-w-4xl: at 56rem this quote ran past
                         100 characters a line. */}
-                    <p className="mb-4 max-w-prose font-sans text-xl leading-relaxed text-text-muted">
+                    {/* text-pretty, because centred text rags on both sides and
+                        a one-word last line shows badly there. */}
+                    <p className="mb-4 max-w-prose font-sans text-lg leading-relaxed text-pretty text-text-muted md:text-xl">
                         {outro.body}
                     </p>
-                    <p className="mb-12 font-sans text-xl font-medium text-text-muted">
+                    <p className="mb-10 font-sans text-lg font-medium text-text-muted md:mb-12 md:text-xl">
                         {outro.quoter}
                     </p>
                 </FadeUp>
@@ -469,7 +521,7 @@ function Outro() {
                             href="mailto:nurkahfirahmada@gmail.com"
                             // Same solid-ink pill as the "All projects" button on
                             // the work page, scaled up for the closing CTA.
-                            className="inline-flex items-center gap-4 rounded-full bg-text px-10 py-5 font-heading text-2xl uppercase tracking-wide text-background transition-transform duration-(--duration-fast) hover:-translate-y-0.5"
+                            className="inline-flex items-center gap-3 rounded-full bg-text px-8 py-4 font-heading text-xl uppercase tracking-wide text-background transition-transform duration-(--duration-fast) hover:-translate-y-0.5 md:gap-4 md:px-10 md:py-5 md:text-2xl"
                         >
                             {outro.cta}
                             <span aria-hidden>→</span>
@@ -486,7 +538,7 @@ function Outro() {
 /* ------------------------------------------------------------------ */
 export default function AboutStory() {
     return (
-        <div className="relative">
+        <div className="relative pb-[env(safe-area-inset-bottom)]">
             {/* The four-colour bar that used to sit here is gone: it was the
                 loudest thing on the page, and the ContentPanel language it
                 claimed to match no longer has one. The theme is still shown —
