@@ -32,7 +32,11 @@ export default function NotFound() {
     return (
         <main
             onPointerMove={handlePointer}
-            className="relative flex min-h-screen flex-col overflow-hidden bg-background"
+            // dvh, not vh: with a mobile browser's toolbar showing, 100vh is
+            // taller than what is on screen, and this page has stickers pinned
+            // to the bottom edge — they would sit under the toolbar. The safe
+            // area keeps them off the home indicator too.
+            className="relative flex min-h-dvh flex-col overflow-hidden bg-background pb-[env(safe-area-inset-bottom)]"
         >
             {/* The four-colour band that used to sit here is gone, as on the
                 about page: the pattern for this page is a single column with no
@@ -49,7 +53,12 @@ export default function NotFound() {
             ))}
 
             {/* Center stage */}
-            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-gutter text-center">
+            {/* py-24 on a phone: the stickers sit in the corners of this same
+                viewport, and the padding is what keeps the copy out of them.
+                Sideways there is no 96px to give away — at 320px of height the
+                copy and button need nearly all of it — so `short` takes it
+                back and the corner placements do the separating instead. */}
+            <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-gutter py-24 text-center short:py-6 roomy:py-0">
                 {/* 404 — draggable 4s, cursor-tracking eye 0. Hidden from AT:
                     the "0" is a graphic with no text, so a screen reader would
                     otherwise announce a bare "4 4". The heading below carries
@@ -80,7 +89,10 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...transition.rise, delay: 0.4 }}
-                    className="mt-4 max-w-lg font-heading text-caption tracking-wide text-text"
+                    // On a short viewport the stickers are the only thing left in
+                    // the margins, so the copy keeps to a narrower column rather
+                    // than running out to meet them.
+                    className="mt-4 max-w-lg font-heading text-caption tracking-wide text-text short:max-w-sm"
                 >
                     <span className="sr-only">404 — </span>
                     This page wandered off the gallery.
@@ -90,7 +102,9 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...transition.rise, delay: 0.5 }}
-                    className="mt-2 max-w-md text-text-muted"
+                    // text-pretty: centred copy rags on both sides, where a
+                    // one-word last line shows badly.
+                    className="mt-2 max-w-md text-pretty text-text-muted short:max-w-xs"
                 >
                     Drag the digits, poke the stickers — or head back to solid ground.
                 </motion.p>
@@ -102,7 +116,7 @@ export default function NotFound() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ ...transition.rise, delay: 0.6 }}
-                    className="mt-9 flex justify-center"
+                    className="mt-7 flex justify-center roomy:mt-9"
                 >
                     <MagneticButton className="cursor-none">
                         <Link

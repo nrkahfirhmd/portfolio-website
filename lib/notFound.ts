@@ -1,8 +1,18 @@
 export interface StickerItem {
     src: string;
     alt: string;
-    size: number;
-    /** Tailwind position classes. */
+    /**
+     * Rendered width, mobile-first: bare value for a phone, `tiny:` for the
+     * 320–360px band, `roomy:` for a viewport with width *and* height to spare.
+     */
+    sizeClassName: string;
+    /**
+     * Tailwind position classes, in the same three tiers as `sizeClassName`. The
+     * bare classes tuck the sticker into a corner, clear of the centre column
+     * the numerals and copy occupy in a phone's width; `tiny:` pushes it into
+     * the very corner, where the centre column has taken the rest; `roomy:` is
+     * the original placement, which assumes room the phone does not have.
+     */
     className: string;
     rotation: number;
     /** Parallax intensity — higher drifts further with the cursor. */
@@ -15,8 +25,9 @@ export const stickers: StickerItem[] = [
     {
         src: "/sushi.svg",
         alt: "sushi",
-        size: 120,
-        className: "left-[14%] bottom-[16%]",
+        sizeClassName: "w-[76px] tiny:w-[62px] roomy:w-[120px]",
+        className:
+            "left-[4%] bottom-[7%] tiny:left-[1%] tiny:bottom-[3%] roomy:left-[14%] roomy:bottom-[16%]",
         rotation: 8,
         depth: 60,
         colors: {
@@ -28,8 +39,11 @@ export const stickers: StickerItem[] = [
     {
         src: "/shoe.svg",
         alt: "sneaker",
-        size: 150,
-        className: "left-[8%] top-[18%]",
+        // Drawn side-on, so it reads at a smaller box than the others and can
+        // hold the corner without crowding the numerals.
+        sizeClassName: "w-[82px] tiny:w-[64px] roomy:w-[150px]",
+        className:
+            "left-[3%] top-[6%] tiny:left-[1%] tiny:top-[2%] roomy:left-[8%] roomy:top-[18%]",
         rotation: -14,
         depth: 46,
         colors: {
@@ -42,8 +56,9 @@ export const stickers: StickerItem[] = [
     {
         src: "/controller.svg",
         alt: "game controller",
-        size: 130,
-        className: "right-[12%] top-[20%]",
+        sizeClassName: "w-[80px] tiny:w-[62px] roomy:w-[130px]",
+        className:
+            "right-[3%] top-[8%] tiny:right-[1%] tiny:top-[3%] roomy:right-[12%] roomy:top-[20%]",
         rotation: 12,
         depth: 70,
         colors: {
@@ -56,8 +71,9 @@ export const stickers: StickerItem[] = [
     {
         src: "/billiard.svg",
         alt: "billiard ball",
-        size: 120,
-        className: "right-[9%] bottom-[14%]",
+        sizeClassName: "w-[72px] tiny:w-[60px] roomy:w-[120px]",
+        className:
+            "right-[4%] bottom-[9%] tiny:right-[1%] tiny:bottom-[4%] roomy:right-[9%] roomy:bottom-[14%]",
         rotation: -10,
         depth: 38,
         colors: {

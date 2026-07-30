@@ -29,3 +29,11 @@ export function useMediaQuery(query: string) {
 
 /** Mirrors Tailwind's `md` breakpoint (48rem), one pixel below it. */
 export const MOBILE_QUERY = "(max-width: 767.98px)";
+
+/**
+ * The JS twin of the `roomy` CSS variant, inverted: true on anything that is
+ * narrow *or* short. Drag ranges are measured in px against the viewport, so a
+ * phone held sideways needs the compact numbers even though it clears `md` on
+ * width — which `MOBILE_QUERY` alone would miss.
+ */
+export const COMPACT_QUERY = "(max-width: 767.98px), (max-height: 30rem)";

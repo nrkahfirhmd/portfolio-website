@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { spring } from "@/lib/motion";
+import { useMediaQuery, COMPACT_QUERY } from "@/lib/useMediaQuery";
 
 interface Props {
     children: React.ReactNode;
@@ -20,11 +21,19 @@ interface Props {
  */
 export default function DraggableDigit({ children, rotation, delay = 0 }: Props) {
     const reduce = useReducedMotion();
+    const compact = useMediaQuery(COMPACT_QUERY);
 
     return (
         <motion.div
             drag={!reduce}
-            dragConstraints={{ left: -220, right: 220, top: -160, bottom: 160 }}
+            // 220px of sideways travel is over half a phone's width: a digit
+            // dropped at the limit half-hangs off the screen and stays there.
+            // Tighter bounds keep the numeral legible wherever it is let go.
+            dragConstraints={
+                compact
+                    ? { left: -70, right: 70, top: -90, bottom: 90 }
+                    : { left: -220, right: 220, top: -160, bottom: 160 }
+            }
             dragElastic={0.5}
             dragTransition={{ bounceStiffness: 300, bounceDamping: 14 }}
             whileDrag={{ cursor: "grabbing" }}

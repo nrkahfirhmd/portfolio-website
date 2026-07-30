@@ -10,6 +10,7 @@ import {
 import { recolorSvg } from "@/helper/recolorSvg";
 import type { StickerItem } from "@/lib/notFound";
 import { spring } from "@/lib/motion";
+import { useMediaQuery, COMPACT_QUERY } from "@/lib/useMediaQuery";
 
 interface Props extends StickerItem {
     /** Shared, normalized (-0.5..0.5) cursor position from the page. */
@@ -25,7 +26,7 @@ interface Props extends StickerItem {
 export default function ParallaxSticker({
     src,
     alt,
-    size,
+    sizeClassName,
     className,
     rotation,
     depth,
@@ -34,6 +35,7 @@ export default function ParallaxSticker({
     pointerY,
 }: Props) {
     const reduce = useReducedMotion();
+    const compact = useMediaQuery(COMPACT_QUERY);
     const [svg, setSvg] = useState("");
 
     const driftX = useTransform(pointerX, (v) => (reduce ? 0 : v * depth));
@@ -63,11 +65,21 @@ export default function ParallaxSticker({
                 mis-measures when the same element also carries a rotate. */}
             <motion.div
                 drag={!reduce}
+                // A phone gives a sticker ~150px of travel before it is off the
+                // screen for good, and a flick covers that easily — so small
+                // viewports get bounds to spring back from. A desktop one is
+                // roomy enough that bounds only make the drag feel tethered.
+                dragConstraints={
+                    compact
+                        ? { left: -90, right: 90, top: -110, bottom: 110 }
+                        : false
+                }
                 dragElastic={0.4}
                 dragTransition={{ bounceStiffness: 260, bounceDamping: 16 }}
                 whileDrag={{ cursor: "grabbing", zIndex: 30 }}
-                style={{ width: size }}
-                className="cursor-none"
+                // Width is a class rather than an inline style so it can carry a
+                // breakpoint, as with the home stage's floating items.
+                className={`cursor-none ${sizeClassName}`}
             >
                 <motion.div
                     initial={{ opacity: 0, scale: 0.6, rotate: rotation }}

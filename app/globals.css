@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Width alone is the wrong gate for the 404's collage: a phone held sideways
+   clears `md:` on width while having less height than a portrait one, and the
+   wide composition is sized off the height it does not have. `roomy` is the
+   real condition for it — wide *and* tall — and `short` is the escape hatch for
+   anything that has to shrink when the height is the scarce axis. */
+@custom-variant roomy (@media (min-width: 48rem) and (min-height: 30rem));
+@custom-variant short (@media (max-height: 30rem));
+/* Below Tailwind's smallest breakpoint there is a real second phone size: 320
+   to 360px, where the centre column has spread to the full measure and the
+   corner art has nowhere left to stand. `tiny` is where it gives way. */
+@custom-variant tiny (@media (max-width: 22.5rem));
+
 @theme {
   /* Fonts */
   --font-sans: var(--font-rubik), sans-serif;
@@ -161,6 +173,16 @@
 
 body {
   @apply bg-background text-text font-sans;
+}
+
+/* A phone held sideways has the width for 24vw numerals and nowhere near the
+   height: the 404 alone was taller than the viewport, pushing its own copy and
+   button off the bottom. On a short viewport the numerals are sized from the
+   height instead. Scoped to max-height so no desktop or portrait case moves. */
+@media (max-height: 30rem) {
+  :root {
+    --text-numeral: clamp(3.5rem, 22dvh, 17rem);
+  }
 }
 
 /* A touch device has no cursor to stand in for, so the dot has nothing to
