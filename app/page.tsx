@@ -12,6 +12,7 @@ import ContentPanel from "@/components/ContentPanel";
 import Footer from "@/components/Footer";
 import HomeStage from "@/components/HomeStage";
 import Navbar from "@/components/Navbar";
+import RailToggle from "@/components/RailToggle";
 import SidebarMenu from "@/components/SidebarMenu";
 import { navItems } from "@/lib/nav";
 import { MOBILE_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
@@ -28,13 +29,18 @@ const layer = {
 
 export default function Home() {
     const [selected, setSelected] = useState<string | null>(null);
+    const [railHidden, setRailHidden] = useState(false);
     const reduce = useReducedMotion();
 
     // Below `md` there is no room for a 220px rail beside the content, so the
     // sidebar changes shape rather than shrinking: it becomes a bar across the
     // top with the nav folded behind a hamburger.
     const isMobile = useMediaQuery(MOBILE_QUERY);
-    const railOpen = selected !== null && !isMobile;
+    // The shell wears its rail form whenever a section is open on desktop —
+    // including while it is folded away, so the collage never flashes back in
+    // behind the content on the way out.
+    const railMode = selected !== null && !isMobile;
+    const railOpen = railMode && !railHidden;
 
     // Normalized cursor position, shared with every parallax layer on the stage.
     const pointerX = useMotionValue(0);
@@ -45,6 +51,28 @@ export default function Home() {
     const handleSelect = useCallback((label: string) => {
         setSelected((prev) => (prev === label ? null : label));
     }, []);
+
+    const toggleRail = useCallback(() => setRailHidden((v) => !v), []);
+
+    // Leaving the section takes the rail with it, so the next section always
+    // opens with the nav in view rather than inheriting a stale folded state.
+    useEffect(() => {
+        if (!selected) setRailHidden(false);
+    }, [selected]);
+
+    // ⌘/Ctrl+B, the shortcut every editor already trained people on.
+    useEffect(() => {
+        if (!railMode) return;
+
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key.toLowerCase() !== "b" || !(e.metaKey || e.ctrlKey)) return;
+            e.preventDefault();
+            toggleRail();
+        };
+
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [railMode, toggleRail]);
 
     // Escape returns to the collage — the only way back once the sidebar is
     // open. On mobile the bar owns Escape (it closes the panel first), and the
@@ -94,9 +122,18 @@ export default function Home() {
                 {!(isMobile && selected) && (
                     <motion.div
                         key="shell"
+                        id="sidebar-rail"
+                        // Folded away, the rail is still in the tree at zero
+                        // width — `inert` keeps its links out of the tab order
+                        // and off the accessibility tree while it is invisible.
+                        inert={railHidden}
                         initial={{ width: "100%", borderRightColor: "rgba(0, 0, 0, 0)" }}
                         animate={{
-                            width: railOpen ? "var(--spacing-sidebar)" : "100%",
+                            width: railMode
+                                ? railHidden
+                                    ? "0px"
+                                    : "var(--spacing-sidebar)"
+                                : "100%",
                             // Fully transparent black, not `transparent` — Motion can
                             // interpolate the former but treats the keyword as non-animatable.
                             borderRightColor: railOpen
@@ -120,12 +157,16 @@ export default function Home() {
 
                         <section className="relative h-full">
                             <AnimatePresence mode="wait">
-                                {railOpen ? (
+                                {railMode ? (
                                     <motion.div
                                         key="sidebar"
                                         {...layer}
                                         transition={{ duration: 0.35, delay: 0.25 }}
-                                        className="absolute inset-0 flex items-center justify-start"
+                                        // Fixed rail width rather than `inset-0`: the
+                                        // shell animates its own width, and content
+                                        // sized off it would reflow every frame of the
+                                        // morph instead of being clipped by it.
+                                        className="absolute inset-y-0 left-0 flex w-sidebar items-center justify-start"
                                     >
                                         <SidebarMenu
                                             items={navItems}
@@ -163,6 +204,16 @@ export default function Home() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Desktop: the handle that folds the rail away and brings it back.
+                Mobile has no rail to fold — the bar's hamburger is its answer. */}
+            {railMode && (
+                <RailToggle
+                    open={!railHidden}
+                    onToggle={toggleRail}
+                    transition={shellTransition}
+                />
+            )}
 
             {/* Mobile: the sidebar as a fixed bar, nav folded behind a hamburger. */}
             {isMobile && selected && (
