@@ -110,6 +110,13 @@
   --duration-hero: 700ms;
 }
 
+:root {
+  /* Live width of the sidebar rail, rewritten by the page as it opens, folds
+     away, and comes back. Fixed-position children read it instead of the
+     static --spacing-sidebar, which is only ever the rail's *open* width. */
+  --rail-offset: var(--spacing-sidebar);
+}
+
 :root,
 [data-theme="green"] {
   --primary: #659287;

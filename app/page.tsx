@@ -107,6 +107,15 @@ export default function Home() {
     return (
         <main
             onPointerMove={handlePointer}
+            // How much of the left edge the rail is currently claiming. The
+            // content rail clears it with a margin, but anything `fixed` inside
+            // the panel is out of flow and has to read the offset itself —
+            // ProjectArticle's overlay is the one that does.
+            style={
+                {
+                    "--rail-offset": railOpen ? "var(--spacing-sidebar)" : "0px",
+                } as React.CSSProperties
+            }
             // dvh, not vh: mobile browsers resolve vh against the viewport with
             // the toolbars retracted, which parks the footer behind them.
             className="relative min-h-dvh overflow-hidden bg-background"

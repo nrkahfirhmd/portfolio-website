@@ -354,7 +354,12 @@ export default function ProjectArticle({ project, onClose }: Props) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 40 }}
             transition={transition.panel}
-            className="fixed inset-0 z-30 bg-background md:left-sidebar"
+            // Fixed, so no margin reaches it: the overlay reads the rail's
+            // current width off --rail-offset and slides its own left edge to
+            // match — folding the rail away hands it the full viewport.
+            // The transition mirrors the shell's morph, so the two edges travel
+            // together instead of one snapping ahead of the other.
+            className="fixed inset-0 z-30 bg-background transition-[left] duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)] md:left-(--rail-offset)"
         >
             {/* reading progress */}
             <motion.div
