@@ -33,6 +33,54 @@ const SOCIALS = [
 /** The bar and the panel below it both start at the notch, never under it. */
 const BELOW_BAR = "calc(var(--spacing-topbar) + env(safe-area-inset-top))";
 
+/**
+ * The marks the header cycles through, each with its own recolour map.
+ *
+ * Every file ships its own palette, so the maps are written per mark rather
+ * than shared: only the accent colours are redirected at the theme, and the
+ * greys, whites and outlines that give each drawing its shape are left alone.
+ */
+const MARKS = [
+    {
+        src: "/sushi.svg",
+        label: "Sushi",
+        colors: {
+            "#e9885b": "var(--primary)",
+            "#cc5e30": "var(--secondary)",
+            "#f1bb9b": "var(--tertiary)",
+        },
+    },
+    {
+        src: "/controller.svg",
+        label: "Game controller",
+        colors: {
+            "#57C0EB": "var(--primary)",
+            "#E776AA": "var(--secondary)",
+            "#7AC493": "var(--tertiary)",
+            "#CE7FB2": "var(--quaternary)",
+        },
+    },
+    {
+        src: "/billiard.svg",
+        label: "Billiard ball",
+        colors: {
+            "#47A544": "var(--primary)",
+            "#4A8F37": "var(--secondary)",
+            "#3A964F": "var(--tertiary)",
+            "#358A48": "var(--quaternary)",
+        },
+    },
+    {
+        src: "/shoe.svg",
+        label: "Running shoe",
+        colors: {
+            "#a8d600": "var(--primary)",
+            "#5b636b": "var(--secondary)",
+            "#69727a": "var(--tertiary)",
+        },
+    },
+] as const;
+
 function SocialLinks({ className = "" }: { className?: string }) {
     return (
         <>
@@ -79,6 +127,7 @@ export default function SidebarMenu({
     variant = "rail",
 }: Props) {
     const [svg, setSvg] = useState("");
+    const [markIndex, setMarkIndex] = useState(0);
     const [time, setTime] = useState("");
     const [open, setOpen] = useState(false);
     const { cycleTheme } = useTheme();
@@ -99,19 +148,23 @@ export default function SidebarMenu({
         return () => clearInterval(id);
     }, []);
 
+    const mark = MARKS[markIndex];
+
     useEffect(() => {
+        // Clicking fast enough outruns the fetches; without this guard a slow
+        // earlier response can land last and paint the wrong mark.
+        let stale = false;
+
         async function loadSvg() {
-            const raw = await fetch("/sushi.svg").then((r) => r.text());
-            setSvg(
-                recolorSvg(raw, {
-                    "#e9885b": "var(--primary)",
-                    "#cc5e30": "var(--secondary)",
-                    "#f1bb9b": "var(--tertiary)",
-                })
-            );
+            const raw = await fetch(mark.src).then((r) => r.text());
+            if (!stale) setSvg(recolorSvg(raw, mark.colors));
         }
+
         loadSvg();
-    }, []);
+        return () => {
+            stale = true;
+        };
+    }, [mark]);
 
     // The panel covers the page, so the page behind it must not scroll with it.
     useEffect(() => {
@@ -138,8 +191,12 @@ export default function SidebarMenu({
     const sushi = (
         <button
             type="button"
-            onClick={cycleTheme}
-            aria-label="Toggle color theme"
+            onClick={() => {
+                cycleTheme();
+                setMarkIndex((i) => (i + 1) % MARKS.length);
+            }}
+            aria-label={`Change theme — ${mark.label} mark`}
+            title={`${mark.label} — click to change theme`}
             className={
                 variant === "bar"
                     ? // 44×44 tap target around an 8×8 mark, so the sushi keeps
