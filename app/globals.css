@@ -192,6 +192,15 @@ body {
   }
 }
 
+/* Interactive elements set their own `cursor-pointer`/`cursor-grab` etc, which
+   otherwise beats the body's `cursor-none` on hover and brings the native
+   arrow back. Force it off everywhere the custom dot is active. */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
 /* A touch device has no cursor to stand in for, so the dot has nothing to
    track — it would simply park itself wherever the last tap landed. Hide it,
    and give back the pointer that `cursor-none` took away for its sake. */
