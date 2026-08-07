@@ -48,17 +48,20 @@ export default function Home() {
     const smoothX = useSpring(pointerX, { stiffness: 90, damping: 20 });
     const smoothY = useSpring(pointerY, { stiffness: 90, damping: 20 });
 
-    const handleSelect = useCallback((label: string) => {
-        setSelected((prev) => (prev === label ? null : label));
+    // The one door in and out of a section. Leaving takes the rail with it, so
+    // the next section always opens with the nav in view rather than inheriting
+    // a stale folded state; switching between sections leaves the fold alone.
+    const select = useCallback((label: string | null) => {
+        setSelected(label);
+        if (label === null) setRailHidden(false);
     }, []);
 
-    const toggleRail = useCallback(() => setRailHidden((v) => !v), []);
+    const handleSelect = useCallback(
+        (label: string) => select(selected === label ? null : label),
+        [select, selected]
+    );
 
-    // Leaving the section takes the rail with it, so the next section always
-    // opens with the nav in view rather than inheriting a stale folded state.
-    useEffect(() => {
-        if (!selected) setRailHidden(false);
-    }, [selected]);
+    const toggleRail = useCallback(() => setRailHidden((v) => !v), []);
 
     // ⌘/Ctrl+B, the shortcut every editor already trained people on.
     useEffect(() => {
@@ -81,12 +84,12 @@ export default function Home() {
         if (!selected || isMobile) return;
 
         const onKey = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setSelected(null);
+            if (e.key === "Escape") select(null);
         };
 
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
-    }, [selected, isMobile]);
+    }, [selected, isMobile, select]);
 
     function handlePointer(e: React.PointerEvent<HTMLElement>) {
         if (reduce || selected) return;
@@ -256,7 +259,7 @@ export default function Home() {
                             exit={{ opacity: 0, y: -16 }}
                             transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
                         >
-                            <ContentPanel label={selected} onNavigate={setSelected} />
+                            <ContentPanel label={selected} onNavigate={select} />
                         </motion.div>
                     )}
                 </AnimatePresence>

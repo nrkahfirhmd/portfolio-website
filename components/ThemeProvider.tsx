@@ -14,14 +14,15 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [theme, setTheme] = useState<Theme>("green");
-
-    useEffect(() => {
-        const stored = localStorage.getItem("theme");
-        if (stored && THEMES.includes(stored as Theme)) {
-            setTheme(stored as Theme);
-        }
-    }, []);
+    // The inline script in the root layout has already resolved the stored
+    // theme onto <html> by the time this runs, so the attribute — not
+    // localStorage — is the source of truth. Reading it here keeps state and
+    // paint agreeing from the very first render instead of a frame later.
+    const [theme, setTheme] = useState<Theme>(() => {
+        if (typeof document === "undefined") return "green";
+        const painted = document.documentElement.getAttribute("data-theme");
+        return THEMES.includes(painted as Theme) ? (painted as Theme) : "green";
+    });
 
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme);

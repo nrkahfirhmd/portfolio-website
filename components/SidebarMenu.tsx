@@ -81,6 +81,9 @@ const MARKS = [
     },
 ] as const;
 
+/** Raw SVG source per mark, kept across mounts — the files never change. */
+const markCache = new Map<string, string>();
+
 function SocialLinks({ className = "" }: { className?: string }) {
     return (
         <>
@@ -134,18 +137,27 @@ export default function SidebarMenu({
     const reduce = useReducedMotion();
 
     useEffect(() => {
-        const update = () =>
-            setTime(
-                new Intl.DateTimeFormat("en-GB", {
-                    timeZone: TIMEZONE,
-                    hour: "2-digit",
-                    minute: "2-digit",
-                }).format(new Date())
-            );
+        const format = new Intl.DateTimeFormat("en-GB", {
+            timeZone: TIMEZONE,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
 
-        update();
-        const id = setInterval(update, 1000);
-        return () => clearInterval(id);
+        // The clock shows HH:MM, so it only has something new to say once a
+        // minute — ticking every second re-rendered the whole sidebar 59 times
+        // for nothing. Each tick schedules the next one at the coming minute
+        // boundary, which also keeps the flip aligned with the real clock
+        // rather than drifting from whenever the component mounted.
+        let id: ReturnType<typeof setTimeout>;
+
+        const tick = () => {
+            const now = new Date();
+            setTime(format.format(now));
+            id = setTimeout(tick, 60_000 - (now.getSeconds() * 1000 + now.getMilliseconds()));
+        };
+
+        tick();
+        return () => clearTimeout(id);
     }, []);
 
     const mark = MARKS[markIndex];
@@ -156,8 +168,25 @@ export default function SidebarMenu({
         let stale = false;
 
         async function loadSvg() {
-            const raw = await fetch(mark.src).then((r) => r.text());
-            if (!stale) setSvg(recolorSvg(raw, mark.colors));
+            try {
+                // Cycling the theme walks the same four marks over and over, so
+                // a mark is only ever fetched once per session; after that the
+                // swap costs a recolour instead of a round trip.
+                let raw = markCache.get(mark.src);
+
+                if (raw === undefined) {
+                    const res = await fetch(mark.src);
+                    if (!res.ok) throw new Error(`${mark.src}: ${res.status}`);
+                    raw = await res.text();
+                    markCache.set(mark.src, raw);
+                }
+
+                if (!stale) setSvg(recolorSvg(raw, mark.colors));
+            } catch {
+                // A missing mark is a missing decoration, not a broken page:
+                // leave the previous drawing up rather than throwing an
+                // unhandled rejection at the console.
+            }
         }
 
         loadSvg();
@@ -371,11 +400,6 @@ export default function SidebarMenu({
                     {/* Sushi = theme toggle */}
                     {sushi}
                 </div>
-
-                {/* Current section */}
-                {/* <p className="mt-3 font-heading text-caption leading-none text-text-muted">
-                    {selected}
-                </p> */}
             </header>
 
             {/* Navigation */}
