@@ -1,6 +1,8 @@
 # Design System — Portfolio Gateway
 
-Companion to [`spec.md`](./spec.md). Tokens live in [`design-tokens.json`](./design-tokens.json) → generated [`design-tokens.css`](./design-tokens.css). Preview: [`design-system-preview.html`](./design-system-preview.html).
+Companion to [`spec.md`](./spec.md). Tokens live in [`design-tokens.json`](./design-tokens.json) → [`design-tokens.css`](./design-tokens.css).
+
+The shipped page pins one configuration: **centre-stage layout, light theme (not switchable), green accent, comfortable density.** The token layer still supports dark, three other accents, and two other densities — see [Theming](#theming). Nothing on the page exposes a switch.
 
 ## Direction
 
@@ -10,19 +12,43 @@ Minimalist but fun. White paper, one green accent, mono-led type with a single s
 
 Not pure `#F5F5F5` gray — **ink** is a warm, near-black neutral (`#0A0A09` base) so white reads as paper rather than clinical white-on-white. **Green** is a grounded mid-saturation accent (`#1C8049` at 600), not a neon/Tailwind-default green — reads professional at body-text size, still pops as a CTA/hover color.
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-surface` | `#FFFFFF` | Page background |
-| `--color-surface-sunken` | `#FAFAF9` | Sunken panels, code-like surfaces |
-| `--color-ink` | `#0A0A09` | Primary text |
-| `--color-ink-muted` | `#7C7768` | Secondary text |
-| `--color-border` | `#E4E2DD` | Default hairline borders |
-| `--color-accent` | `#1C8049` | Links, active state, primary CTA |
-| `--color-accent-hover` | `#166238` | Hover |
-| `--color-accent-soft` | `#F0FBF4` | Hover fills, badges |
-| `--color-focus-ring` | `#2AA35F` | Keyboard focus ring only |
+| Token | Light | Dark | Use |
+|---|---|---|---|
+| `--color-surface` | `#FFFFFF` | `ink-950` | Page background |
+| `--color-surface-sunken` | `ink-50` | `ink-900` | Sunken panels, code-like surfaces |
+| `--color-ink` | `ink-950` | `ink-50` | Primary text |
+| `--color-ink-muted` | `ink-600` | `ink-400` | Secondary text |
+| `--color-border` | `ink-200` | `ink-800` | Default hairline borders |
+| `--color-accent` | `accent-600` | `accent-400` | Links, active state, primary CTA |
+| `--color-accent-hover` | `accent-700` | `accent-300` | Hover |
+| `--color-accent-soft` | `accent-50` | `accent-950` | Hover fills, badges |
+| `--color-focus-ring` | `accent-500` | `accent-400` | Keyboard focus ring only |
 
-Accent is reserved for interactive/live elements — it should never appear as a static decoration, so every green pixel on the page implies "this responds to you."
+Accent is reserved for interactive/live elements — it should never appear as a static decoration, so every accent pixel on the page implies "this responds to you."
+
+`ink-muted` is `ink-600`, not `ink-500`. `ink-500` on white measures 4.47:1 and misses WCAG AA for the secondary text it carries; `ink-600` clears it at ~7:1.
+
+## Theming
+
+Three independent root attributes, all driven by tokens — no component knows a theme exists.
+
+| Attribute | Values | Default | Shipped as |
+|---|---|---|---|
+| `data-theme` | `light`, `dark`, *(absent)* = follow system | absent | `light` (pinned) |
+| `data-accent` | `green`, `amber`, `indigo`, `clay` | `green` | omitted = green |
+| `data-density` | `compact`, `comfortable`, *(absent)* = default scale | absent | `comfortable` |
+
+These are set once on `<html>` in [`app/layout.tsx`](../app/layout.tsx). Because `data-theme="light"` emits `color-scheme: only light`, a visitor whose OS is in dark mode still gets the light page — that is the intended lock, not an oversight. Removing the attribute is all it takes to re-enable system-following.
+
+**Light/dark** uses a single `light-dark(lightValue, darkValue)` definition per semantic token rather than three duplicated blocks. `color-scheme: light dark` on `:root` makes it follow the system; `data-theme` pins it by switching to `color-scheme: only light|dark`.
+
+**Accent** is an indirection. `data-accent` swaps an `--accent-50…950` ramp, and every semantic accent token points at a step in whatever ramp is live. Adding a fifth accent means adding one ramp — no other file changes. Every ramp's `600` clears 4.5:1 on white and its `400` clears 4.5:1 on ink-950, so contrast survives any theme × accent pairing (verified across all 8).
+
+**Density** retunes the spacing scale only. Type and radius hold, so the identity survives and only breathing room moves. Layout clamps take density on the *ceiling* (`clamp(1rem, 3.5vh, var(--spacing-gutter-lg))`) — the fixed floor keeps the single-viewport no-scroll guarantee intact even on `comfortable`.
+
+**Shadows** are derived with `color-mix()` from the live `--color-accent` and `--color-border-strong`, so they follow theme and accent automatically instead of needing a variant per mode.
+
+Component tokens reference semantic tokens only — never a raw hex. That is the rule that makes all three switches work; a single hardcoded `#FFFFFF` in a component token breaks dark mode for that component.
 
 ## Type
 
@@ -49,7 +75,7 @@ Radius is mixed on purpose: `--radius-lg` (14px) on rectangular surfaces (gatewa
 
 ## Elevation
 
-No ambient gray shadows at rest — surfaces sit flush against the page with a 1px hairline border (`--gateway-card-shadow`, effectively a border-as-shadow so it composites cleanly with the hover state). On hover/focus, elevation becomes a **green-tinted glow** (`--gateway-card-shadow-hover`) plus a small upward translate (`--gateway-card-lift-hover: -4px`) — depth and accent color arrive together, reinforcing that green = "alive right now."
+No ambient gray shadows at rest — surfaces sit flush against the page with a 1px hairline border (`--gateway-card-shadow`, effectively a border-as-shadow so it composites cleanly with the hover state). On hover/focus, elevation becomes an **accent-tinted glow** (`--gateway-card-shadow-hover`) plus a small upward translate (`--gateway-card-lift-hover: -4px`) — depth and accent color arrive together, reinforcing that accent = "alive right now."
 
 ## Motion
 
@@ -71,5 +97,7 @@ No ambient gray shadows at rest — surfaces sit flush against the page with a 1
 
 ## Open items to confirm with Kv
 
-- Photo treatment (duotone in ink/green? full color? masked shape?) — affects whether we need an extra `--color-photo-*` token group.
+- Photo treatment (duotone in ink/accent? full color? masked shape?) — affects whether we need an extra `--color-photo-*` token group.
 - Whether the Fraunces flourish appears in the name or only in the tagline — affects `--typography-display` font-family.
+- Which accent ships as the default. `green` is current; `amber`, `indigo`, and `clay` are built and contrast-verified.
+- Whether the theme/accent/density controls stay user-facing on the live page or are a build-time choice only. They currently live in the `/options` preview chrome, not the page itself.

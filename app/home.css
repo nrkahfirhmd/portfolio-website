@@ -1,0 +1,391 @@
+/* Gateway landing page — centre-stage layout.
+   Every value resolves from docs/design-tokens.css. No raw hex here. */
+
+.home {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  text-align: center;
+  height: 100dvh;
+  overflow: hidden;
+  /* Density moves the ceiling; the fixed floor keeps the single-viewport
+     guarantee on small screens. */
+  padding: clamp(1rem, 3.5vh, var(--spacing-stack-lg))
+    clamp(1rem, 4vw, var(--spacing-gutter-lg));
+}
+
+/* --- entrance stagger --- */
+[data-enter] {
+  animation: enter var(--motion-enter) var(--motion-ease-default) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* --- centre stage --- */
+.stage {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(0.75rem, 2.5vh, var(--spacing-stack));
+  min-height: 0;
+  width: 100%;
+}
+
+.halo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+/* ambient: slow dashed ring, alive on load without any interaction */
+.halo::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: var(--primitive-radius-full);
+  border: 1px dashed var(--accent-200);
+  animation: spin 24s var(--primitive-easing-linear) infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.photo {
+  position: relative;
+  overflow: hidden;
+  width: clamp(96px, 17vh, 168px);
+  aspect-ratio: 1;
+  border-radius: var(--primitive-radius-full);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(
+    150deg,
+    var(--color-accent-soft),
+    var(--color-surface-sunken) 55%,
+    var(--color-border)
+  );
+  display: grid;
+  place-items: center;
+  filter: grayscale(0.35);
+  /* --mx/--my come from CursorParallax; 0 until it mounts */
+  transform: translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 10px));
+  transition:
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    filter var(--motion-hover) var(--motion-ease-default);
+}
+.photo:hover,
+.photo:focus-visible {
+  filter: grayscale(0);
+  box-shadow: var(--shadow-glow-accent);
+}
+.photo svg {
+  width: 55%;
+  height: 55%;
+  color: var(--color-ink-faint);
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 4.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 0.9;
+}
+
+.tagline {
+  margin: 0;
+  max-width: 44ch;
+  font-size: clamp(1rem, 1.6vw, var(--typography-tagline));
+  line-height: 1.55;
+}
+.tagline .muted {
+  color: var(--color-ink-muted);
+}
+.flourish {
+  font-family: var(--font-flourish), var(--primitive-fontFamily-flourish);
+  font-style: italic;
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-accent);
+}
+
+/* --- gateways --- */
+.gates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.2vw, var(--spacing-stack-xs));
+  width: min(100%, 62rem);
+  margin-top: clamp(0.25rem, 1.5vh, var(--spacing-stack-sm));
+}
+
+.gate {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  text-align: left;
+  padding: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  background: var(--gateway-card-bg);
+  border: 1px solid var(--gateway-card-border);
+  border-radius: var(--gateway-card-radius);
+  box-shadow: var(--gateway-card-shadow);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform var(--motion-playful) var(--motion-ease-playful),
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+/* accent fills upward from the base on hover */
+.gate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-accent-soft);
+  transform: translateY(101%);
+  transition: transform var(--motion-playful) var(--motion-ease-playful);
+}
+.gate:hover,
+.gate:focus-visible {
+  transform: translateY(var(--gateway-card-lift-hover));
+  box-shadow: var(--gateway-card-shadow-hover);
+  border-color: var(--gateway-card-border-hover);
+}
+.gate:hover::after,
+.gate:focus-visible::after {
+  transform: translateY(0);
+}
+.gate:active {
+  transform: translateY(-1px);
+  transition-duration: var(--motion-press);
+}
+
+.gate-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.gate h2 {
+  margin: 0;
+  font-size: var(--typography-label);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wide);
+}
+.gate p {
+  margin: 0;
+  font-size: var(--typography-caption);
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+.gate .arrow {
+  position: absolute;
+  top: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  right: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  color: var(--color-ink-faint);
+  transition:
+    transform var(--motion-playful) var(--motion-ease-playful),
+    color var(--motion-hover) linear;
+}
+.gate:hover .arrow,
+.gate:focus-visible .arrow {
+  transform: translate(3px, -3px);
+  color: var(--color-accent);
+}
+
+.chip {
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  border-radius: var(--chip-radius);
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  font-size: 10px;
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  transition: background var(--motion-hover) var(--motion-ease-default);
+}
+.gate:hover .chip,
+.gate:focus-visible .chip {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+/* --- footer --- */
+.foot {
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.5rem, 1.5vh, var(--spacing-stack-sm));
+}
+
+.socials {
+  display: flex;
+  gap: var(--spacing-stack-xs);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.social {
+  width: var(--social-icon-size);
+  height: var(--social-icon-size);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--social-icon-border);
+  border-radius: var(--social-icon-radius);
+  background: var(--social-icon-bg);
+  color: var(--social-icon-fg);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.social svg {
+  width: 18px;
+  height: 18px;
+}
+.social:hover,
+.social:focus-visible {
+  background: var(--social-icon-bg-hover);
+  border-color: var(--social-icon-border-hover);
+  color: var(--social-icon-fg-hover);
+  transform: translateY(-3px) scale(1.06);
+}
+.social:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: var(--motion-press);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-stack-xs);
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  animation: pulse var(--primitive-duration-ambient)
+    var(--primitive-easing-linear) infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/* --- placeholder destination pages --- */
+.soon-page {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--spacing-stack-sm);
+  height: 100dvh;
+  padding: var(--spacing-gutter);
+  text-align: center;
+}
+.soon-page h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+}
+.soon-page p {
+  margin: 0;
+  max-width: 42ch;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--spacing-stack-xs);
+  padding: 0.6rem 1.1rem;
+  font-size: var(--typography-label);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.back:hover,
+.back:focus-visible {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-active);
+}
+
+/* ============================================================
+   RESPONSIVE — one column, still no scroll
+   ============================================================ */
+@media (max-width: 780px) {
+  .gates {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+  .gate {
+    padding: 0.7rem 0.85rem;
+  }
+  .gate p {
+    display: none;
+  }
+  .gate .arrow {
+    top: 50%;
+    right: 0.85rem;
+    transform: translateY(-50%);
+  }
+  .gate:hover .arrow,
+  .gate:focus-visible .arrow {
+    transform: translate(3px, -50%);
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — no transforms, no ambient loops.
+   Colour and opacity feedback stays, so nothing becomes dead.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: var(--motion-hover) !important;
+    transition-property: background-color, border-color, color, opacity,
+      box-shadow !important;
+  }
+  .photo,
+  .gate,
+  .social,
+  .gate .arrow {
+    transform: none !important;
+  }
+  .gate::after {
+    display: none;
+  }
+}
