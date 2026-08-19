@@ -1,0 +1,150 @@
+/* Design Tokens - Auto-generated */
+/* Do not edit directly - modify tokens.json instead */
+
+/* === PRIMITIVES === */
+:root {
+  --primitive-color-white: #FFFFFF;
+  --primitive-color-black: #0A0A09;
+  --primitive-color-ink-50: #FAFAF9;
+  --primitive-color-ink-100: #F2F1EE;
+  --primitive-color-ink-200: #E4E2DD;
+  --primitive-color-ink-300: #CFCCC3;
+  --primitive-color-ink-400: #A6A296;
+  --primitive-color-ink-500: #7C7768;
+  --primitive-color-ink-600: #59564A;
+  --primitive-color-ink-700: #403D35;
+  --primitive-color-ink-800: #282622;
+  --primitive-color-ink-900: #17160F;
+  --primitive-color-ink-950: #0A0A09;
+  --primitive-color-green-50: #F0FBF4;
+  --primitive-color-green-100: #DBF5E4;
+  --primitive-color-green-200: #B8EACB;
+  --primitive-color-green-300: #86D9A8;
+  --primitive-color-green-400: #4FC17F;
+  --primitive-color-green-500: #2AA35F;
+  --primitive-color-green-600: #1C8049;
+  --primitive-color-green-700: #166238;
+  --primitive-color-green-800: #134D2E;
+  --primitive-color-green-900: #113F27;
+  --primitive-color-green-950: #06210F;
+  --primitive-color-red-500: #E5484D;
+  --primitive-color-red-600: #CC3A3F;
+  --primitive-spacing-0: 0;
+  --primitive-spacing-1: 0.25rem;
+  --primitive-spacing-2: 0.5rem;
+  --primitive-spacing-3: 0.75rem;
+  --primitive-spacing-4: 1rem;
+  --primitive-spacing-5: 1.25rem;
+  --primitive-spacing-6: 1.5rem;
+  --primitive-spacing-8: 2rem;
+  --primitive-spacing-10: 2.5rem;
+  --primitive-spacing-12: 3rem;
+  --primitive-spacing-16: 4rem;
+  --primitive-spacing-20: 5rem;
+  --primitive-spacing-24: 6rem;
+  --primitive-spacing-px: 1px;
+  --primitive-fontFamily-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --primitive-fontFamily-flourish: 'Fraunces', 'Times New Roman', serif;
+  --primitive-fontSize-xs: 0.75rem;
+  --primitive-fontSize-sm: 0.875rem;
+  --primitive-fontSize-base: 1rem;
+  --primitive-fontSize-lg: 1.125rem;
+  --primitive-fontSize-xl: 1.375rem;
+  --primitive-fontSize-2xl: 1.75rem;
+  --primitive-fontSize-3xl: 2.25rem;
+  --primitive-fontSize-4xl: 3rem;
+  --primitive-fontSize-5xl: 4rem;
+  --primitive-fontSize-6xl: 5.5rem;
+  --primitive-fontWeight-regular: 400;
+  --primitive-fontWeight-medium: 500;
+  --primitive-fontWeight-semibold: 600;
+  --primitive-fontWeight-bold: 700;
+  --primitive-tracking-tight: -0.02em;
+  --primitive-tracking-normal: 0;
+  --primitive-tracking-wide: 0.04em;
+  --primitive-tracking-wider: 0.12em;
+  --primitive-radius-none: 0;
+  --primitive-radius-sm: 0.25rem;
+  --primitive-radius-md: 0.5rem;
+  --primitive-radius-lg: 0.875rem;
+  --primitive-radius-xl: 1.25rem;
+  --primitive-radius-full: 9999px;
+  --primitive-shadow-none: none;
+  --primitive-shadow-hairline: 0 0 0 1px rgb(10 10 9 / 0.06);
+  --primitive-shadow-lift: 0 8px 24px -12px rgb(10 10 9 / 0.18);
+  --primitive-shadow-glow-green: 0 0 0 1px rgb(42 163 95 / 0.35), 0 8px 28px -8px rgb(42 163 95 / 0.45);
+  --primitive-duration-instant: 80ms;
+  --primitive-duration-fast: 150ms;
+  --primitive-duration-normal: 220ms;
+  --primitive-duration-slow: 420ms;
+  --primitive-duration-ambient: 6000ms;
+  --primitive-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --primitive-easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --primitive-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --primitive-easing-linear: linear;
+}
+
+/* === SEMANTIC === */
+:root {
+  --color-surface: #FFFFFF;
+  --color-surface-sunken: #FAFAF9;
+  --color-ink: #0A0A09;
+  --color-ink-muted: #7C7768;
+  --color-ink-faint: #CFCCC3;
+  --color-border: #E4E2DD;
+  --color-border-strong: #0A0A09;
+  --color-accent: #1C8049;
+  --color-accent-hover: #166238;
+  --color-accent-active: #134D2E;
+  --color-accent-soft: #F0FBF4;
+  --color-accent-soft-hover: #DBF5E4;
+  --color-accent-foreground: #FFFFFF;
+  --color-focus-ring: #2AA35F;
+  --color-danger: #CC3A3F;
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-lg: 3rem;
+  --spacing-stack-xs: 0.5rem;
+  --spacing-stack-sm: 1rem;
+  --spacing-stack: 1.5rem;
+  --spacing-stack-lg: 2.5rem;
+  --typography-display: 5.5rem;
+  --typography-heading: 2.25rem;
+  --typography-tagline: 1.125rem;
+  --typography-body: 1rem;
+  --typography-label: 0.875rem;
+  --typography-caption: 0.75rem;
+  --motion-hover: 150ms;
+  --motion-press: 80ms;
+  --motion-enter: 220ms;
+  --motion-playful: 420ms;
+  --motion-ease-default: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-playful: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* === COMPONENTS === */
+:root {
+  --gateway-card-bg: #FFFFFF;
+  --gateway-card-border: #E4E2DD;
+  --gateway-card-border-hover: #1C8049;
+  --gateway-card-shadow: 0 0 0 1px rgb(10 10 9 / 0.06);
+  --gateway-card-shadow-hover: 0 0 0 1px rgb(42 163 95 / 0.35), 0 8px 28px -8px rgb(42 163 95 / 0.45);
+  --gateway-card-radius: 0.875rem;
+  --gateway-card-padding: 1.5rem;
+  --gateway-card-lift-hover: -4px;
+  --social-icon-size: 2.75rem;
+  --social-icon-bg: #FFFFFF;
+  --social-icon-bg-hover: #F0FBF4;
+  --social-icon-border: #E4E2DD;
+  --social-icon-border-hover: #1C8049;
+  --social-icon-fg: #0A0A09;
+  --social-icon-fg-hover: #134D2E;
+  --social-icon-radius: 9999px;
+  --focus-ring-color: #2AA35F;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 3px;
+  --chip-bg: #0A0A09;
+  --chip-fg: #FFFFFF;
+  --chip-radius: 9999px;
+  --chip-padding-x: 0.75rem;
+  --chip-padding-y: 0.25rem;
+}
