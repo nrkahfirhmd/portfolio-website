@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { BaliClock } from "./bali-clock";
+import { Canopy } from "./canopy";
 import { CursorParallax } from "./cursor-parallax";
 import { GATEWAYS } from "./gateways";
+import { MusicIsland } from "./music-island";
 import { PaintName } from "./paint-name";
 import { SparkWord } from "./spark-word";
 import "./home.css";
@@ -35,6 +37,11 @@ export default function Home() {
     <main className="home">
       <CursorParallax />
 
+      {/* Shade from an offscreen tree, thrown in from the bottom right. Tint
+          and angle come from the daypart the clock writes to <html>; the two
+          layers sway out of step so the wind never looks mechanical. */}
+      <Canopy />
+
       <div className="eyebrow flex justify-between items-center w-full" data-enter style={{ "--i": 0 } as React.CSSProperties}>
         <p className="kv" aria-label="KV">
           <span className="kv-letter" tabIndex={0}>
@@ -46,6 +53,10 @@ export default function Home() {
             <span className="kv-alt" aria-hidden="true">Ɣ</span>
           </span>
         </p>
+        {/* Absolutely centred on this row, so it lines up with the KV mark and
+            the clock without taking part in their justify-between split — and
+            so expanding it can't push either one around. */}
+        <MusicIsland />
         <BaliClock />
       </div>
 

@@ -77,12 +77,12 @@ Because v1 ships without a backend, most launch measurement is manual and qualit
 
 ## Open Questions
 
-- Which exact social/contact links should appear (LinkedIn, GitHub, email, X/Twitter, Discord, itch.io, etc.)? — **Kv**
-- Do the photos and SVG assets already exist, or do they need to be sourced/created as part of this build? — **Kv / design**
-- What should the three gateway links point to before their destination portfolios exist — a dead placeholder, a "coming soon" state, or hidden entirely until ready? (P1 #5 assumes "coming soon," needs confirmation) — **Kv**
-- Is there a hard deadline driving this (e.g., an active job search timeline)? — **Kv**
-- Where will this be hosted/deployed (Vercel, Netlify, GitHub Pages, custom domain)? — **Kv / engineering**
-- Should sound be included at all given the UX risk of autoplay audio, or is muted-by-default sufficient? — **Kv (design)**
+- ~~Which exact social/contact links should appear~~ — **Resolved**: GitHub, LinkedIn, Email, itch.io. Shipped in `app/page.tsx`.
+- ~~Do the photos and SVG assets already exist~~ — **Resolved**: yes, `public/portrait.png` + custom inline SVGs.
+- ~~What should the three gateway links point to before their destination portfolios exist~~ — **Resolved**: "coming soon" chip + placeholder page, keyed off `live` in `app/gateways.ts`.
+- Is there a hard deadline driving this? — **Resolved**: no fixed date, but actively job-searching — ship soon, no hard cutoff.
+- Where will this be hosted/deployed? — **Resolved**: Vercel.
+- Should sound be included at all? — **Resolved**: yes, muted-by-default with a visible toggle. Built as the Dynamic-Island-style player (`app/music-island.tsx`); nothing plays until the visitor presses play. Tracks come from `app/tracks.ts`, files from `public/music/`.
 
 ## Timeline Considerations
 

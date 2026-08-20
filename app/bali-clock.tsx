@@ -14,6 +14,18 @@ function makeFormatter(timeZone: string) {
   });
 }
 
+/** Which of the four window lights is falling across the page. Derived from
+ * the clock's own hour rather than the visitor's machine, so the light always
+ * agrees with the time actually on screen — retarget the clock to Reykjavik
+ * at 2am and the page goes dark with it. */
+function daypart(hour: number) {
+  if (hour < 5) return "night";
+  if (hour < 11) return "morning";
+  if (hour < 16) return "noon";
+  if (hour < 20) return "afternoon";
+  return "night";
+}
+
 /** Matches typed text against the IANA timezone city segment
  * (e.g. "tokyo" -> "Asia/Tokyo"). Native Intl.supportedValuesOf, no lookup table. */
 function findZone(query: string) {
@@ -38,7 +50,13 @@ export function BaliClock() {
   const fmt = useMemo(() => makeFormatter(target.timeZone), [target.timeZone]);
 
   useEffect(() => {
-    const tick = () => setTime(fmt.format(new Date()));
+    const tick = () => {
+      // "HH:MM" in the target zone — the hour is already in there, so the
+      // daypart costs a slice rather than a second Intl formatter.
+      const text = fmt.format(new Date());
+      setTime(text);
+      document.documentElement.dataset.daypart = daypart(Number(text.slice(0, 2)));
+    };
     tick();
     const id = setInterval(tick, 30_000);
     return () => clearInterval(id);

@@ -22,6 +22,13 @@
       "red": {
         "500": { "$value": "#E5484D", "$type": "color" },
         "600": { "$value": "#CC3A3F", "$type": "color" }
+      },
+      "daylight": {
+        "$description": "Colour of light at four points in the day, carried by the canopy shadow. Outside the accent system on purpose: ambient light must never read as an interactive signal. Selected by [data-daypart], which the clock writes to <html>.",
+        "morning":   { "$value": "#9DC4E8", "$type": "color" },
+        "noon":      { "$value": "#FFD97A", "$type": "color" },
+        "afternoon": { "$value": "#FF9D5C", "$type": "color" },
+        "night":     { "$value": "#4A6EA8", "$type": "color" }
       }
     },
     "spacing": {
@@ -160,6 +167,13 @@
 
   "component": {
     "$description": "References semantic tokens only — never a raw hex — so every component inherits theme, accent, and density for free.",
+    "daylight": {
+      "$description": "The canopy shadow, selected by [data-daypart] on <html>. Strength is per-daypart rather than constant: the alpha that reads as a soft noon dapple becomes a heavy wash at night, since the page stays light-themed around the clock. Angle rotates the canopy about its bottom-right anchor — the sun tracking across the sky.",
+      "morning":   { "tint": "{primitive.color.daylight.morning}",   "strength": "0.32", "angle": "14deg" },
+      "noon":      { "tint": "{primitive.color.daylight.noon}",      "strength": "0.3",  "angle": "5deg" },
+      "afternoon": { "tint": "{primitive.color.daylight.afternoon}", "strength": "0.34", "angle": "-12deg" },
+      "night":     { "tint": "{primitive.color.daylight.night}",     "strength": "0.16", "angle": "-8deg" }
+    },
     "gateway-card": {
       "bg":           { "$value": "{semantic.color.surface}", "$type": "color" },
       "border":       { "$value": "{semantic.color.border}", "$type": "color" },

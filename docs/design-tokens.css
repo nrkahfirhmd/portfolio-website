@@ -21,6 +21,15 @@
   --primitive-color-red-500: #e5484d;
   --primitive-color-red-600: #cc3a3f;
 
+  /* Daylight — the colour of light at four points in the day, carried by the
+     foliage shadow. Deliberately outside the accent system: this is ambient
+     light, not an interactive signal, so it must never read as "this responds
+     to you". Only the canopy layer may use these. */
+  --primitive-color-daylight-morning: #9dc4e8;
+  --primitive-color-daylight-noon: #ffd97a;
+  --primitive-color-daylight-afternoon: #ff9d5c;
+  --primitive-color-daylight-night: #4a6ea8;
+
   --primitive-spacing-0: 0;
   --primitive-spacing-px: 1px;
   --primitive-spacing-1: 0.25rem;
@@ -201,6 +210,47 @@
   --shadow-glow-accent:
     0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent),
     0 8px 28px -8px color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
+/* ============================================================
+   DAYPART — the foliage shadow. `data-daypart` is written to <html> by the
+   clock, so the light tracks whichever city the clock is showing rather
+   than the machine's own timezone. Absent attribute = the noon defaults
+   below, which is what pages without a clock get.
+
+   Strength is per-daypart, not a constant: the same alpha that reads as a
+   soft noon dapple turns into a blue wash at night, when the surface it
+   falls on is unchanged (the page stays light-themed around the clock).
+
+   Angle rotates the whole canopy about its bottom-right anchor — the sun
+   tracking across the sky, which swings the shadow with it.
+   ============================================================ */
+:root {
+  --daylight-tint: var(--primitive-color-daylight-noon);
+  --daylight-strength: 0.3;
+  --daylight-angle: 5deg;
+}
+:root[data-daypart="morning"] {
+  --daylight-tint: var(--primitive-color-daylight-morning);
+  --daylight-strength: 0.32;
+  /* Low sun: a long shaft thrown far across the floor. */
+  --daylight-angle: 14deg;
+}
+:root[data-daypart="noon"] {
+  --daylight-tint: var(--primitive-color-daylight-noon);
+  --daylight-strength: 0.3;
+  --daylight-angle: 5deg;
+}
+:root[data-daypart="afternoon"] {
+  --daylight-tint: var(--primitive-color-daylight-afternoon);
+  --daylight-strength: 0.34;
+  --daylight-angle: -12deg;
+}
+:root[data-daypart="night"] {
+  --daylight-tint: var(--primitive-color-daylight-night);
+  /* Weakest by a distance — moonlight, and it sits under body text. */
+  --daylight-strength: 0.16;
+  --daylight-angle: -8deg;
 }
 
 /* Explicit theme choice overrides the system preference in both directions. */
