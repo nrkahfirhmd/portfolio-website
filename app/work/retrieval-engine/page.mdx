@@ -1,0 +1,113 @@
+export const metadata = {
+  title: "Retrieval Engine — Kv",
+  description:
+    "Making retrieval-augmented generation stop confidently inventing things.",
+};
+
+<ArticleHeader slug="retrieval-engine" />
+
+<Figure caption="Drop the system diagram here — the whole pipeline on one screen." />
+
+The first version worked in the demo and fell apart in the first week. Someone
+asked a question whose answer lived in a table spanning two pages, and the model
+answered it anyway — fluently, with a citation, and wrong.
+
+That failure is not a prompting problem. By the time the model sees the context,
+the mistake has already happened. So this is a story about the index.
+
+<Kicker>Problem</Kicker>
+
+## Three failures, in the order they hurt
+
+<Points>
+  <Point title="Chunking cut through meaning">
+    A fixed 512-token window split tables from their headers and procedures from
+    their preconditions.
+  </Point>
+  <Point title="Dense retrieval missed exact terms">
+    Internal part numbers and error codes are precisely the strings embeddings
+    are worst at.
+  </Point>
+  <Point title="Nothing ranked">
+    The top ten by cosine distance went straight into the prompt, relevant or
+    not.
+  </Point>
+</Points>
+
+> Every one of these is invisible in an eval that only measures whether the
+> final answer reads well. They are obvious the moment you look at what was
+> retrieved.
+
+<Kicker>Approach</Kicker>
+
+## Fusing two kinds of search
+
+Dense retrieval understands paraphrase. BM25 understands that `ERR_4021` is a
+literal string. Running both and fusing the rankings costs one extra query and
+fixes an entire class of miss.
+
+```python
+def hybrid(query: str, k: int = 50) -> list[Chunk]:
+    dense = vector_search(embed(query), k=k)
+    lexical = bm25_search(query, k=k)
+    # Reciprocal rank fusion: rank position, not score, so the two
+    # retrievers do not need calibrated scales to be combined.
+    return rrf(dense, lexical)[:k]
+```
+
+Reciprocal rank fusion is the whole trick, and it is four lines. It combines by
+*position* rather than score, so the two retrievers never need their scores
+normalised against each other — which is fortunate, because they cannot be.
+
+<Aside>
+  Worth saying plainly: this is not a clever idea I had. RRF is a 2009 paper.
+  The engineering was in noticing that the failure mode called for it.
+</Aside>
+
+### Then throw most of it away
+
+Fifty candidates go to a cross-encoder reranker, which reads the query and each
+chunk *together* rather than comparing two vectors made in isolation. Eight
+survive. The model sees only those eight.
+
+<Gallery>
+  <Figure ratio="4 / 3" caption="Before: ten chunks by cosine distance." />
+  <Figure ratio="4 / 3" caption="After: eight chunks, reranked." />
+</Gallery>
+
+This is the step people skip because it adds latency. It is also the step that
+moved the needle most.
+
+<Kicker>Implementation</Kicker>
+
+## Repairing the chunks
+
+The chunker now walks the document structure instead of the token stream:
+
+- A table is one chunk, header rows included, however long it is.
+- A heading is prepended to every chunk beneath it, so a fragment still knows
+  what section it came from.
+- Chunks overlap by one sentence, so a claim split across a boundary survives in
+  at least one of them.
+
+None of this is elegant. All of it is the difference between a citation that
+checks out and one that does not.
+
+<Kicker>Reflection</Kicker>
+
+## What I would do differently
+
+Build the retrieval eval before building the retriever. For a month I measured
+answer quality and inferred retrieval quality from it, which is a slow and noisy
+way to learn things I could have measured directly.
+
+<Points>
+  <Point title="Measure retrieval directly">
+    Recall@k against a labelled set, before a single answer is generated.
+  </Point>
+  <Point title="Keep the lexical path">
+    It is unfashionable and it caught the failures nothing else did.
+  </Point>
+</Points>
+
+The [eval harness](/work/eval-harness) came out of that regret.

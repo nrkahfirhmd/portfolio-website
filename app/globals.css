@@ -1,0 +1,400 @@
+@import "tailwindcss";
+/* Single source of truth. Do not copy these values — edit docs/design-tokens.json
+   and regenerate docs/design-tokens.css instead. */
+@import "../docs/design-tokens.css";
+
+/* `inline` so Tailwind emits the utilities without re-declaring the variables:
+   the definitions stay in the token file, which is what keeps [data-theme],
+   [data-accent] and [data-density] working through every utility below. */
+@theme inline {
+  --color-surface: var(--color-surface);
+  --color-surface-sunken: var(--color-surface-sunken);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-faint: var(--color-ink-faint);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-active: var(--color-accent-active);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-soft-hover: var(--color-accent-soft-hover);
+  --color-accent-foreground: var(--color-accent-foreground);
+
+  --font-mono: var(--font-jetbrains-mono), var(--primitive-fontFamily-mono);
+  --font-flourish: var(--font-fraunces), var(--primitive-fontFamily-flourish);
+
+  --text-display: var(--typography-display);
+  --text-display--line-height: 1.02;
+  --text-heading: var(--typography-heading);
+  --text-heading--line-height: 1.15;
+  --text-tagline: var(--typography-tagline);
+  --text-tagline--line-height: 1.6;
+  --text-body: var(--typography-body);
+  --text-body--line-height: 1.65;
+  --text-label: var(--typography-label);
+  --text-label--line-height: 1.55;
+  --text-caption: var(--typography-caption);
+  --text-caption--line-height: 1.4;
+
+  --tracking-tight: var(--primitive-tracking-tight);
+  --tracking-wide: var(--primitive-tracking-wide);
+  --tracking-wider: var(--primitive-tracking-wider);
+
+  --radius-card: var(--gateway-card-radius);
+
+  --spacing-gutter: var(--spacing-gutter);
+  --spacing-gutter-lg: var(--spacing-gutter-lg);
+  --spacing-stack-xs: var(--spacing-stack-xs);
+  --spacing-stack-sm: var(--spacing-stack-sm);
+  --spacing-stack: var(--spacing-stack);
+  --spacing-stack-lg: var(--spacing-stack-lg);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+  }
+
+  /* Uniform on every interactive element regardless of its own hover
+     treatment, and never suppressed. */
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+@layer components {
+  /* The gateway card, reused: hairline at rest, accent glow + lift on
+     hover/focus. Depth and accent arrive together — accent only ever marks
+     something that responds to you. */
+  .card {
+    /* Clips an edge-to-edge thumbnail to the card's own corners. Safe next to
+       box-shadow: the shadow paints outside the border box, so overflow on
+       this element does not clip its own hover glow. */
+    overflow: hidden;
+    background-color: var(--gateway-card-bg);
+    border: 1px solid var(--gateway-card-border);
+    border-radius: var(--gateway-card-radius);
+    box-shadow: var(--gateway-card-shadow);
+    transition:
+      border-color var(--motion-hover) var(--motion-ease-default),
+      box-shadow var(--motion-hover) var(--motion-ease-default),
+      transform var(--motion-playful) var(--motion-ease-playful);
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    border-color: var(--gateway-card-border-hover);
+    box-shadow: var(--gateway-card-shadow-hover);
+    transform: translateY(var(--gateway-card-lift-hover));
+  }
+
+  /* Sunken, borderless: reads as a panel rather than a target. The absence of
+     the hairline is the signal that there is nothing here to click. */
+  .panel {
+    background-color: var(--color-surface-sunken);
+    border-radius: var(--gateway-card-radius);
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--social-icon-size);
+    block-size: var(--social-icon-size);
+    background-color: var(--social-icon-bg);
+    border: 1px solid var(--social-icon-border);
+    border-radius: var(--social-icon-radius);
+    color: var(--social-icon-fg);
+    transition:
+      background-color var(--motion-hover) var(--motion-ease-default),
+      border-color var(--motion-hover) var(--motion-ease-default),
+      color var(--motion-hover) var(--motion-ease-default);
+  }
+
+  .social-icon:hover,
+  .social-icon:focus-visible {
+    background-color: var(--social-icon-bg-hover);
+    border-color: var(--social-icon-border-hover);
+    color: var(--social-icon-fg-hover);
+  }
+
+  /* The link-out arrow on an image card. Translucent rather than the plain
+     ink-faint glyph used elsewhere: it sits on arbitrary photo content, where
+     a bare glyph can vanish, so it carries its own light backdrop for
+     contrast regardless of what's under it. */
+  .card-affordance {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: var(--primitive-radius-full);
+    border: 1px solid color-mix(in srgb, var(--color-border-strong) 12%, transparent);
+    background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+    backdrop-filter: blur(4px);
+    color: var(--color-ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--chip-bg);
+    color: var(--chip-fg);
+    border-radius: var(--chip-radius);
+    padding: var(--chip-padding-y) var(--chip-padding-x);
+    font-size: var(--typography-caption);
+    font-weight: var(--primitive-fontWeight-medium);
+    letter-spacing: var(--primitive-tracking-wider);
+    text-transform: uppercase;
+  }
+
+  /* The accent cursor. Accent is the rule here rather than an exception to it:
+     the pointer is the one thing on the page that is always live. Only mounted
+     on fine pointers, and the class is added by JS so a script failure leaves
+     the native cursor rather than none. */
+  .has-custom-cursor,
+  .has-custom-cursor * {
+    cursor: none;
+  }
+
+  .cursor-root {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--motion-hover) var(--motion-ease-default);
+  }
+
+  .cursor-root[data-visible="true"] {
+    opacity: 1;
+  }
+
+  .cursor-body {
+    display: grid;
+    /* 0fr -> 1fr is what makes the pill animate open to the width of its own
+       label; an auto width would not transition. */
+    grid-template-columns: 0fr;
+    align-items: center;
+    block-size: 0.75rem;
+    min-inline-size: 0.75rem;
+    padding-inline: 0;
+    border-radius: var(--primitive-radius-full);
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+    font-size: var(--typography-caption);
+    font-weight: var(--primitive-fontWeight-medium);
+    letter-spacing: var(--primitive-tracking-wide);
+    transform: translate(-50%, -50%);
+    transition:
+      grid-template-columns var(--motion-playful) var(--motion-ease-playful),
+      block-size var(--motion-playful) var(--motion-ease-playful),
+      padding-inline var(--motion-playful) var(--motion-ease-playful);
+  }
+
+  .cursor-root[data-expanded="true"] .cursor-body {
+    grid-template-columns: 1fr;
+    block-size: 2.25rem;
+    padding-inline: var(--primitive-spacing-4);
+  }
+
+  .cursor-label {
+    display: flex;
+    align-items: center;
+    gap: var(--primitive-spacing-2);
+    min-inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* ------------------------------------------------------------------
+     Long-form article typography.
+
+     Still JetBrains Mono — swapping to a text face for stories would break
+     the identity harder than it would help. Mono is made readable at length
+     instead: a slightly larger size, much looser leading, and a measure held
+     at ~70 characters, which for a 0.6em advance width lands near 44rem.
+
+     Block elements are matched as direct children, so <ArticleHeader> and
+     <Aside> are untouched. Inline elements need a descendant match, so those
+     carry a .not-prose guard.
+     ------------------------------------------------------------------ */
+  .prose {
+    max-inline-size: 44rem;
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    color: var(--color-ink);
+  }
+
+  .prose > * + * {
+    margin-block-start: var(--spacing-stack-sm);
+  }
+
+  .prose > h2 {
+    margin-block-start: var(--spacing-stack-lg);
+    /* Clears the sticky navbar when the section rail jumps to an anchor. */
+    scroll-margin-block-start: 6rem;
+    font-size: var(--primitive-fontSize-2xl);
+    line-height: 1.25;
+    font-weight: var(--primitive-fontWeight-bold);
+    letter-spacing: var(--primitive-tracking-tight);
+  }
+
+  /* A <Kicker> names the section, so the heading under it should sit tight
+     against the label rather than opening its own gap. */
+  .prose > .kicker + h2 {
+    margin-block-start: var(--spacing-stack-xs);
+  }
+
+  /* Column count from auto-fit rather than a prop: the same markup gives two
+     columns for two points and four for four, and collapses on a phone. */
+  .points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--spacing-stack-sm);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--spacing-stack-xs);
+  }
+
+  /* Figures inside a gallery are already spaced by the grid gap. */
+  .gallery > figure {
+    margin-block: 0;
+  }
+
+  .prose > h3 {
+    margin-block-start: var(--spacing-stack);
+    font-size: var(--primitive-fontSize-xl);
+    line-height: 1.35;
+    font-weight: var(--primitive-fontWeight-medium);
+  }
+
+  .prose > ul,
+  .prose > ol {
+    padding-inline-start: var(--primitive-spacing-6);
+  }
+
+  .prose > ul {
+    list-style: disc;
+  }
+
+  .prose > ol {
+    list-style: decimal;
+  }
+
+  .prose > ul > li::marker,
+  .prose > ol > li::marker {
+    color: var(--color-ink-faint);
+  }
+
+  /* Ink, not accent: a quote is emphasis, not something that responds to you. */
+  .prose > blockquote {
+    border-inline-start: 2px solid var(--color-border-strong);
+    padding-inline-start: var(--primitive-spacing-5);
+    color: var(--color-ink-muted);
+  }
+
+  .prose > pre {
+    overflow-x: auto;
+    padding: var(--primitive-spacing-5);
+    border-radius: var(--primitive-radius-lg);
+    background-color: var(--color-surface-sunken);
+    font-size: var(--typography-label);
+    line-height: 1.7;
+  }
+
+  .prose > hr {
+    margin-block: var(--spacing-stack-lg);
+    border-color: var(--color-border);
+  }
+
+  .prose > figure > img,
+  .prose > img {
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: var(--primitive-radius-lg);
+  }
+
+  .prose > figure > figcaption {
+    margin-block-start: var(--primitive-spacing-3);
+    font-size: var(--typography-caption);
+    color: var(--color-ink-muted);
+  }
+
+  .prose :where(a):not(.not-prose *) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: color var(--motion-hover) var(--motion-ease-default);
+  }
+
+  .prose :where(a):not(.not-prose *):hover {
+    color: var(--color-accent-hover);
+  }
+
+  .prose :where(strong):not(.not-prose *) {
+    font-weight: var(--primitive-fontWeight-bold);
+    color: var(--color-ink);
+  }
+
+  /* Pill rather than a soft rectangle — the radius scale is deliberately
+     binary. The hairline does the work, same as .tag: surface-sunken alone is
+     ink-50, which is invisible against white. */
+  .prose :where(code):not(.not-prose *, pre code) {
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--color-border);
+    border-radius: var(--primitive-radius-full);
+    background-color: var(--color-surface-sunken);
+    font-size: 0.9em;
+  }
+
+  /* Hairline pill for tech tags. Deliberately ink, never accent — a tag is a
+     label, not something that responds to you. */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--primitive-radius-full);
+    padding: var(--primitive-spacing-1) var(--primitive-spacing-3);
+    color: var(--color-ink-muted);
+    font-size: var(--typography-caption);
+  }
+}
+
+/* Transform and spring motion are stripped entirely; colour and opacity
+   changes survive at hover speed. */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition:
+      border-color var(--motion-hover) var(--motion-ease-default),
+      box-shadow var(--motion-hover) var(--motion-ease-default);
+  }
+
+  .card:hover,
+  .card:focus-visible {
+    transform: none;
+  }
+
+  .motion-arrow {
+    transition: none;
+  }
+
+  .group:hover .motion-arrow {
+    transform: none;
+  }
+
+  /* The pill still opens — it carries the label, which is information — but it
+     snaps rather than springing. */
+  .cursor-body {
+    transition: none;
+  }
+}
