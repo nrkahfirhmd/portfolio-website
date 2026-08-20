@@ -35,6 +35,65 @@
   color: var(--color-ink-muted);
 }
 
+/* KV mark: each letter swaps to an alt glyph on its own hover/focus only. */
+.kv {
+  margin: 0;
+  text-transform: none;
+}
+.kv-letter {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+.kv-base,
+.kv-alt {
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.kv-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  color: var(--color-accent);
+}
+.kv-letter:hover .kv-base,
+.kv-letter:focus-visible .kv-base {
+  opacity: 0;
+}
+.kv-letter:hover .kv-alt,
+.kv-letter:focus-visible .kv-alt {
+  opacity: 1;
+}
+
+.clock {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin: 0;
+}
+.clock-input {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--color-border);
+  text-align: left;
+  padding: 0;
+  cursor: text;
+  field-sizing: content;
+  min-width: 3ch;
+  max-width: 16ch;
+}
+.clock-input::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+.clock-input:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
 /* --- centre stage --- */
 .stage {
   display: grid;
@@ -104,6 +163,18 @@
   font-weight: var(--primitive-fontWeight-bold);
   letter-spacing: var(--primitive-tracking-tight);
   line-height: 0.9;
+  /* Paintable: PaintName feeds background-image a stack of accent dabs at the
+     cursor, clipped to the glyphs, over a base ink layer. */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+/* background-image is dropped in forced-colors, which would leave the
+   clipped text invisible — hand the color back. */
+@media (forced-colors: active) {
+  .name {
+    color: CanvasText;
+  }
 }
 
 .tagline {
@@ -120,6 +191,51 @@
   font-style: italic;
   font-weight: var(--primitive-fontWeight-medium);
   color: var(--color-accent);
+}
+
+/* tagline words made interactive: reset to inline text, accent + playful
+   press on hover/focus, no static accent unless already .flourish. */
+.spark {
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-block;
+  transition:
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.spark:not(.flourish) {
+  color: inherit;
+}
+.spark:hover,
+.spark:focus-visible {
+  color: var(--color-accent);
+}
+.spark:active {
+  transform: scale(0.9) rotate(-4deg);
+  transition-duration: var(--motion-press);
+}
+.spark-burst {
+  display: inline-block;
+  animation: spark-pop var(--motion-playful) var(--motion-ease-playful);
+}
+@keyframes spark-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(1.3) rotate(-8deg);
+  }
+  65% {
+    transform: scale(0.95) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 /* --- gateways --- */
@@ -144,30 +260,40 @@
   box-shadow: var(--gateway-card-shadow);
   overflow: hidden;
   isolation: isolate;
+  /* Exit clock — quicker than the enter below, so pulling the cursor away
+     feels crisp instead of trailing a slow bounce behind it. */
   transition:
-    transform var(--motion-playful) var(--motion-ease-playful),
+    transform var(--motion-hover) var(--motion-ease-default),
     box-shadow var(--motion-hover) var(--motion-ease-default),
     border-color var(--motion-hover) var(--motion-ease-default);
 }
-/* accent fills upward from the base on hover */
+/* Accent tint fades in. It used to slide up 101%, which raced the card's own
+   upward lift on a second clock — two upward vectors at different speeds. */
 .gate::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
   background: var(--color-accent-soft);
-  transform: translateY(101%);
-  transition: transform var(--motion-playful) var(--motion-ease-playful);
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
 }
 .gate:hover,
 .gate:focus-visible {
   transform: translateY(var(--gateway-card-lift-hover));
   box-shadow: var(--gateway-card-shadow-hover);
   border-color: var(--gateway-card-border-hover);
+  /* Enter clock — one duration across every property so lift, glow, border
+     and tint land together. Spring stays on the lift alone; overshooting a
+     colour or a shadow reads as a flicker, not as bounce. */
+  transition-duration: var(--motion-enter);
+  transition-timing-function: var(--motion-ease-playful),
+    var(--motion-ease-default), var(--motion-ease-default);
 }
 .gate:hover::after,
 .gate:focus-visible::after {
-  transform: translateY(0);
+  opacity: 1;
+  transition-duration: var(--motion-enter);
 }
 .gate:active {
   transform: translateY(-1px);
@@ -198,13 +324,14 @@
   right: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
   color: var(--color-ink-faint);
   transition:
-    transform var(--motion-playful) var(--motion-ease-playful),
-    color var(--motion-hover) linear;
+    transform var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
 }
 .gate:hover .arrow,
 .gate:focus-visible .arrow {
   transform: translate(3px, -3px);
   color: var(--color-accent);
+  transition-duration: var(--motion-enter);
 }
 
 .chip {
@@ -212,16 +339,19 @@
   color: var(--chip-fg);
   border-radius: var(--chip-radius);
   padding: var(--chip-padding-y) var(--chip-padding-x);
-  font-size: 10px;
+  font-size: var(--typography-caption);
   font-weight: var(--primitive-fontWeight-medium);
   letter-spacing: var(--primitive-tracking-wider);
   text-transform: uppercase;
-  transition: background var(--motion-hover) var(--motion-ease-default);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
 }
 .gate:hover .chip,
 .gate:focus-visible .chip {
   background: var(--color-accent);
   color: var(--color-accent-foreground);
+  transition-duration: var(--motion-enter);
 }
 
 /* --- footer --- */
@@ -347,13 +477,22 @@
 @media (max-width: 780px) {
   .gates {
     grid-template-columns: 1fr;
-    gap: 0.4rem;
+    /* 8px floor keeps adjacent tap targets from crowding each other. */
+    gap: 0.5rem;
   }
   .gate {
     padding: 0.7rem 0.85rem;
+    /* room for the arrow, which is centred on this breakpoint */
+    padding-right: 2.25rem;
   }
+  /* Clamped rather than hidden — the description is the only thing telling a
+     phone visitor what each portfolio actually contains. */
   .gate p {
-    display: none;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
   }
   .gate .arrow {
     top: 50%;
@@ -382,7 +521,8 @@
   .photo,
   .gate,
   .social,
-  .gate .arrow {
+  .gate .arrow,
+  .spark {
     transform: none !important;
   }
   .gate::after {

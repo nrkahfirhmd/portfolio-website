@@ -15,7 +15,7 @@ const flourish = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Kv — AI, Game Dev, Systems Engineering",
+  title: "Kahfi R — Technology Orchestrator",
   description:
     "Kahfi Rahmada. Systems that think, play, and hold up under load.",
 };

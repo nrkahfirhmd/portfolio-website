@@ -13,8 +13,24 @@ body {
   margin: 0;
 }
 
+/* Self-healing cutting mat: accent-tinted surface with an even 24px grid.
+   The line color is derived from the live accent via color-mix, so the mat
+   follows theme and accent like the shadows do. */
 body {
-  background: var(--color-surface);
+  --mat-fine: color-mix(in srgb, var(--color-accent) 10%, transparent);
+
+  background-color: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface));
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      var(--mat-fine) 0 1px,
+      transparent 1px 24px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      var(--mat-fine) 0 1px,
+      transparent 1px 24px
+    );
   color: var(--color-ink);
   font-family: var(--font-mono), var(--primitive-fontFamily-mono);
   font-size: var(--typography-body);
