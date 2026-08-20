@@ -1,0 +1,1173 @@
+/* Gateway landing page — centre-stage layout.
+   Every value resolves from docs/design-tokens.css. No raw hex here. */
+
+.home {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  text-align: center;
+  height: 100dvh;
+  overflow: hidden;
+  /* Density moves the ceiling; the fixed floor keeps the single-viewport
+     guarantee on small screens. */
+  padding: clamp(1rem, 3.5vh, var(--spacing-stack-lg))
+    clamp(1rem, 4vw, var(--spacing-gutter-lg));
+}
+
+/* ============================================================
+   CANOPY — dappled shade from offscreen foliage, thrown in from the bottom
+   right and thinning out toward the top left. Tinted and angled by
+   `data-daypart` on <html>. Decorative only, so it is aria-hidden in the
+   markup and sits behind everything on z-index -1: body's background
+   propagates to the canvas, which paints below negative z-index, so the
+   shade lands on the cutting mat without covering any content.
+   ============================================================ */
+.canopy {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: var(--daylight-strength);
+  /* Tints the paper rather than laying a coloured film over it — white under
+     multiply takes the hue, which is what light on a surface actually does. */
+  mix-blend-mode: multiply;
+  transition: opacity var(--motion-enter) var(--motion-ease-default);
+}
+/* The daypart only exists once the clock has mounted. Staying dark until then
+   avoids showing the default tint and then snapping to the real one. */
+:root:not([data-daypart]) .canopy {
+  opacity: 0;
+}
+
+/* Two layers of leaves rather than one: a single sway looks like a sheet of
+   paper moving, whereas two drifting at different speeds and phases never
+   line up, which is what sells it as depth rather than one flat cut-out. */
+.leaves {
+  position: absolute;
+  /* Viewport plus a margin on every side: the margin is what the sway swings
+     into, so no rotation can drag an edge into frame. A 1.5deg turn about the
+     corner moves the far side ~5vmax, so 12vmax of bleed is ample. */
+  inset: -12vmax;
+  width: auto;
+  height: auto;
+  /* The daypart's sun angle. Kept on `rotate` so the sway below can own
+     `transform` outright without the two overwriting each other. */
+  rotate: var(--daylight-angle);
+  /* Pivot at the trunk: a small rotation here swings the far leaves a long
+     way, which is how a branch actually moves. */
+  transform-origin: bottom right;
+  transition: background-color var(--motion-enter) var(--motion-ease-default);
+}
+
+/* Leaf clusters, densest at the bottom-right anchor and scattering as they
+   reach across the page. Sizes and offsets are irregular on purpose — an even
+   distribution reads as a pattern, not as foliage. */
+/* The tree is drawn in canopy.tsx and inherits its colour from here, so one
+   token recolours limbs and leaves together. */
+.leaves {
+  fill: var(--daylight-tint);
+  stroke: var(--daylight-tint);
+  transition:
+    fill var(--motion-enter) var(--motion-ease-default),
+    stroke var(--motion-enter) var(--motion-ease-default);
+}
+
+.leaves-near {
+  /* Barely blurred: a near shadow keeps its leaf edges, and softening it far
+     enough to lose them is exactly what stops it reading as a tree. */
+  filter: blur(0.28vmax);
+  animation: sway-near 11s ease-in-out infinite;
+}
+
+.leaves-far {
+  /* Softer, fainter and slower — distance reads as blur plus lag. */
+  filter: blur(0.8vmax);
+  opacity: 0.65;
+  animation: sway-far 17s ease-in-out infinite;
+}
+
+/* Defs only; nothing paints from this one. */
+.canopy-defs {
+  position: absolute;
+}
+
+/* Wind. Rotation does the work; the small translate stops the motion looking
+   like a rigid hinge. Three stops rather than two so the gust and the recovery
+   are not mirror images of each other. */
+@keyframes sway-near {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  35% {
+    transform: rotate(1.5deg) translate(-1.1vmax, 0.3vmax);
+  }
+  70% {
+    transform: rotate(-0.7deg) translate(0.5vmax, -0.2vmax);
+  }
+}
+@keyframes sway-far {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  40% {
+    transform: rotate(-1.1deg) translate(0.8vmax, -0.4vmax);
+  }
+  75% {
+    transform: rotate(0.6deg) translate(-0.4vmax, 0.2vmax);
+  }
+}
+
+/* The cutting-mat grid, redrawn on canvas so it can bend around the pointer.
+   z-index -2 puts it below the canopy's -1, preserving the existing stack:
+   body background → grid → foliage shade (multiply) → content. */
+.grid-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* ============================================================
+   CURSOR DOT — replaces the OS cursor with a solid circle. z-index sits
+   above the music island (highest other value on the page, 50) so nothing
+   can paint over it.
+
+   Split across two elements on purpose — position and scale are two
+   different kinds of motion and each needs its own animation mechanism:
+   .cursor-wrap (position, driven every frame by JS in cursor-dot.tsx — a
+   CSS transition can't do this, since the target itself moves every frame)
+   and .cursor-dot (scale, a real CSS transition on the spring/overshoot
+   pair, since it only changes on hover in/out and a transition is exactly
+   the right tool there).
+   ============================================================ */
+.cursor-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--primitive-radius-full);
+  /* Inverts via backdrop-filter, not a mix-blend-mode + fill-colour hack.
+     That distinction matters here specifically because a *black* fill under
+     mix-blend-mode: difference is a mathematical no-op — difference(0, C) =
+     |0-C| = C, the identity function, so the circle would render as exactly
+     whatever's behind it, i.e. perfectly invisible everywhere, not just over
+     one problem surface. backdrop-filter: invert(1) samples and inverts the
+     real pixels behind the shape instead of blending a chosen fill against
+     them, so there's no fill colour to pick badly in the first place — no
+     degenerate case exists for ANY colour, "black" included. It also means
+     "black" and "inverted" stop being in tension: over this page's mostly
+     light paper background, inverting reads as dark/near-black already, so
+     both readings of the request are satisfied by the same mechanism. */
+  /* No manual -webkit-backdrop-filter alongside this: writing both let the
+     build's CSS pipeline (Lightning CSS) coalesce them into a single
+     prefixed-only declaration and silently drop the standard property.
+     Autoprefixing is the pipeline's job — one declaration, and it emits
+     whatever prefixes its target browsers need. */
+  background: transparent;
+  backdrop-filter: invert(1);
+  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
+  /* --motion-playful/--motion-ease-playful — the design system's own name
+     for this pair is literally "cursor-follow settle" (docs/design-
+     system.md's motion table), which is exactly this transition. */
+  transition: transform var(--motion-playful) var(--motion-ease-playful);
+}
+.cursor-dot--active {
+  --cursor-scale: 2;
+}
+
+/* Native cursor off wherever this is mounted (set by CursorDot on <html>),
+   with one carve-out: the clock's editable city field, where a caret
+   position is real information a circle cannot give back. `!important` on
+   both sides because the hide rule must beat every UA default (`pointer` on
+   links and buttons, `text` on inputs), and the carve-out must then beat the
+   hide rule in turn — matching importance, so it comes down to specificity,
+   and the class selector already wins over the bare `*`. */
+[data-cursor-hidden] * {
+  cursor: none !important;
+}
+[data-cursor-hidden] .clock-input {
+  cursor: text !important;
+}
+
+/* --- entrance stagger --- */
+[data-enter] {
+  animation: enter var(--motion-enter) var(--motion-ease-default) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.eyebrow {
+  /* Containing block for the music island, which centres itself on this row. */
+  position: relative;
+  margin: 0;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+/* KV mark: each letter swaps to an alt glyph on its own hover/focus only. */
+.kv {
+  margin: 0;
+  text-transform: none;
+}
+.kv-letter {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+}
+.kv-base,
+.kv-alt {
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.kv-alt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  color: var(--color-accent);
+}
+.kv-letter:hover .kv-base,
+.kv-letter:focus-visible .kv-base {
+  opacity: 0;
+}
+.kv-letter:hover .kv-alt,
+.kv-letter:focus-visible .kv-alt {
+  opacity: 1;
+}
+
+.clock {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  margin: 0;
+}
+.clock-input {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px dashed var(--color-border);
+  text-align: left;
+  padding: 0;
+  cursor: text;
+  field-sizing: content;
+  min-width: 3ch;
+  max-width: 16ch;
+}
+.clock-input::placeholder {
+  color: inherit;
+  opacity: 1;
+}
+.clock-input:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* --- centre stage --- */
+.stage {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(0.75rem, 2.5vh, var(--spacing-stack));
+  min-height: 0;
+  width: 100%;
+}
+
+.halo {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+/* ambient: slow dashed ring, alive on load without any interaction */
+.halo::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: var(--primitive-radius-full);
+  border: 1px dashed var(--accent-200);
+  animation: spin 24s var(--primitive-easing-linear) infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.photo {
+  position: relative;
+  overflow: hidden;
+  width: clamp(96px, 17vh, 168px);
+  aspect-ratio: 1;
+  border-radius: var(--primitive-radius-full);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(
+    150deg,
+    var(--color-accent-soft),
+    var(--color-surface-sunken) 55%,
+    var(--color-border)
+  );
+  display: grid;
+  place-items: center;
+  filter: grayscale(0.35);
+  /* --mx/--my come from CursorParallax; 0 until it mounts */
+  transform: translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 10px));
+  transition:
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    filter var(--motion-hover) var(--motion-ease-default);
+}
+/* Brush-to-reveal layer over the portrait (app/brush-reveal.tsx). Sits above
+   the photo but inside it, so .photo's own grayscale filter and cursor
+   parallax carry the revealed art along with the rest of the image. */
+.brush-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+/* Decode-only source for the canvas. Not `display: none` — that can stop the
+   image loading at all, and the canvas has nothing to read. Zero-sized and
+   clipped instead, so it still decodes. */
+.brush-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.photo:hover,
+.photo:focus-visible {
+  filter: grayscale(0);
+  box-shadow: var(--shadow-glow-accent);
+}
+.photo svg {
+  width: 55%;
+  height: 55%;
+  color: var(--color-ink-faint);
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 4.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 0.9;
+  /* Paintable: PaintName feeds background-image a stack of accent dabs at the
+     cursor, clipped to the glyphs, over a base ink layer. */
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+/* background-image is dropped in forced-colors, which would leave the
+   clipped text invisible — hand the color back. */
+@media (forced-colors: active) {
+  .name {
+    color: CanvasText;
+  }
+}
+
+.tagline {
+  margin: 0;
+  max-width: 44ch;
+  font-size: clamp(1rem, 1.6vw, var(--typography-tagline));
+  line-height: 1.55;
+}
+.tagline .muted {
+  color: var(--color-ink-muted);
+}
+.flourish {
+  font-family: var(--font-flourish), var(--primitive-fontFamily-flourish);
+  font-style: italic;
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-accent);
+}
+
+/* tagline words made interactive: reset to inline text, accent + playful
+   press on hover/focus, no static accent unless already .flourish. */
+.spark {
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-block;
+  transition:
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.spark:not(.flourish) {
+  color: inherit;
+}
+.spark:hover,
+.spark:focus-visible {
+  color: var(--color-accent);
+}
+.spark:active {
+  transform: scale(0.9) rotate(-4deg);
+  transition-duration: var(--motion-press);
+}
+.spark-burst {
+  display: inline-block;
+  animation: spark-pop var(--motion-playful) var(--motion-ease-playful);
+}
+@keyframes spark-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(1.3) rotate(-8deg);
+  }
+  65% {
+    transform: scale(0.95) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* --- gateways --- */
+.gates {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1.2vw, var(--spacing-stack-xs));
+  width: min(100%, 62rem);
+  margin-top: clamp(0.25rem, 1.5vh, var(--spacing-stack-sm));
+}
+
+.gate {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  text-align: left;
+  padding: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  background: var(--gateway-card-bg);
+  border: 1px solid var(--gateway-card-border);
+  border-radius: var(--gateway-card-radius);
+  box-shadow: var(--gateway-card-shadow);
+  overflow: hidden;
+  isolation: isolate;
+  /* Exit clock — quicker than the enter below, so pulling the cursor away
+     feels crisp instead of trailing a slow bounce behind it. */
+  transition:
+    transform var(--motion-hover) var(--motion-ease-default),
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+/* Accent tint fades in. It used to slide up 101%, which raced the card's own
+   upward lift on a second clock — two upward vectors at different speeds. */
+.gate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-accent-soft);
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.gate:hover,
+.gate:focus-visible {
+  transform: translateY(var(--gateway-card-lift-hover));
+  box-shadow: var(--gateway-card-shadow-hover);
+  border-color: var(--gateway-card-border-hover);
+  /* Enter clock — one duration across every property so lift, glow, border
+     and tint land together. Spring stays on the lift alone; overshooting a
+     colour or a shadow reads as a flicker, not as bounce. */
+  transition-duration: var(--motion-enter);
+  transition-timing-function: var(--motion-ease-playful),
+    var(--motion-ease-default), var(--motion-ease-default);
+}
+.gate:hover::after,
+.gate:focus-visible::after {
+  opacity: 1;
+  transition-duration: var(--motion-enter);
+}
+.gate:active {
+  transform: translateY(-1px);
+  transition-duration: var(--motion-press);
+}
+
+.gate-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.gate h2 {
+  margin: 0;
+  font-size: var(--typography-label);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wide);
+}
+.gate p {
+  margin: 0;
+  font-size: var(--typography-caption);
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+.gate .arrow {
+  position: absolute;
+  top: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  right: clamp(0.875rem, 1.8vh, var(--gateway-card-padding));
+  color: var(--color-ink-faint);
+  transition:
+    transform var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.gate:hover .arrow,
+.gate:focus-visible .arrow {
+  transform: translate(3px, -3px);
+  color: var(--color-accent);
+  transition-duration: var(--motion-enter);
+}
+
+.chip {
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  border-radius: var(--chip-radius);
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.gate:hover .chip,
+.gate:focus-visible .chip {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  transition-duration: var(--motion-enter);
+}
+
+/* --- footer --- */
+.foot {
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.5rem, 1.5vh, var(--spacing-stack-sm));
+}
+
+.socials {
+  display: flex;
+  gap: var(--spacing-stack-xs);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.social {
+  width: var(--social-icon-size);
+  height: var(--social-icon-size);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--social-icon-border);
+  border-radius: var(--social-icon-radius);
+  background: var(--social-icon-bg);
+  color: var(--social-icon-fg);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.social svg {
+  width: 18px;
+  height: 18px;
+}
+.social:hover,
+.social:focus-visible {
+  background: var(--social-icon-bg-hover);
+  border-color: var(--social-icon-border-hover);
+  color: var(--social-icon-fg-hover);
+  transform: translateY(-3px) scale(1.06);
+}
+.social:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: var(--motion-press);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-stack-xs);
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  animation: pulse var(--primitive-duration-ambient)
+    var(--primitive-easing-linear) infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/* ============================================================
+   MUSIC ISLAND — Dynamic-Island-style player, centred on the eyebrow row
+   between the KV mark and the clock. Inverted (ink surface / paper text),
+   reusing the same language as the `chip` token group.
+
+   Absolute, never in flow: collapsed it would be taller than the caption-sized
+   row it sits on and would stretch it, and expanded it would shove the KV mark
+   and the clock apart. Out of flow, neither can happen, and the page keeps its
+   single-viewport no-scroll guarantee.
+   ============================================================ */
+.island {
+  position: absolute;
+  /* Anchored by its top edge, offset by half the collapsed height, so the
+     collapsed pill sits centred on the row and expanding only grows downward.
+     Centring the expanded box instead would push its top edge up past the
+     page's padding, where `.home`'s overflow:hidden would clip it. */
+  top: calc(50% - 1.125rem);
+  left: 50%;
+  z-index: 50;
+  translate: -50% 0;
+  overflow: hidden;
+  /* .eyebrow uppercases and letterspaces everything inside it, which is right
+     for a caption row and wrong for track titles. Children that do want the
+     tracking ask for it themselves. */
+  text-transform: none;
+  letter-spacing: normal;
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  box-shadow: var(--shadow-lift);
+  /* Collapsed box. Both dimensions are explicit because the morph animates
+     them — `auto` height would make the expand un-transitionable. */
+  --island-h: 2.25rem;
+  width: 11.5rem;
+  height: var(--island-h);
+  /* Half the collapsed height: a true pill, but deliberately NOT
+     `--primitive-radius-full`. Radius is clamped to min(value, height/2), and
+     interpolating from 9999px stays above that ceiling for ~99% of the morph —
+     the corners would track half-height the whole way up (a pill that keeps
+     growing) and then snap to the target on the last frame. A concrete
+     18px → 20px never reaches the clamp, so the curve stays put. */
+  border-radius: calc(var(--island-h) / 2);
+  transition:
+    width var(--motion-playful) var(--motion-ease-playful),
+    height var(--motion-playful) var(--motion-ease-playful),
+    border-radius var(--motion-playful) var(--motion-ease-playful);
+}
+.island[data-open] {
+  width: min(21rem, calc(100vw - 2rem));
+  height: 7rem;
+  border-radius: var(--primitive-radius-xl);
+}
+
+/* Both layers occupy the same box and cross-fade; `inert` (set in the
+   component) is what actually removes the hidden one from tab order. */
+.island-pill,
+.island-panel {
+  position: absolute;
+  inset: 0;
+  transition:
+    opacity var(--motion-hover) var(--motion-ease-default),
+    scale var(--motion-playful) var(--motion-ease-playful);
+}
+.island-pill[inert],
+.island-panel[inert] {
+  opacity: 0;
+  scale: 0.94;
+  pointer-events: none;
+}
+
+/* --- collapsed pill --- */
+.island-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.island-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: none;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+}
+/* Spins only while playing — a still record reads as "stopped" at a glance. */
+.island[data-playing] .island-dot {
+  animation: spin 3s var(--primitive-easing-linear) infinite;
+  background: conic-gradient(
+    var(--color-accent),
+    var(--chip-bg) 55%,
+    var(--color-accent)
+  );
+}
+.island-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+}
+
+/* --- equalizer --- */
+.island-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 0.875rem;
+  flex: none;
+}
+.island-eq i {
+  width: 2px;
+  height: 35%;
+  border-radius: var(--primitive-radius-sm);
+  background: var(--color-accent);
+  transform-origin: bottom;
+}
+.island[data-playing] .island-eq i {
+  animation: eq 900ms var(--motion-ease-default) infinite alternate;
+  /* Staggered start so the bars never move as one block. */
+  animation-delay: calc(var(--b) * -220ms);
+}
+@keyframes eq {
+  from {
+    height: 25%;
+  }
+  to {
+    height: 100%;
+  }
+}
+/* --- expanded panel --- */
+.island-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.875rem;
+}
+/* --- the record --- */
+.island-art {
+  position: relative;
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+}
+
+/* Grooves, accent label and spindle hole, painted as one gradient stack so the
+   record is a single element with nothing to keep in sync while it turns.
+   The conic wedge is an off-centre sheen — without it a radially symmetric
+   disc looks completely still no matter how fast it actually spins. */
+.disc {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--primitive-radius-full);
+  background:
+    radial-gradient(circle at 50% 50%, var(--chip-bg) 0 7%, transparent 7.5%),
+    radial-gradient(
+      circle at 50% 50%,
+      var(--color-accent) 7.5% 27%,
+      transparent 27.5%
+    ),
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      color-mix(in srgb, var(--chip-fg) 15%, transparent) 0 1px,
+      transparent 1px 3px
+    ),
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      color-mix(in srgb, var(--chip-fg) 20%, transparent) 45deg,
+      transparent 100deg
+    ),
+    color-mix(in srgb, var(--chip-fg) 13%, var(--chip-bg));
+}
+.island[data-playing] .disc {
+  animation: spin 2.4s var(--primitive-easing-linear) infinite;
+}
+
+/* Notes stream up out of the record. Three glyphs on one staggered loop read
+   as a continuous trickle, so there is no particle system to run. They are
+   allowed to escape .island-art and are clipped by the island itself. */
+.notes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.notes i {
+  position: absolute;
+  left: 50%;
+  top: 0.25rem;
+  font-style: normal;
+  font-size: 0.8125rem;
+  line-height: 1;
+  color: var(--color-accent);
+  opacity: 0;
+}
+/* Linear, not the house ease-out: `ease-default` front-loads so hard that the
+   note hits full travel by the halfway point and then hangs motionless for the
+   rest of the loop. Drifting smoke wants a constant rise. */
+.island[data-playing] .notes i {
+  animation: float-note 2.4s var(--primitive-easing-linear) infinite;
+  animation-delay: calc(var(--n) * -0.8s);
+}
+.notes i:nth-child(2) {
+  --dx: -18px;
+}
+.notes i:nth-child(3) {
+  --dx: 20px;
+}
+/* Opacity is held flat through the middle so the note stays lit for most of
+   its climb and only fades near the top, rather than blinking out early. */
+@keyframes float-note {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.55) rotate(-12deg);
+  }
+  15%,
+  65% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx, 8px)), -2rem) scale(1.05)
+      rotate(16deg);
+  }
+}
+.island-meta {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+.island-track,
+.island-artist {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: var(--typography-caption);
+}
+.island-artist {
+  color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
+  /* Overflow measurement (music-island.tsx) reads scrollWidth off the inner
+     span, so the wrapper's own overflow/ellipsis is what actually clips —
+     ellipsis is the resting state and the fallback under reduced motion,
+     where the animation below is stripped by the global rule and this line
+     never moves. */
+}
+.island-artist-text {
+  display: inline-block;
+}
+/* Only mounted once JS has measured real overflow, so a line that fits never
+   pays for the animation. Bounces rather than loops so there is exactly one
+   text node — a looping marquee needs a duplicated copy, which a screen
+   reader would announce twice. */
+.island-artist[data-marquee] {
+  text-overflow: clip;
+}
+.island-artist[data-marquee] .island-artist-text {
+  animation: marquee var(--marquee-duration, 3s) ease-in-out infinite;
+}
+/* Collapsing the panel doesn't unmount it, so pause the scroll while
+   inert — no reason to animate text nobody can see. */
+.island:not([data-open]) .island-artist[data-marquee] .island-artist-text {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  0%,
+  12% {
+    transform: translateX(0);
+  }
+  45%,
+  60% {
+    transform: translateX(var(--marquee-distance));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Native range input: keyboard seeking, arrow keys and all, for free. */
+.island-seek {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  margin: 0.15rem 0;
+  border-radius: var(--primitive-radius-full);
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    var(--color-accent) calc(var(--p, 0) * 100%),
+    color-mix(in srgb, var(--chip-fg) 25%, transparent) 0
+  );
+}
+.island-seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--primitive-radius-full);
+  background: var(--chip-fg);
+}
+.island-seek::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: none;
+  border-radius: var(--primitive-radius-full);
+  background: var(--chip-fg);
+}
+.island-seek:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.island-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.island-time {
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
+}
+.island-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  margin-inline: auto;
+}
+.island-row button {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--primitive-radius-full);
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.island-row button svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Play/pause is the primary action, so it gets the accent and the fill. */
+.island-play svg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+.island-play {
+  color: var(--color-accent);
+}
+.island-row button:hover:not(:disabled),
+.island-row button:focus-visible:not(:disabled) {
+  background: color-mix(in srgb, var(--chip-fg) 14%, transparent);
+  transform: scale(1.1);
+}
+.island-row button:active:not(:disabled) {
+  transform: scale(0.92);
+  transition-duration: var(--motion-press);
+}
+.island-row button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.island-close svg {
+  /* The chevron points up: it dismisses back into the notch. */
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 780px) {
+  /* The eyebrow row's KV mark and clock sit either side of the island, so
+     the collapsed pill has to give up width before it collides with them. */
+  .island {
+    width: 8.5rem;
+  }
+  .island-title {
+    display: none;
+  }
+}
+
+/* --- placeholder destination pages --- */
+.soon-page {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--spacing-stack-sm);
+  height: 100dvh;
+  padding: var(--spacing-gutter);
+  text-align: center;
+}
+.soon-page h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+}
+.soon-page p {
+  margin: 0;
+  max-width: 42ch;
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--spacing-stack-xs);
+  padding: 0.6rem 1.1rem;
+  font-size: var(--typography-label);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.back:hover,
+.back:focus-visible {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-active);
+}
+
+/* ============================================================
+   RESPONSIVE — one column, still no scroll
+   ============================================================ */
+@media (max-width: 780px) {
+  .gates {
+    grid-template-columns: 1fr;
+    /* 8px floor keeps adjacent tap targets from crowding each other. */
+    gap: 0.5rem;
+  }
+  .gate {
+    padding: 0.7rem 0.85rem;
+    /* room for the arrow, which is centred on this breakpoint */
+    padding-right: 2.25rem;
+  }
+  /* Clamped rather than hidden — the description is the only thing telling a
+     phone visitor what each portfolio actually contains. */
+  .gate p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+  .gate .arrow {
+    top: 50%;
+    right: 0.85rem;
+    transform: translateY(-50%);
+  }
+  .gate:hover .arrow,
+  .gate:focus-visible .arrow {
+    transform: translate(3px, -50%);
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — no transforms, no ambient loops.
+   Colour and opacity feedback stays, so nothing becomes dead.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: var(--motion-hover) !important;
+    transition-property: background-color, border-color, color, opacity,
+      box-shadow !important;
+  }
+  .photo,
+  .gate,
+  .social,
+  .gate .arrow,
+  .spark,
+  .island-artist-text {
+    transform: none !important;
+  }
+  /* The animation above is stripped, so a long artist/game line would
+     otherwise hard-cut mid-word with no signal there's more. Ellipsis is the
+     resting state everywhere else in the panel — restore it here too. */
+  .island-artist[data-marquee] {
+    text-overflow: ellipsis;
+  }
+  .gate::after {
+    display: none;
+  }
+  .island-pill[inert],
+  .island-panel[inert] {
+    scale: none;
+  }
+  /* Ambient motion is disabled outright here, not slowed — and a note frozen
+     mid-flight is just a stray glyph floating beside the record. */
+  .notes {
+    display: none;
+  }
+  /* The equalizer loses its animation, so give the bars fixed uneven heights —
+     a row of four identical stubs reads as broken, not as "audio". */
+  .island-eq i:nth-child(1) {
+    height: 45%;
+  }
+  .island-eq i:nth-child(2) {
+    height: 100%;
+  }
+  .island-eq i:nth-child(3) {
+    height: 65%;
+  }
+  .island-eq i:nth-child(4) {
+    height: 85%;
+  }
+}

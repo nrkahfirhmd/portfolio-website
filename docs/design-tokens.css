@@ -1,35 +1,37 @@
-/* Design Tokens - Auto-generated */
-/* Do not edit directly - modify tokens.json instead */
+/* Design Tokens */
+/* Generated from design-tokens.json — keep the two in sync when editing. */
 
-/* === PRIMITIVES === */
+/* ============================================================
+   PRIMITIVES — fixed ramps. Never theme-dependent.
+   ============================================================ */
 :root {
-  --primitive-color-white: #FFFFFF;
-  --primitive-color-black: #0A0A09;
-  --primitive-color-ink-50: #FAFAF9;
-  --primitive-color-ink-100: #F2F1EE;
-  --primitive-color-ink-200: #E4E2DD;
-  --primitive-color-ink-300: #CFCCC3;
-  --primitive-color-ink-400: #A6A296;
-  --primitive-color-ink-500: #7C7768;
-  --primitive-color-ink-600: #59564A;
-  --primitive-color-ink-700: #403D35;
+  --primitive-color-white: #ffffff;
+  --primitive-color-black: #0a0a09;
+  --primitive-color-ink-50: #fafaf9;
+  --primitive-color-ink-100: #f2f1ee;
+  --primitive-color-ink-200: #e4e2dd;
+  --primitive-color-ink-300: #cfccc3;
+  --primitive-color-ink-400: #a6a296;
+  --primitive-color-ink-500: #7c7768;
+  --primitive-color-ink-600: #59564a;
+  --primitive-color-ink-700: #403d35;
   --primitive-color-ink-800: #282622;
-  --primitive-color-ink-900: #17160F;
-  --primitive-color-ink-950: #0A0A09;
-  --primitive-color-green-50: #F0FBF4;
-  --primitive-color-green-100: #DBF5E4;
-  --primitive-color-green-200: #B8EACB;
-  --primitive-color-green-300: #86D9A8;
-  --primitive-color-green-400: #4FC17F;
-  --primitive-color-green-500: #2AA35F;
-  --primitive-color-green-600: #1C8049;
-  --primitive-color-green-700: #166238;
-  --primitive-color-green-800: #134D2E;
-  --primitive-color-green-900: #113F27;
-  --primitive-color-green-950: #06210F;
-  --primitive-color-red-500: #E5484D;
-  --primitive-color-red-600: #CC3A3F;
+  --primitive-color-ink-900: #17160f;
+  --primitive-color-ink-950: #0a0a09;
+  --primitive-color-red-500: #e5484d;
+  --primitive-color-red-600: #cc3a3f;
+
+  /* Daylight — the colour of light at four points in the day, carried by the
+     foliage shadow. Deliberately outside the accent system: this is ambient
+     light, not an interactive signal, so it must never read as "this responds
+     to you". Only the canopy layer may use these. */
+  --primitive-color-daylight-morning: #9dc4e8;
+  --primitive-color-daylight-noon: #ffd97a;
+  --primitive-color-daylight-afternoon: #ff9d5c;
+  --primitive-color-daylight-night: #4a6ea8;
+
   --primitive-spacing-0: 0;
+  --primitive-spacing-px: 1px;
   --primitive-spacing-1: 0.25rem;
   --primitive-spacing-2: 0.5rem;
   --primitive-spacing-3: 0.75rem;
@@ -42,9 +44,11 @@
   --primitive-spacing-16: 4rem;
   --primitive-spacing-20: 5rem;
   --primitive-spacing-24: 6rem;
-  --primitive-spacing-px: 1px;
-  --primitive-fontFamily-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-  --primitive-fontFamily-flourish: 'Fraunces', 'Times New Roman', serif;
+
+  --primitive-fontFamily-mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace,
+    "SF Mono", Menlo, monospace;
+  --primitive-fontFamily-flourish: "Fraunces", "Times New Roman", serif;
+
   --primitive-fontSize-xs: 0.75rem;
   --primitive-fontSize-sm: 0.875rem;
   --primitive-fontSize-base: 1rem;
@@ -55,96 +59,260 @@
   --primitive-fontSize-4xl: 3rem;
   --primitive-fontSize-5xl: 4rem;
   --primitive-fontSize-6xl: 5.5rem;
+
   --primitive-fontWeight-regular: 400;
   --primitive-fontWeight-medium: 500;
   --primitive-fontWeight-semibold: 600;
   --primitive-fontWeight-bold: 700;
+
   --primitive-tracking-tight: -0.02em;
   --primitive-tracking-normal: 0;
   --primitive-tracking-wide: 0.04em;
   --primitive-tracking-wider: 0.12em;
+
   --primitive-radius-none: 0;
   --primitive-radius-sm: 0.25rem;
   --primitive-radius-md: 0.5rem;
   --primitive-radius-lg: 0.875rem;
   --primitive-radius-xl: 1.25rem;
   --primitive-radius-full: 9999px;
-  --primitive-shadow-none: none;
-  --primitive-shadow-hairline: 0 0 0 1px rgb(10 10 9 / 0.06);
-  --primitive-shadow-lift: 0 8px 24px -12px rgb(10 10 9 / 0.18);
-  --primitive-shadow-glow-green: 0 0 0 1px rgb(42 163 95 / 0.35), 0 8px 28px -8px rgb(42 163 95 / 0.45);
+
   --primitive-duration-instant: 80ms;
   --primitive-duration-fast: 150ms;
   --primitive-duration-normal: 220ms;
   --primitive-duration-slow: 420ms;
   --primitive-duration-ambient: 6000ms;
+
   --primitive-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --primitive-easing-out: cubic-bezier(0.16, 1, 0.3, 1);
   --primitive-easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --primitive-easing-linear: linear;
 }
 
-/* === SEMANTIC === */
-:root {
-  --color-surface: #FFFFFF;
-  --color-surface-sunken: #FAFAF9;
-  --color-ink: #0A0A09;
-  --color-ink-muted: #7C7768;
-  --color-ink-faint: #CFCCC3;
-  --color-border: #E4E2DD;
-  --color-border-strong: #0A0A09;
-  --color-accent: #1C8049;
-  --color-accent-hover: #166238;
-  --color-accent-active: #134D2E;
-  --color-accent-soft: #F0FBF4;
-  --color-accent-soft-hover: #DBF5E4;
-  --color-accent-foreground: #FFFFFF;
-  --color-focus-ring: #2AA35F;
-  --color-danger: #CC3A3F;
-  --spacing-gutter: 1.5rem;
-  --spacing-gutter-lg: 3rem;
-  --spacing-stack-xs: 0.5rem;
-  --spacing-stack-sm: 1rem;
-  --spacing-stack: 1.5rem;
-  --spacing-stack-lg: 2.5rem;
-  --typography-display: 5.5rem;
-  --typography-heading: 2.25rem;
-  --typography-tagline: 1.125rem;
-  --typography-body: 1rem;
-  --typography-label: 0.875rem;
-  --typography-caption: 0.75rem;
-  --motion-hover: 150ms;
-  --motion-press: 80ms;
-  --motion-enter: 220ms;
-  --motion-playful: 420ms;
-  --motion-ease-default: cubic-bezier(0.16, 1, 0.3, 1);
-  --motion-ease-playful: cubic-bezier(0.34, 1.56, 0.64, 1);
+/* ============================================================
+   ACCENT RAMPS — swap the whole accent identity with [data-accent].
+   Every ramp is mid-saturation and grounded; none read as neon.
+   Each 600 clears 4.5:1 on white, each 400 clears 4.5:1 on ink-950.
+   ============================================================ */
+:root,
+:root[data-accent="green"] {
+  --accent-50: #f0fbf4;
+  --accent-100: #dbf5e4;
+  --accent-200: #b8eacb;
+  --accent-300: #86d9a8;
+  --accent-400: #4fc17f;
+  --accent-500: #2aa35f;
+  --accent-600: #1c8049;
+  --accent-700: #166238;
+  --accent-800: #134d2e;
+  --accent-900: #113f27;
+  --accent-950: #06210f;
 }
 
-/* === COMPONENTS === */
+:root[data-accent="amber"] {
+  --accent-50: #fdf8ed;
+  --accent-100: #f9edd0;
+  --accent-200: #f2daa1;
+  --accent-300: #e7c065;
+  --accent-400: #d9a22f;
+  --accent-500: #bf8718;
+  --accent-600: #9a6a11;
+  --accent-700: #7a530f;
+  --accent-800: #63430f;
+  --accent-900: #52380f;
+  --accent-950: #2e1e06;
+}
+
+:root[data-accent="indigo"] {
+  --accent-50: #f1f3fd;
+  --accent-100: #e1e5fb;
+  --accent-200: #c7cef7;
+  --accent-300: #a2adf0;
+  --accent-400: #7b87e6;
+  --accent-500: #5b63d8;
+  --accent-600: #4746c4;
+  --accent-700: #3a38a0;
+  --accent-800: #313081;
+  --accent-900: #2c2c68;
+  --accent-950: #1b1a3d;
+}
+
+:root[data-accent="clay"] {
+  --accent-50: #fdf2f3;
+  --accent-100: #fbe3e5;
+  --accent-200: #f7cbd0;
+  --accent-300: #f0a5ad;
+  --accent-400: #e47483;
+  --accent-500: #d44c5e;
+  --accent-600: #b93348;
+  --accent-700: #9b283c;
+  --accent-800: #822438;
+  --accent-900: #6f2234;
+  --accent-950: #3e0e19;
+}
+
+/* ============================================================
+   SEMANTIC — one definition per token via light-dark().
+   Light value first, dark value second. [data-theme] pins one side.
+   ============================================================ */
 :root {
-  --gateway-card-bg: #FFFFFF;
-  --gateway-card-border: #E4E2DD;
-  --gateway-card-border-hover: #1C8049;
-  --gateway-card-shadow: 0 0 0 1px rgb(10 10 9 / 0.06);
-  --gateway-card-shadow-hover: 0 0 0 1px rgb(42 163 95 / 0.35), 0 8px 28px -8px rgb(42 163 95 / 0.45);
-  --gateway-card-radius: 0.875rem;
-  --gateway-card-padding: 1.5rem;
+  color-scheme: light dark;
+
+  --color-surface: light-dark(var(--primitive-color-white), var(--primitive-color-ink-950));
+  --color-surface-sunken: light-dark(var(--primitive-color-ink-50), var(--primitive-color-ink-900));
+  --color-ink: light-dark(var(--primitive-color-ink-950), var(--primitive-color-ink-50));
+  /* ink-600, not ink-500: ink-500 on white is 4.47:1 and misses AA for the
+     secondary text it carries. ink-600 clears it at ~7:1. */
+  --color-ink-muted: light-dark(var(--primitive-color-ink-600), var(--primitive-color-ink-400));
+  --color-ink-faint: light-dark(var(--primitive-color-ink-300), var(--primitive-color-ink-600));
+  --color-border: light-dark(var(--primitive-color-ink-200), var(--primitive-color-ink-800));
+  --color-border-strong: light-dark(var(--primitive-color-ink-950), var(--primitive-color-ink-50));
+
+  /* Accent steps shift one stop lighter in dark so contrast holds on ink. */
+  --color-accent: light-dark(var(--accent-600), var(--accent-400));
+  --color-accent-hover: light-dark(var(--accent-700), var(--accent-300));
+  --color-accent-active: light-dark(var(--accent-800), var(--accent-200));
+  --color-accent-soft: light-dark(var(--accent-50), var(--accent-950));
+  --color-accent-soft-hover: light-dark(var(--accent-100), var(--accent-900));
+  --color-accent-foreground: light-dark(var(--primitive-color-white), var(--primitive-color-ink-950));
+
+  --color-focus-ring: light-dark(var(--accent-500), var(--accent-400));
+  --color-danger: light-dark(var(--primitive-color-red-600), var(--primitive-color-red-500));
+
+  --spacing-gutter: var(--primitive-spacing-6);
+  --spacing-gutter-lg: var(--primitive-spacing-12);
+  --spacing-stack-xs: var(--primitive-spacing-2);
+  --spacing-stack-sm: var(--primitive-spacing-4);
+  --spacing-stack: var(--primitive-spacing-6);
+  --spacing-stack-lg: var(--primitive-spacing-10);
+
+  --typography-display: var(--primitive-fontSize-6xl);
+  --typography-heading: var(--primitive-fontSize-3xl);
+  --typography-tagline: var(--primitive-fontSize-lg);
+  --typography-body: var(--primitive-fontSize-base);
+  --typography-label: var(--primitive-fontSize-sm);
+  --typography-caption: var(--primitive-fontSize-xs);
+
+  --motion-hover: var(--primitive-duration-fast);
+  --motion-press: var(--primitive-duration-instant);
+  --motion-enter: var(--primitive-duration-normal);
+  --motion-playful: var(--primitive-duration-slow);
+  --motion-ease-default: var(--primitive-easing-out);
+  --motion-ease-playful: var(--primitive-easing-spring);
+
+  /* Shadows derive from the live accent + ink, so they follow theme and
+     accent swaps with no per-theme redefinition. */
+  --shadow-none: none;
+  --shadow-hairline: 0 0 0 1px
+    color-mix(in srgb, var(--color-border-strong) 8%, transparent);
+  --shadow-lift: 0 8px 24px -12px
+    color-mix(in srgb, var(--color-border-strong) 20%, transparent);
+  --shadow-glow-accent:
+    0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent),
+    0 8px 28px -8px color-mix(in srgb, var(--color-accent) 45%, transparent);
+}
+
+/* ============================================================
+   DAYPART — the foliage shadow. `data-daypart` is written to <html> by the
+   clock, so the light tracks whichever city the clock is showing rather
+   than the machine's own timezone. Absent attribute = the noon defaults
+   below, which is what pages without a clock get.
+
+   Strength is per-daypart, not a constant: the same alpha that reads as a
+   soft noon dapple turns into a blue wash at night, when the surface it
+   falls on is unchanged (the page stays light-themed around the clock).
+
+   Angle rotates the whole canopy about its bottom-right anchor — the sun
+   tracking across the sky, which swings the shadow with it.
+   ============================================================ */
+:root {
+  --daylight-tint: var(--primitive-color-daylight-noon);
+  --daylight-strength: 0.3;
+  --daylight-angle: 5deg;
+}
+:root[data-daypart="morning"] {
+  --daylight-tint: var(--primitive-color-daylight-morning);
+  --daylight-strength: 0.32;
+  /* Low sun: a long shaft thrown far across the floor. */
+  --daylight-angle: 14deg;
+}
+:root[data-daypart="noon"] {
+  --daylight-tint: var(--primitive-color-daylight-noon);
+  --daylight-strength: 0.3;
+  --daylight-angle: 5deg;
+}
+:root[data-daypart="afternoon"] {
+  --daylight-tint: var(--primitive-color-daylight-afternoon);
+  --daylight-strength: 0.34;
+  --daylight-angle: -12deg;
+}
+:root[data-daypart="night"] {
+  --daylight-tint: var(--primitive-color-daylight-night);
+  /* Weakest by a distance — moonlight, and it sits under body text. */
+  --daylight-strength: 0.16;
+  --daylight-angle: -8deg;
+}
+
+/* Explicit theme choice overrides the system preference in both directions. */
+:root[data-theme="light"] {
+  color-scheme: only light;
+}
+:root[data-theme="dark"] {
+  color-scheme: only dark;
+}
+
+/* ============================================================
+   DENSITY — retunes the spacing scale only. Type and radius hold,
+   so the identity survives; only the breathing room moves.
+   ============================================================ */
+:root[data-density="compact"] {
+  --spacing-gutter: var(--primitive-spacing-4);
+  --spacing-gutter-lg: var(--primitive-spacing-8);
+  --spacing-stack-xs: var(--primitive-spacing-1);
+  --spacing-stack-sm: var(--primitive-spacing-3);
+  --spacing-stack: var(--primitive-spacing-4);
+  --spacing-stack-lg: var(--primitive-spacing-6);
+}
+
+:root[data-density="comfortable"] {
+  --spacing-gutter: var(--primitive-spacing-8);
+  --spacing-gutter-lg: var(--primitive-spacing-16);
+  --spacing-stack-xs: var(--primitive-spacing-3);
+  --spacing-stack-sm: var(--primitive-spacing-5);
+  --spacing-stack: var(--primitive-spacing-8);
+  --spacing-stack-lg: var(--primitive-spacing-12);
+}
+
+/* ============================================================
+   COMPONENT — reference semantic tokens only, never raw hex,
+   so every component inherits theme / accent / density for free.
+   ============================================================ */
+:root {
+  --gateway-card-bg: var(--color-surface);
+  --gateway-card-border: var(--color-border);
+  --gateway-card-border-hover: var(--color-accent);
+  --gateway-card-shadow: var(--shadow-hairline);
+  --gateway-card-shadow-hover: var(--shadow-glow-accent);
+  --gateway-card-radius: var(--primitive-radius-lg);
+  --gateway-card-padding: var(--spacing-gutter);
   --gateway-card-lift-hover: -4px;
+
   --social-icon-size: 2.75rem;
-  --social-icon-bg: #FFFFFF;
-  --social-icon-bg-hover: #F0FBF4;
-  --social-icon-border: #E4E2DD;
-  --social-icon-border-hover: #1C8049;
-  --social-icon-fg: #0A0A09;
-  --social-icon-fg-hover: #134D2E;
-  --social-icon-radius: 9999px;
-  --focus-ring-color: #2AA35F;
+  --social-icon-bg: var(--color-surface);
+  --social-icon-bg-hover: var(--color-accent-soft);
+  --social-icon-border: var(--color-border);
+  --social-icon-border-hover: var(--color-accent);
+  --social-icon-fg: var(--color-ink);
+  --social-icon-fg-hover: var(--color-accent-active);
+  --social-icon-radius: var(--primitive-radius-full);
+
+  --focus-ring-color: var(--color-focus-ring);
   --focus-ring-width: 2px;
   --focus-ring-offset: 3px;
-  --chip-bg: #0A0A09;
-  --chip-fg: #FFFFFF;
-  --chip-radius: 9999px;
-  --chip-padding-x: 0.75rem;
-  --chip-padding-y: 0.25rem;
+
+  --chip-bg: var(--color-ink);
+  --chip-fg: var(--color-surface);
+  --chip-radius: var(--primitive-radius-full);
+  --chip-padding-x: var(--primitive-spacing-3);
+  --chip-padding-y: var(--primitive-spacing-1);
 }
