@@ -36,6 +36,16 @@ body {
   font-size: var(--typography-body);
 }
 
+/* The magnetic grid canvas (app/magnetic-grid.tsx) redraws this exact mat so
+   it can bend it around the pointer, something a CSS background cannot do —
+   it can be moved or scaled as a whole, never dented in one spot. While that
+   canvas is mounted it owns the grid outright and the CSS copy has to go, or
+   the two would double up. Removing the attribute hands it straight back,
+   which is what touch devices and reduced-motion get. */
+[data-grid-canvas] body {
+  background-image: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;

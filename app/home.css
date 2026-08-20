@@ -120,6 +120,88 @@
   }
 }
 
+/* The cutting-mat grid, redrawn on canvas so it can bend around the pointer.
+   z-index -2 puts it below the canopy's -1, preserving the existing stack:
+   body background → grid → foliage shade (multiply) → content. */
+.grid-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* ============================================================
+   CURSOR DOT — replaces the OS cursor with a solid circle. z-index sits
+   above the music island (highest other value on the page, 50) so nothing
+   can paint over it.
+
+   Split across two elements on purpose — position and scale are two
+   different kinds of motion and each needs its own animation mechanism:
+   .cursor-wrap (position, driven every frame by JS in cursor-dot.tsx — a
+   CSS transition can't do this, since the target itself moves every frame)
+   and .cursor-dot (scale, a real CSS transition on the spring/overshoot
+   pair, since it only changes on hover in/out and a transition is exactly
+   the right tool there).
+   ============================================================ */
+.cursor-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--primitive-radius-full);
+  /* Inverts via backdrop-filter, not a mix-blend-mode + fill-colour hack.
+     That distinction matters here specifically because a *black* fill under
+     mix-blend-mode: difference is a mathematical no-op — difference(0, C) =
+     |0-C| = C, the identity function, so the circle would render as exactly
+     whatever's behind it, i.e. perfectly invisible everywhere, not just over
+     one problem surface. backdrop-filter: invert(1) samples and inverts the
+     real pixels behind the shape instead of blending a chosen fill against
+     them, so there's no fill colour to pick badly in the first place — no
+     degenerate case exists for ANY colour, "black" included. It also means
+     "black" and "inverted" stop being in tension: over this page's mostly
+     light paper background, inverting reads as dark/near-black already, so
+     both readings of the request are satisfied by the same mechanism. */
+  /* No manual -webkit-backdrop-filter alongside this: writing both let the
+     build's CSS pipeline (Lightning CSS) coalesce them into a single
+     prefixed-only declaration and silently drop the standard property.
+     Autoprefixing is the pipeline's job — one declaration, and it emits
+     whatever prefixes its target browsers need. */
+  background: transparent;
+  backdrop-filter: invert(1);
+  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
+  /* --motion-playful/--motion-ease-playful — the design system's own name
+     for this pair is literally "cursor-follow settle" (docs/design-
+     system.md's motion table), which is exactly this transition. */
+  transition: transform var(--motion-playful) var(--motion-ease-playful);
+}
+.cursor-dot--active {
+  --cursor-scale: 2;
+}
+
+/* Native cursor off wherever this is mounted (set by CursorDot on <html>),
+   with one carve-out: the clock's editable city field, where a caret
+   position is real information a circle cannot give back. `!important` on
+   both sides because the hide rule must beat every UA default (`pointer` on
+   links and buttons, `text` on inputs), and the carve-out must then beat the
+   hide rule in turn — matching importance, so it comes down to specificity,
+   and the class selector already wins over the bare `*`. */
+[data-cursor-hidden] * {
+  cursor: none !important;
+}
+[data-cursor-hidden] .clock-input {
+  cursor: text !important;
+}
+
 /* --- entrance stagger --- */
 [data-enter] {
   animation: enter var(--motion-enter) var(--motion-ease-default) backwards;
@@ -254,6 +336,27 @@
     box-shadow var(--motion-hover) var(--motion-ease-default),
     filter var(--motion-hover) var(--motion-ease-default);
 }
+/* Brush-to-reveal layer over the portrait (app/brush-reveal.tsx). Sits above
+   the photo but inside it, so .photo's own grayscale filter and cursor
+   parallax carry the revealed art along with the rest of the image. */
+.brush-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+/* Decode-only source for the canvas. Not `display: none` — that can stop the
+   image loading at all, and the canvas has nothing to read. Zero-sized and
+   clipped instead, so it still decodes. */
+.brush-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .photo:hover,
 .photo:focus-visible {
   filter: grayscale(0);

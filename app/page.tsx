@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { BaliClock } from "./bali-clock";
+import { BrushReveal } from "./brush-reveal";
 import { Canopy } from "./canopy";
+import { CursorDot } from "./cursor-dot";
 import { CursorParallax } from "./cursor-parallax";
 import { GATEWAYS } from "./gateways";
+import { MagneticGrid } from "./magnetic-grid";
 import { MusicIsland } from "./music-island";
 import { PaintName } from "./paint-name";
 import { SparkWord } from "./spark-word";
@@ -36,6 +39,8 @@ export default function Home() {
   return (
     <main className="home">
       <CursorParallax />
+      <CursorDot />
+      <MagneticGrid />
 
       {/* Shade from an offscreen tree, thrown in from the bottom right. Tint
           and angle come from the daypart the clock writes to <html>; the two
@@ -74,6 +79,7 @@ export default function Home() {
               width={1500}
               height={1500}
             />
+            <BrushReveal />
           </div>
         </div>
 
