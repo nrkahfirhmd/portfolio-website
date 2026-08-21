@@ -11,13 +11,6 @@ function Icon({ type }: { type: Social["key"] }) {
   } as const;
 
   switch (type) {
-    case "email":
-      return (
-        <svg {...common}>
-          <rect x="3" y="5" width="18" height="14" rx="2" />
-          <path d="m3 7 9 6 9-6" />
-        </svg>
-      );
     case "github":
       return (
         <svg {...common}>
@@ -29,12 +22,6 @@ function Icon({ type }: { type: Social["key"] }) {
         <svg {...common}>
           <rect x="3" y="3" width="18" height="18" rx="2" />
           <path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4" />
-        </svg>
-      );
-    case "x":
-      return (
-        <svg {...common}>
-          <path d="m4 4 16 16M20 4 4 20" />
         </svg>
       );
   }

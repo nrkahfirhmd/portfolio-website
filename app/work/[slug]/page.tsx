@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { projects } from "@/lib/content";
 import { SectionLabel } from "../../components/section-label";
 import { Chip } from "../../components/chip";
+import { ArticleBlocks } from "../../components/article-blocks";
 
 const statusTone = {
   live: "accent",
@@ -90,6 +91,8 @@ export default async function WorkDetail({
             </a>
           ) : null}
         </section>
+
+        {project.blocks?.length ? <ArticleBlocks blocks={project.blocks} /> : null}
 
         {project.highlights?.length ? (
           <section aria-labelledby="highlights-label">
