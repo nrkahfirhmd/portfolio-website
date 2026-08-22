@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BaliClock } from "./bali-clock";
-import { BrushReveal } from "./brush-reveal";
 import { Canopy } from "./canopy";
 import { CursorDot } from "./cursor-dot";
 import { CursorParallax } from "./cursor-parallax";
@@ -8,9 +7,9 @@ import { GATEWAYS } from "./gateways";
 import { MagneticGrid } from "./magnetic-grid";
 import { MusicIsland } from "./music-island";
 import { PaintName } from "./paint-name";
+import { PortraitToggle } from "./portrait-toggle";
 import { SparkWord } from "./spark-word";
 import "./home.css";
-import Image from "next/image";
 
 const SOCIALS = [
   {
@@ -67,20 +66,7 @@ export default function Home() {
 
       <div className="stage">
         <div className="halo" data-enter style={{ "--i": 1 } as React.CSSProperties}>
-          <div
-            className="photo"
-            tabIndex={0}
-            role="img"
-            aria-label="Portrait of Kahfi Rahmada"
-          >
-            <Image
-              src={'/portrait.png'}
-              alt="Portrait"
-              width={1500}
-              height={1500}
-            />
-            <BrushReveal />
-          </div>
+          <PortraitToggle />
         </div>
 
         <PaintName>Kahfi Rahmada</PaintName>

@@ -185,7 +185,7 @@
   transition: transform var(--motion-playful) var(--motion-ease-playful);
 }
 .cursor-dot--active {
-  --cursor-scale: 2;
+  --cursor-scale: 0.5;
 }
 
 /* Native cursor off wherever this is mounted (set by CursorDot on <html>),
@@ -366,6 +366,26 @@
   width: 55%;
   height: 55%;
   color: var(--color-ink-faint);
+}
+
+/* Click-to-toggle portrait/spiderman (app/portrait-toggle.tsx). Both images
+   stacked; data-revealed crossfades between them. */
+.photo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.photo-img--spider {
+  opacity: 0;
+}
+.photo[data-revealed="spider"] .photo-img--spider {
+  opacity: 1;
+}
+.photo[data-revealed="spider"] .photo-img:not(.photo-img--spider) {
+  opacity: 0;
 }
 
 .name {
@@ -1034,6 +1054,9 @@
      the collapsed pill has to give up width before it collides with them. */
   .island {
     width: 8.5rem;
+  }
+  .island-pill {
+    justify-content: space-between;
   }
   .island-title {
     display: none;

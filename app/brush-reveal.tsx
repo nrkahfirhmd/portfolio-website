@@ -36,7 +36,7 @@ const IDLE_FRAMES = 90;
  * so it gets the framework's optimisation — 5.6MB raw becomes ~96KB — using
  * the public API rather than a hardcoded /_next/image URL.
  */
-export function BrushReveal() {
+export function BrushReveal({ src }: { src: string }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const art = useRef<HTMLImageElement>(null);
 
@@ -194,7 +194,7 @@ export function BrushReveal() {
       view.removeEventListener("pointermove", move);
       view.removeEventListener("pointerleave", leave);
     };
-  }, []);
+  }, [src]);
 
   return (
     <>
@@ -204,7 +204,7 @@ export function BrushReveal() {
       <Image
         ref={art}
         className="brush-source"
-        src="/spiderman.png"
+        src={src}
         alt=""
         aria-hidden="true"
         width={384}
