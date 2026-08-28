@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { projects } from "@/lib/content";
+import { projects, storySlugs } from "@/lib/content";
 import { SectionLabel } from "../../components/section-label";
 import { Chip } from "../../components/chip";
-import { ArticleBlocks } from "../../components/article-blocks";
+import { storyComponents } from "../../components/story-components";
 
 const statusTone = {
   live: "accent",
@@ -32,6 +32,15 @@ export async function generateMetadata({
   };
 }
 
+/** The narrative body at `content/work/<slug>.mdx`, or null if the project has none. */
+async function loadStory(slug: string) {
+  if (!storySlugs.has(slug)) return null;
+  const mod = await import(`@/content/work/${slug}.mdx`);
+  return mod.default as (props: {
+    components: typeof storyComponents;
+  }) => React.JSX.Element;
+}
+
 export default async function WorkDetail({
   params,
 }: PageProps<"/work/[slug]">) {
@@ -41,6 +50,8 @@ export default async function WorkDetail({
   if (!project) {
     notFound();
   }
+
+  const Story = await loadStory(slug);
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-6 py-10 sm:px-8">
@@ -92,7 +103,11 @@ export default async function WorkDetail({
           ) : null}
         </section>
 
-        {project.blocks?.length ? <ArticleBlocks blocks={project.blocks} /> : null}
+        {Story ? (
+          <article className="prose">
+            <Story components={storyComponents} />
+          </article>
+        ) : null}
 
         {project.highlights?.length ? (
           <section aria-labelledby="highlights-label">

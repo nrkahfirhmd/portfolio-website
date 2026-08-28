@@ -1,0 +1,44 @@
+export const metadata = { title: "Platform Gateway" };
+
+<Kicker>Problem</Kicker>
+
+## Why a gateway
+
+Five services had five URLs, five auth flows, and five sets of logs. A single
+entry point collapses that surface into one stable contract without forcing the
+services to agree on anything except an upstream port.
+
+> The gateway is not the product. It is the one door the product agrees to open.
+
+Routing stays boring: a small table maps path prefixes to upstreams. Everything
+that used to be scattered — auth, rate limits, tracing — now lives in one
+middleware chain instead of five copies.
+
+---
+
+## What changed
+
+<Stats
+  items={[
+    { label: "p99 latency", value: "-34%" },
+    { label: "services behind door", value: "5" },
+    { label: "deploy risk", value: "zero-downtime" },
+  ]}
+/>
+
+<Points>
+  <Point>Auth moved out of the hot path.</Point>
+  <Point>OpenTelemetry traces unified across all upstreams.</Point>
+  <Point>Zero-downtime deploys for the gateway itself.</Point>
+</Points>
+
+<Figure
+  src="/window.svg"
+  alt="Platform gateway routing diagram"
+  caption="One door, five upstreams."
+/>
+
+<Callout>
+  The hardest part was not routing. It was making the fallback path boring
+  enough to trust at 3am.
+</Callout>

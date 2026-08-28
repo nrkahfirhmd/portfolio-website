@@ -1,15 +1,5 @@
 export type ProjectStatus = "live" | "coming-soon" | "archive";
 
-export type ArticleBlock =
-  | { type: "paragraph"; text: string }
-  | { type: "heading"; text: string }
-  | { type: "quote"; text: string }
-  | { type: "callout"; text: string }
-  | { type: "divider" }
-  | { type: "stats"; items: { label: string; value: string }[] }
-  | { type: "columns"; items: string[] }
-  | { type: "image"; src: string; alt: string; caption?: string };
-
 export type Project = {
   slug: string;
   name: string;
@@ -20,7 +10,6 @@ export type Project = {
   stack: string[];
   href?: string;
   highlights?: string[];
-  blocks?: ArticleBlock[];
 };
 
 export type Social = {
@@ -39,6 +28,15 @@ export const profile = {
   currently: "Currently focused on reliable, observable systems for small teams.",
   email: "nurkahfirahmada@gmail.com",
 };
+
+/** Slugs that have a long-form story at `content/work/<slug>.mdx`. */
+export const storySlugs = new Set<string>(["platform-gateway"]);
+
+export function getProject(slug: string): Project {
+  const project = projects.find((p) => p.slug === slug);
+  if (!project) throw new Error(`Unknown project slug: "${slug}"`);
+  return project;
+}
 
 export const socials: Social[] = [
   { key: "github", label: "GitHub", href: "https://github.com/nrkahfirhmd" },
@@ -67,57 +65,6 @@ export const projects: Project[] = [
       "Reduced request latency by 34% by moving auth checks out of the hot path.",
       "Unified tracing across five services with OpenTelemetry.",
       "Introduced zero-downtime deploys for the gateway itself.",
-    ],
-    blocks: [
-      {
-        type: "heading",
-        text: "Why a gateway",
-      },
-      {
-        type: "paragraph",
-        text: "Five services had five URLs, five auth flows, and five sets of logs. A single entry point collapses that surface into one stable contract without forcing the services to agree on anything except an upstream port.",
-      },
-      {
-        type: "quote",
-        text: "The gateway is not the product. It is the one door the product agrees to open.",
-      },
-      {
-        type: "paragraph",
-        text: "Routing stays boring: a small table maps path prefixes to upstreams. Everything that used to be scattered — auth, rate limits, tracing — now lives in one middleware chain instead of five copies.",
-      },
-      {
-        type: "divider",
-      },
-      {
-        type: "heading",
-        text: "What changed",
-      },
-      {
-        type: "stats",
-        items: [
-          { label: "p99 latency", value: "-34%" },
-          { label: "services behind door", value: "5" },
-          { label: "deploy risk", value: "zero-downtime" },
-        ],
-      },
-      {
-        type: "columns",
-        items: [
-          "Auth moved out of the hot path.",
-          "OpenTelemetry traces unified across all upstreams.",
-          "Zero-downtime deploys for the gateway itself.",
-        ],
-      },
-      {
-        type: "image",
-        src: "/window.svg",
-        alt: "Platform gateway routing diagram",
-        caption: "One door, five upstreams.",
-      },
-      {
-        type: "callout",
-        text: "The hardest part was not routing. It was making the fallback path boring enough to trust at 3am.",
-      },
     ],
   },
   {

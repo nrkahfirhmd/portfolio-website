@@ -41,6 +41,32 @@
   }
 }
 
+@layer components {
+  /* Article body. Element styling lives in the MDX component map
+     (app/components/story-components.tsx); this only owns rhythm + measure. */
+  .prose {
+    max-width: 42rem;
+  }
+
+  .prose > * + * {
+    margin-top: var(--spacing-stack);
+  }
+
+  .prose h2 {
+    margin-top: var(--spacing-stack-lg);
+  }
+
+  /* Kicker + heading read as one unit: big gap before the kicker, hairline gap
+     between it and the heading it introduces. */
+  .prose > * + .story-kicker {
+    margin-top: var(--spacing-stack-lg);
+  }
+
+  .prose .story-kicker + h2 {
+    margin-top: var(--spacing-stack-xs);
+  }
+}
+
 @layer utilities {
   .cursor-blink {
     animation: cursor-blink 1.1s steps(2, start) infinite;
