@@ -18,7 +18,7 @@ export const GATEWAYS: Gateway[] = [
   {
     slug: "ai",
     name: "AI",
-    desc: "Models, agents, and the plumbing that makes them useful.",
+    desc: "Models, agents, and the engineering that makes them useful.",
     blurb:
       "Applied models, agent systems, and the unglamorous plumbing that turns a demo into something people can actually rely on.",
     live: false,
@@ -26,7 +26,7 @@ export const GATEWAYS: Gateway[] = [
   {
     slug: "games",
     name: "Game Dev",
-    desc: "Systems-driven games, tools, and toy physics.",
+    desc: "Designing systems, mechanics, and moments worth playing.",
     blurb:
       "Systems-driven games, the tools built to make them, and physics toys that exist mostly because they were fun to write.",
     live: false,
@@ -34,7 +34,7 @@ export const GATEWAYS: Gateway[] = [
   {
     slug: "systems",
     name: "Systems Engineering",
-    desc: "Infrastructure, performance, things that must not fall over.",
+    desc: "Infrastructure, performance, and systems built to stay up.",
     blurb:
       "Infrastructure, performance work, and the kind of engineering whose success looks like nothing happening at 3am.",
     live: false,
