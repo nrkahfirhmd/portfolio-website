@@ -4,8 +4,8 @@ import { Canopy } from "./canopy";
 import { CursorDot } from "./cursor-dot";
 import { CursorParallax } from "./cursor-parallax";
 import { GATEWAYS } from "./gateways";
+import { GithubActivity } from "./github-activity";
 import { MagneticGrid } from "./magnetic-grid";
-import { MusicIsland } from "./music-island";
 import { PaintName } from "./paint-name";
 import { PortraitToggle } from "./portrait-toggle";
 import { SparkWord } from "./spark-word";
@@ -60,7 +60,7 @@ export default function Home() {
         {/* Absolutely centred on this row, so it lines up with the KV mark and
             the clock without taking part in their justify-between split — and
             so expanding it can't push either one around. */}
-        <MusicIsland />
+        <GithubActivity />
         <BaliClock />
       </div>
 
@@ -75,7 +75,7 @@ export default function Home() {
           Building things that <SparkWord>think</SparkWord>.
           Creating worlds that <SparkWord>play</SparkWord>.
           Engineering systems that <SparkWord>last</SparkWord>. <br />
-          <span className="muted">AI · Games · Infrastructure.</span>
+          <span className="muted">I Orchestrate Technologies.</span>
         </p>
 
         <nav className="gates" aria-label="Portfolios">

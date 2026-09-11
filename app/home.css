@@ -707,7 +707,7 @@
 }
 .island[data-open] {
   width: min(21rem, calc(100vw - 2rem));
-  height: 7rem;
+  height: 6.5rem;
   border-radius: var(--primitive-radius-xl);
 }
 
@@ -747,14 +747,11 @@
   border-radius: var(--primitive-radius-full);
   background: var(--color-accent);
 }
-/* Spins only while playing — a still record reads as "stopped" at a glance. */
-.island[data-playing] .island-dot {
-  animation: spin 3s var(--primitive-easing-linear) infinite;
-  background: conic-gradient(
-    var(--color-accent),
-    var(--chip-bg) 55%,
-    var(--color-accent)
-  );
+/* Pulses once activity has loaded — reuses .status::before's own keyframes
+   (below), so "alive" reads the same way in the footer and the island. */
+.island[data-live] .island-dot {
+  animation: pulse var(--primitive-duration-ambient)
+    var(--primitive-easing-linear) infinite;
 }
 .island-title {
   flex: 1;
@@ -766,170 +763,18 @@
   font-size: var(--typography-caption);
   letter-spacing: var(--primitive-tracking-wide);
 }
-
-/* --- equalizer --- */
-.island-eq {
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 0.875rem;
-  flex: none;
-}
-.island-eq i {
-  width: 2px;
-  height: 35%;
-  border-radius: var(--primitive-radius-sm);
-  background: var(--color-accent);
-  transform-origin: bottom;
-}
-.island[data-playing] .island-eq i {
-  animation: eq 900ms var(--motion-ease-default) infinite alternate;
-  /* Staggered start so the bars never move as one block. */
-  animation-delay: calc(var(--b) * -220ms);
-}
-@keyframes eq {
-  from {
-    height: 25%;
-  }
-  to {
-    height: 100%;
-  }
-}
-/* --- expanded panel --- */
-.island-panel {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 0.875rem;
-}
-/* --- the record --- */
-.island-art {
-  position: relative;
-  width: 3.5rem;
-  height: 3.5rem;
-  flex: none;
-}
-
-/* Grooves, accent label and spindle hole, painted as one gradient stack so the
-   record is a single element with nothing to keep in sync while it turns.
-   The conic wedge is an off-centre sheen — without it a radially symmetric
-   disc looks completely still no matter how fast it actually spins. */
-.disc {
-  position: absolute;
-  inset: 0;
-  border-radius: var(--primitive-radius-full);
-  background:
-    radial-gradient(circle at 50% 50%, var(--chip-bg) 0 7%, transparent 7.5%),
-    radial-gradient(
-      circle at 50% 50%,
-      var(--color-accent) 7.5% 27%,
-      transparent 27.5%
-    ),
-    repeating-radial-gradient(
-      circle at 50% 50%,
-      color-mix(in srgb, var(--chip-fg) 15%, transparent) 0 1px,
-      transparent 1px 3px
-    ),
-    conic-gradient(
-      from 0deg,
-      transparent 0deg,
-      color-mix(in srgb, var(--chip-fg) 20%, transparent) 45deg,
-      transparent 100deg
-    ),
-    color-mix(in srgb, var(--chip-fg) 13%, var(--chip-bg));
-}
-.island[data-playing] .disc {
-  animation: spin 2.4s var(--primitive-easing-linear) infinite;
-}
-
-/* Notes stream up out of the record. Three glyphs on one staggered loop read
-   as a continuous trickle, so there is no particle system to run. They are
-   allowed to escape .island-art and are clipped by the island itself. */
-.notes {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.notes i {
-  position: absolute;
-  left: 50%;
-  top: 0.25rem;
-  font-style: normal;
-  font-size: 0.8125rem;
-  line-height: 1;
-  color: var(--color-accent);
-  opacity: 0;
-}
-/* Linear, not the house ease-out: `ease-default` front-loads so hard that the
-   note hits full travel by the halfway point and then hangs motionless for the
-   rest of the loop. Drifting smoke wants a constant rise. */
-.island[data-playing] .notes i {
-  animation: float-note 2.4s var(--primitive-easing-linear) infinite;
-  animation-delay: calc(var(--n) * -0.8s);
-}
-.notes i:nth-child(2) {
-  --dx: -18px;
-}
-.notes i:nth-child(3) {
-  --dx: 20px;
-}
-/* Opacity is held flat through the middle so the note stays lit for most of
-   its climb and only fades near the top, rather than blinking out early. */
-@keyframes float-note {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 0) scale(0.55) rotate(-12deg);
-  }
-  15%,
-  65% {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    transform: translate(calc(-50% + var(--dx, 8px)), -2rem) scale(1.05)
-      rotate(16deg);
-  }
-}
-.island-meta {
-  flex: 1;
-  min-width: 0;
-  display: grid;
-  gap: 0.2rem;
-}
-.island-track,
-.island-artist {
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
-  font-size: var(--typography-caption);
-}
-.island-artist {
-  color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
-  /* Overflow measurement (music-island.tsx) reads scrollWidth off the inner
-     span, so the wrapper's own overflow/ellipsis is what actually clips —
-     ellipsis is the resting state and the fallback under reduced motion,
-     where the animation below is stripped by the global rule and this line
-     never moves. */
-}
-.island-artist-text {
+.island-title-text {
   display: inline-block;
 }
-/* Only mounted once JS has measured real overflow, so a line that fits never
-   pays for the animation. Bounces rather than loops so there is exactly one
-   text node — a looping marquee needs a duplicated copy, which a screen
-   reader would announce twice. */
-.island-artist[data-marquee] {
+/* Only mounted once JS has measured real overflow, so a headline that fits
+   never pays for the animation. Bounces rather than loops so there is
+   exactly one text node — a looping marquee needs a duplicated copy, which a
+   screen reader would announce twice. */
+.island-title[data-marquee] {
   text-overflow: clip;
 }
-.island-artist[data-marquee] .island-artist-text {
+.island-title[data-marquee] .island-title-text {
   animation: marquee var(--marquee-duration, 3s) ease-in-out infinite;
-}
-/* Collapsing the panel doesn't unmount it, so pause the scroll while
-   inert — no reason to animate text nobody can see. */
-.island:not([data-open]) .island-artist[data-marquee] .island-artist-text {
-  animation-play-state: paused;
 }
 @keyframes marquee {
   0%,
@@ -945,62 +790,48 @@
   }
 }
 
-/* Native range input: keyboard seeking, arrow keys and all, for free. */
-.island-seek {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 3px;
-  margin: 0.15rem 0;
-  border-radius: var(--primitive-radius-full);
-  cursor: pointer;
-  background: linear-gradient(
-    to right,
-    var(--color-accent) calc(var(--p, 0) * 100%),
-    color-mix(in srgb, var(--chip-fg) 25%, transparent) 0
-  );
-}
-.island-seek::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: var(--primitive-radius-full);
-  background: var(--chip-fg);
-}
-.island-seek::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border: none;
-  border-radius: var(--primitive-radius-full);
-  background: var(--chip-fg);
-}
-.island-seek:disabled {
-  opacity: 0.4;
-  cursor: default;
+.island-gh-icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  color: var(--color-accent);
 }
 
-.island-row {
+/* --- expanded panel --- */
+.island-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0.875rem;
+}
+.island-gh-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex: none;
 }
-.island-time {
-  font-size: 0.6875rem;
-  font-variant-numeric: tabular-nums;
+.island-gh-user {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  font-size: var(--typography-caption);
+}
+.island-gh-user strong {
+  font-weight: var(--primitive-fontWeight-medium);
+}
+.island-gh-muted {
   color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
 }
-.island-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.125rem;
-  margin-inline: auto;
-}
-.island-row button {
+.island-close {
   display: grid;
   place-items: center;
   width: 1.75rem;
   height: 1.75rem;
+  flex: none;
   padding: 0;
   background: none;
   border: none;
@@ -1009,44 +840,64 @@
   cursor: pointer;
   transition:
     background var(--motion-hover) var(--motion-ease-default),
-    color var(--motion-hover) var(--motion-ease-default),
     transform var(--motion-playful) var(--motion-ease-playful);
 }
-.island-row button svg {
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-/* Play/pause is the primary action, so it gets the accent and the fill. */
-.island-play svg {
-  width: 17px;
-  height: 17px;
-  fill: currentColor;
-}
-.island-play {
-  color: var(--color-accent);
-}
-.island-row button:hover:not(:disabled),
-.island-row button:focus-visible:not(:disabled) {
+.island-close:hover,
+.island-close:focus-visible {
   background: color-mix(in srgb, var(--chip-fg) 14%, transparent);
   transform: scale(1.1);
 }
-.island-row button:active:not(:disabled) {
+.island-close:active {
   transform: scale(0.92);
   transition-duration: var(--motion-press);
-}
-.island-row button:disabled {
-  opacity: 0.35;
-  cursor: default;
 }
 .island-close svg {
   /* The chevron points up: it dismisses back into the notch. */
   width: 16px;
   height: 16px;
+}
+
+.island-gh-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: var(--typography-caption);
+}
+.island-gh-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
+}
+.island-gh-time {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--chip-fg) 55%, transparent);
+}
+
+/* --- activity dots: DOT_DAYS of "did anything land that day", oldest to
+   newest. Not a real contribution calendar — the events feed only covers
+   recent history — just a pulse of "active lately". */
+.island-gh-days {
+  display: flex;
+  justify-content: space-between;
+  flex: none;
+}
+.island-gh-day {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--primitive-radius-full);
+  border: 1px solid color-mix(in srgb, var(--chip-fg) 30%, transparent);
+  background: transparent;
+  transition: background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.island-gh-day[data-active] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 @media (max-width: 780px) {
@@ -1158,13 +1009,13 @@
   .social,
   .gate .arrow,
   .spark,
-  .island-artist-text {
+  .island-title-text {
     transform: none !important;
   }
-  /* The animation above is stripped, so a long artist/game line would
-     otherwise hard-cut mid-word with no signal there's more. Ellipsis is the
-     resting state everywhere else in the panel — restore it here too. */
-  .island-artist[data-marquee] {
+  /* The animation above is stripped, so a long headline would otherwise
+     hard-cut mid-word with no signal there's more. Ellipsis is the resting
+     state everywhere else on the page — restore it here too. */
+  .island-title[data-marquee] {
     text-overflow: ellipsis;
   }
   .gate::after {
@@ -1173,24 +1024,5 @@
   .island-pill[inert],
   .island-panel[inert] {
     scale: none;
-  }
-  /* Ambient motion is disabled outright here, not slowed — and a note frozen
-     mid-flight is just a stray glyph floating beside the record. */
-  .notes {
-    display: none;
-  }
-  /* The equalizer loses its animation, so give the bars fixed uneven heights —
-     a row of four identical stubs reads as broken, not as "audio". */
-  .island-eq i:nth-child(1) {
-    height: 45%;
-  }
-  .island-eq i:nth-child(2) {
-    height: 100%;
-  }
-  .island-eq i:nth-child(3) {
-    height: 65%;
-  }
-  .island-eq i:nth-child(4) {
-    height: 85%;
   }
 }
