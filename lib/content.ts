@@ -43,13 +43,6 @@ export const socials: Social[] = [
   { key: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/nrkahfirhmd" },
 ];
 
-export const skills = {
-  systems: ["Linux", "Nix", "Docker", "Kubernetes", "Terraform"],
-  observability: ["Prometheus", "Grafana", "OpenTelemetry", "eBPF"],
-  automation: ["Ansible", "Bash", "CI/CD", "GitOps"],
-  languages: ["Go", "TypeScript", "Python", "SQL"],
-};
-
 export const projects: Project[] = [
   {
     slug: "platform-gateway",

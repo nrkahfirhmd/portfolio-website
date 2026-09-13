@@ -1,8 +1,7 @@
-import { profile, projects, skills } from "@/lib/content";
+import { profile, projects } from "@/lib/content";
 import { ProjectRow } from "./components/project-row";
 import { SectionLabel } from "./components/section-label";
 import { SocialLinks } from "./components/social-links";
-import { Chip } from "./components/chip";
 
 export default function Home() {
   return (
@@ -51,26 +50,6 @@ export default function Home() {
           <div className="mt-6 flex flex-col">
             {projects.map((project) => (
               <ProjectRow key={project.slug} project={project} />
-            ))}
-          </div>
-        </section>
-
-        <section id="skills" aria-labelledby="skills-label" className="scroll-mt-8">
-          <SectionLabel id="skills-label" command="ls skills/" />
-          <div className="mt-6 flex flex-col gap-5">
-            {Object.entries(skills).map(([group, items]) => (
-              <div key={group}>
-                <p className="mb-2 font-mono text-caption uppercase tracking-wider text-ink-faint">
-                  {group}/
-                </p>
-                <ul className="flex flex-wrap gap-2">
-                  {items.map((item) => (
-                    <li key={item}>
-                      <Chip tone="accent-soft">{item}</Chip>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             ))}
           </div>
         </section>
