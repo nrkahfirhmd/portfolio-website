@@ -25,24 +25,37 @@ export default function Home() {
 
 function Intro() {
   return (
-    <section className="py-gutter-lg max-w-3xl">
-      <p className="mt-stack-sm text-tagline max-w-lg">
-        Hi! I'm Kahfi and I design and ship AI systems that{" "}
-        <em className="font-flourish font-medium text-ink">earns its place</em>
-      </p>
+    <section className="py-gutter-lg max-w-3xl flex flex-col items-center text-center sm:flex-row sm:items-center sm:text-left gap-gutter">
+      <div className="relative w-36 sm:w-48 aspect-square shrink-0 overflow-hidden rounded-card">
+        <Image
+          src="/photo.jpeg"
+          alt="Kahfi Rahmada"
+          fill
+          sizes="(min-width: 640px) 12rem, 9rem"
+          className="object-cover"
+          priority
+        />
+      </div>
 
-      <p className="mt-stack text-label text-ink-muted">
-        Currently {CURRENT.role} @ {" "}
-        <a
-          href={CURRENT.companyUrl}
-          className="text-accent hover:text-accent-hover underline underline-offset-4 decoration-1 transition-colors duration-150"
-        >
-          {CURRENT.company}
-        </a>
-        .
-      </p>
+      <div className="min-w-0 flex flex-col items-center sm:items-start">
+        <p className="mt-stack-sm text-tagline max-w-lg">
+          Hi! I'm Kahfi and I design and ship AI systems that{" "}
+          <em className="font-flourish font-medium text-ink">earns its place</em>
+        </p>
 
-      {CURRENT.openToWork ? <OpenToWorkBadge /> : null}
+        <p className="mt-stack text-label text-ink-muted">
+          Currently {CURRENT.role} @ {" "}
+          <a
+            href={CURRENT.companyUrl}
+            className="text-accent hover:text-accent-hover underline underline-offset-4 decoration-1 transition-colors duration-150"
+          >
+            {CURRENT.company}
+          </a>
+          .
+        </p>
+
+        {CURRENT.openToWork ? <OpenToWorkBadge /> : null}
+      </div>
     </section>
   );
 }
