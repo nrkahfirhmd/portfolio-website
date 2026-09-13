@@ -1,6 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CURRENT, PROJECTS, STACK, type Project } from "./projects";
+import { CURRENT, PROJECTS, type Project } from "./projects";
+
+// Bento columns follow project count so the grid never leaves author-facing
+// gaps that used to be plugged by a filler tile — 1 project reads as 1 card,
+// not 1 card lost in a 4-wide row. Capped at 4: a 5th project wraps to a new
+// row rather than squeezing a 5-wide grid.
+const GRID_COLS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-1 sm:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+  5: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+};
 
 export default function Home() {
   return (
@@ -57,11 +69,12 @@ function Work() {
         Selected work
       </h2>
 
-      <div className="mt-stack-sm grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-stack-xs auto-rows-[minmax(11rem,auto)]">
+      <div
+        className={`mt-stack-sm grid ${GRID_COLS[Math.min(PROJECTS.length, 5)] ?? GRID_COLS[4]} gap-stack-xs auto-rows-[minmax(11rem,auto)]`}
+      >
         {PROJECTS.map((project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}
-        <StackPanel />
       </div>
     </section>
   );
@@ -155,33 +168,5 @@ function ProjectCard({ project }: { project: Project }) {
         {project.name}
       </h3>
     </Link>
-  );
-}
-
-function StackPanel() {
-  return (
-    <div className="panel p-gutter flex flex-col md:col-span-2">
-      <h3 className="text-caption font-medium tracking-wider uppercase text-ink-muted">
-        Stack
-      </h3>
-
-      <ul className="mt-stack-xs grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-label text-ink-muted">
-        {STACK.map(({ name, icon }) => (
-          <li key={name} className="flex items-center gap-2">
-            <svg
-              viewBox="0 0 24 24"
-              width="15"
-              height="15"
-              fill="currentColor"
-              className="shrink-0 text-ink"
-              aria-hidden
-            >
-              <path d={icon.path} />
-            </svg>
-            {name}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

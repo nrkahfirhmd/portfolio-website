@@ -2,22 +2,6 @@
 // grid on the home page and the <ArticleHeader> at the top of each story, so a
 // name or tag is only ever edited here.
 
-import type { SimpleIcon } from "simple-icons";
-import {
-  siClaude,
-  siDocker,
-  siFastapi,
-  siGo,
-  siLanggraph,
-  siOpentelemetry,
-  siPostgresql,
-  siPytorch,
-  siPython,
-  siRedis,
-  siTemporal,
-  siTypescript,
-} from "simple-icons";
-
 // The gateway is a separate deployment, so this is an absolute URL rather than
 // a route in this app.
 export const GATEWAY_URL = "https://example.com";
@@ -108,7 +92,9 @@ export const PROJECTS: Project[] = [
     role: "Design and implementation",
     period: "2024",
     tags: ["Go", "Redis", "OpenTelemetry"],
-    span: "md:col-span-2",
+    // Last tile, alone in its row — full width so it doesn't leave a gap now
+    // that there's no filler panel after it.
+    span: "md:col-span-2 lg:col-span-4",
     hasArticle: false,
     live: "https://example.com"
   },
@@ -119,23 +105,6 @@ export function projectBySlug(slug: string): Project {
   if (!found) throw new Error(`Unknown project slug: ${slug}`);
   return found;
 }
-
-// Rendered monochrome in currentColor, never in brand colour — a dozen brand
-// palettes would break the ink-and-one-accent rule the whole page runs on.
-export const STACK: { name: string; icon: SimpleIcon }[] = [
-  { name: "Python", icon: siPython },
-  { name: "TypeScript", icon: siTypescript },
-  { name: "Go", icon: siGo },
-  { name: "PyTorch", icon: siPytorch },
-  { name: "Claude API", icon: siClaude },
-  { name: "LangGraph", icon: siLanggraph },
-  { name: "FastAPI", icon: siFastapi },
-  { name: "Postgres", icon: siPostgresql },
-  { name: "Redis", icon: siRedis },
-  { name: "Temporal", icon: siTemporal },
-  { name: "Docker", icon: siDocker },
-  { name: "OpenTelemetry", icon: siOpentelemetry },
-];
 
 export const SOCIALS = [
   { label: "GitHub", href: "https://github.com/nrkahfirhmd" },
