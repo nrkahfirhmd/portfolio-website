@@ -1,0 +1,35 @@
+export const metadata = { title: "DeQRypt" };
+
+{/* TODO(kv): draft built only from the repo README. Rewrite in your own voice,
+    add what you personally owned, and swap the figure placeholder for a real
+    diagram or screenshot (put it in public/ and pass src="/…"). */}
+
+DeQRypt started as a hackathon MVP on Base: pay by scanning a QR code, borrow
+against what you hold, and manage the lot by asking an agent in plain language
+instead of clicking through a DeFi dashboard.
+
+## What it does
+
+<Points>
+  <Point title="Scan to pay">QR payments in mUSDC and mIDRX, settled through an atomic payment router.</Point>
+  <Point title="Lend and borrow">A multi-asset lending pool deployed on Base Sepolia.</Point>
+  <Point title="Ask, don't click">A LangChain + Google Gemini agent that manages a portfolio from natural-language requests.</Point>
+</Points>
+
+## How it's put together
+
+The contracts hold the money logic; everything else reacts to them. A
+Python/FastAPI backend listens for on-chain events and bridges them to the
+off-chain side, where the agent and the web app live.
+
+<Figure caption="Architecture diagram goes here: contracts → event listener → FastAPI → agent and web app." />
+
+## What's next
+
+The roadmap moves it from testnet MVP to a real product: a third-party audit
+of the lending pool and router, aimed at reentrancy and liquidity exploits,
+then migrating everything from Base Sepolia to Base Mainnet.
+
+<Callout>
+  Try the testnet build at [deqrypt.vercel.app](https://deqrypt.vercel.app).
+</Callout>

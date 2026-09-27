@@ -21,7 +21,7 @@ export const GATEWAYS: Gateway[] = [
     desc: "AI systems, infrastructure, and software built to stay up.",
     blurb:
       "Applied models, agent systems, and infrastructure work — the unglamorous engineering that turns a demo into something people can rely on at 3am.",
-    live: false,
+    live: true,
   },
   {
     slug: "games",
