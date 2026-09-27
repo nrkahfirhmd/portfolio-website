@@ -660,8 +660,8 @@
 }
 
 /* ============================================================
-   MUSIC ISLAND — Dynamic-Island-style player, centred on the eyebrow row
-   between the KV mark and the clock. Inverted (ink surface / paper text),
+   GITHUB ISLAND — Dynamic-Island-style status card, centred on the eyebrow
+   row between the KV mark and the clock. Inverted (ink surface / paper text),
    reusing the same language as the `chip` token group.
 
    Absolute, never in flow: collapsed it would be taller than the caption-sized
@@ -681,7 +681,7 @@
   translate: -50% 0;
   overflow: hidden;
   /* .eyebrow uppercases and letterspaces everything inside it, which is right
-     for a caption row and wrong for track titles. Children that do want the
+     for a caption row and wrong for status text. Children that do want the
      tracking ask for it themselves. */
   text-transform: none;
   letter-spacing: normal;
