@@ -6,19 +6,19 @@
 
 ## Problem Statement
 
-Kv's work is split across three specialized portfolios — AI, Game Dev, and Systems Engineering — plus scattered social/contact links, with no single entry point that ties them together. A recruiter or employer who lands on any one link gets a partial picture of Kv and no obvious path to the other two, and there's no page that establishes a strong first impression of who Kv is before someone digs into the work itself. Without a unifying gateway, Kv either has to hand out multiple links per context or rely on people finding the right one on their own, both of which dilute the first impression and add friction right when it matters most.
+Kv's work is split across two specialized portfolios — Software Engineering and Game Development — plus scattered social/contact links, with no single entry point that ties them together. A recruiter or employer who lands on any one link gets a partial picture of Kv and no obvious path to the other, and there's no page that establishes a strong first impression of who Kv is before someone digs into the work itself. Without a unifying gateway, Kv either has to hand out multiple links per context or rely on people finding the right one on their own, both of which dilute the first impression and add friction right when it matters most.
 
 ## Goals
 
 - Give recruiters and employers a single, memorable URL that establishes who Kv is within seconds of arrival, with zero scrolling required.
-- Route visitors to the correct specialized portfolio (AI, Game Dev, Systems Engineering) in one click, with each clearly labeled.
+- Route visitors to the correct specialized portfolio (Software Engineering, Game Development) in one click, with each clearly labeled.
 - Consolidate social and contact links into one discoverable hub.
 - Make the page's interactivity itself a demonstration of craft — every element responds to input, signaling design and technical ability before a single portfolio piece is opened.
 - Load fast and hold the entire experience within one viewport on common desktop and mobile screen sizes.
 
 ## Non-Goals
 
-- **Building the three destination portfolios** (AI, Game Dev, Systems Engineering) — these are separate, not-yet-started initiatives. This spec covers only the gateway page.
+- **Building the two destination portfolios** (Software Engineering, Game Development) — these are separate, not-yet-started initiatives. This spec covers only the gateway page.
 - **Blog or long-form content** — this is a gateway, not a content site.
 - **Backend, CMS, or contact-form handling** — v1 needs no server-side logic.
 - **Multi-page navigation or additional sections** — the "no scrolling" constraint means everything lives in a single viewport; there is no v2 page to scroll to.
@@ -27,7 +27,7 @@ Kv's work is split across three specialized portfolios — AI, Game Dev, and Sys
 ## User Stories
 
 1. As a recruiter who received Kv's link, I want to understand who Kv is and what they do within a few seconds, so I can decide whether to explore further without hunting for context.
-2. As a recruiter hiring for a specific specialty, I want to click directly into the AI, Game Dev, or Systems Engineering portfolio that matches my role, so I don't have to sift through irrelevant work.
+2. As a recruiter hiring for a specific specialty, I want to click directly into the Software Engineering or Game Development portfolio that matches my role, so I don't have to sift through irrelevant work.
 3. As any visitor, I want to reach Kv's social and contact channels in one click from the same page, so I don't need to search elsewhere.
 4. As a visitor on mobile, I want the entire experience to fit my screen without scrolling, so the page feels complete and intentional rather than cut off.
 5. As a visitor exploring the page, I want small interactive surprises (hover states, responsive SVGs, cursor-driven effects) so the page itself feels like a demonstration of Kv's craft.
@@ -40,7 +40,7 @@ Kv's work is split across three specialized portfolios — AI, Game Dev, and Sys
 1. **Single fixed-viewport layout** — no page scroll on standard desktop (1280×800+) or common mobile viewports (390×844 and similar). *Acceptance:* no vertical or horizontal scrollbar appears at any target size; content reflows/scales to fit rather than being truncated.
 2. **Short personal introduction** — name, tagline, and 1–2 sentence positioning visible immediately on load.
 3. **At least one photo of Kv**, integrated into the layout rather than presented as a static headshot dump.
-4. **Three clearly labeled gateways** to the AI Portfolio, Game Dev Portfolio, and System Engineer Portfolio. *Acceptance:* each is a distinct interactive element with its own hover/focus state and links out — even if the destination is a placeholder route for now, since those sites don't exist yet.
+4. **Two clearly labeled gateways** to the Software Engineering Portfolio and Game Development Portfolio. *Acceptance:* each is a distinct interactive element with its own hover/focus state and links out — even if the destination is a placeholder route for now, since those sites don't exist yet.
 5. **Social/contact links** present and clickable (exact set TBD — see Open Questions).
 6. **Baseline micro-interactions on every primary element** — photo, portfolio gateways, social icons, decorative SVGs. *Acceptance:* no static/dead element; everything interactive changes appearance on hover, focus, or pointer movement.
 7. **Built in React/Next.js**, deployable as a static or SSR site.
@@ -59,8 +59,8 @@ Kv's work is split across three specialized portfolios — AI, Game Dev, and Sys
 
 1. Theming (light/dark mode, or a rotating visual theme) without adding scroll or complexity.
 2. Localization/multi-language intro, if Kv's audience becomes international.
-3. Lightweight click analytics on the three gateways, to inform which destination portfolio to invest in next — deferred until a backend/analytics tool is chosen.
-4. Shareable rich preview (Open Graph card) once the three destination portfolios exist and are worth previewing.
+3. Lightweight click analytics on the two gateways, to inform which destination portfolio to invest in next — deferred until a backend/analytics tool is chosen.
+4. Shareable rich preview (Open Graph card) once the two destination portfolios exist and are worth previewing.
 
 ## Success Metrics
 
@@ -79,13 +79,13 @@ Because v1 ships without a backend, most launch measurement is manual and qualit
 
 - ~~Which exact social/contact links should appear~~ — **Resolved**: GitHub, LinkedIn, Email, itch.io. Shipped in `app/page.tsx`.
 - ~~Do the photos and SVG assets already exist~~ — **Resolved**: yes, `public/portrait.png` + custom inline SVGs.
-- ~~What should the three gateway links point to before their destination portfolios exist~~ — **Resolved**: "coming soon" chip + placeholder page, keyed off `live` in `app/gateways.ts`.
+- ~~What should the gateway links point to before their destination portfolios exist~~ — **Resolved**: "coming soon" chip + placeholder page, keyed off `live` in `app/gateways.ts`.
 - Is there a hard deadline driving this? — **Resolved**: no fixed date, but actively job-searching — ship soon, no hard cutoff.
 - Where will this be hosted/deployed? — **Resolved**: Vercel.
-- Should sound be included at all? — **Resolved**: yes, muted-by-default with a visible toggle. Built as the Dynamic-Island-style player (`app/music-island.tsx`); nothing plays until the visitor presses play. Tracks come from `app/tracks.ts`, files from `public/music/`.
+- Should sound be included at all? — **Resolved**: no, for now. A muted-by-default music player shipped first and was then replaced by the GitHub activity island (`app/github-activity.tsx`), which backs the tagline with live data instead.
 
 ## Timeline Considerations
 
 - No hard deadline stated yet. If Kv is actively job-searching, ship P0 first as a fast v1 — it already satisfies the core "single-click gateway" problem — then layer in P1 playful/motion/sound work as a fast-follow.
-- Depends on the three destination portfolios eventually existing; until then, P0 #4 ships with placeholder or "coming soon" routes so this page isn't blocked on that separate, larger body of work.
+- Depends on the two destination portfolios eventually existing; until then, P0 #4 ships with placeholder or "coming soon" routes so this page isn't blocked on that separate, larger body of work.
 - Solo project — no cross-team dependencies.
