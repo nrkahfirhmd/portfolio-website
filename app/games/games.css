@@ -1,0 +1,545 @@
+/* /games — the game dev portfolio, told as a game's own screens: title
+   screen, level select, credits. Same world as the rest of the site
+   (cutting-mat paper, mono, one green accent that only marks what you can
+   touch); different structure from /software's git log. Every value resolves
+   from docs/design-tokens.css. No raw hex here. */
+
+.gd {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.gd) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* --- top bar --- */
+.gd-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: var(--spacing-stack);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+}
+.gd-home span {
+  color: var(--color-ink-faint);
+}
+.gd-nav {
+  display: flex;
+  gap: var(--spacing-stack);
+}
+.gd-nav a {
+  color: var(--color-ink-muted);
+}
+.gd-home,
+.gd-nav a {
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.gd-home:hover,
+.gd-nav a:hover {
+  color: var(--color-accent);
+}
+
+/* --- title screen --- */
+.gd-title {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-height: calc(100dvh - 8rem);
+  padding-block: 2rem;
+}
+.gd-sprite {
+  width: clamp(96px, 14vw, 136px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  image-rendering: pixelated;
+  border-radius: var(--primitive-radius-lg);
+  box-shadow: var(--shadow-hairline);
+  /* Two-frame idle, the way a sprite breathes on a title screen. */
+  animation: idle 1.2s steps(1, end) infinite;
+}
+@keyframes idle {
+  50% {
+    translate: 0 -3px;
+  }
+}
+.gd-name {
+  margin: 1.5rem 0 0;
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+  text-wrap: balance;
+}
+.gd-lede {
+  margin: 1.1rem 0 0;
+  max-width: 34ch;
+  font-size: var(--typography-tagline);
+  line-height: 1.55;
+  text-wrap: balance;
+}
+.gd-studio {
+  margin: 0.6rem 0 0;
+  font-size: var(--typography-label);
+  color: var(--color-ink-muted);
+}
+.gd-studio a,
+.stage-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.gd-studio a:hover,
+.stage-link:hover {
+  color: var(--color-accent-hover);
+}
+
+.start {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 2.25rem;
+  padding: 0.75rem 1.3rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.start svg {
+  width: 12px;
+  height: 12px;
+  color: var(--color-accent);
+  animation: blink 1.1s steps(1, end) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.start:hover,
+.start:focus-visible {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+.start:active {
+  transform: scale(0.97);
+  transition-duration: var(--motion-press);
+}
+
+/* --- section headings --- */
+.gd-h2 {
+  margin: 0 0 var(--spacing-stack-lg);
+  font-size: var(--typography-tagline);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+}
+.gd-levels {
+  padding-top: clamp(2rem, 8vh, 5rem);
+  scroll-margin-top: 1rem;
+}
+
+/* ============================================================
+   LEVEL MAP — a dotted trail with a node per stage and a pawn that hops
+   between them. Nodes are HTML buttons laid over the SVG in % of its
+   viewBox, so they stay focusable while the trail scales.
+   ============================================================ */
+.map {
+  position: relative;
+  width: 100%;
+  margin-inline: auto;
+}
+.map > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.trail {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-ink) 28%, transparent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0.5 12;
+  vector-effect: non-scaling-stroke;
+}
+.map-tall {
+  display: none;
+  max-width: 22rem;
+}
+@media (max-width: 720px) {
+  .map-wide {
+    display: none;
+  }
+  .map-tall {
+    display: block;
+  }
+}
+
+.stage-node {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 2px solid var(--color-ink);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-hairline);
+  font: inherit;
+  font-size: var(--typography-label);
+  font-weight: var(--primitive-fontWeight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  cursor: pointer;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.stage-node:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  transform: scale(1.08);
+}
+.stage-node:active {
+  transform: scale(0.94);
+  transition-duration: var(--motion-press);
+}
+.stage-node[aria-pressed="true"] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+.stage-node[data-locked] {
+  border-style: dashed;
+  color: var(--color-ink-muted);
+}
+.stage-node[data-locked][aria-pressed="true"] {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-surface);
+}
+
+.pawn {
+  position: absolute;
+  z-index: 2;
+  translate: -50% calc(-100% - 32px);
+  pointer-events: none;
+  transition:
+    left 620ms var(--motion-ease-default),
+    top 620ms var(--motion-ease-default);
+}
+.pawn svg {
+  display: block;
+  fill: var(--color-ink);
+}
+.pawn-shadow {
+  fill: color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+.pawn-hop {
+  animation: hop 620ms var(--motion-ease-default);
+}
+@keyframes hop {
+  45% {
+    transform: translateY(-28px);
+  }
+}
+
+/* --- stage card --- */
+.stage-card {
+  max-width: 54rem;
+  margin: var(--spacing-stack-lg) auto 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  text-align: left;
+}
+.stage-swap {
+  display: grid;
+  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  animation: enter var(--motion-enter) var(--motion-ease-default);
+}
+/* Fills the row beside the info column on desktop (cover cropped to fit),
+   takes the cover's own proportions once stacked on phones. */
+.stage-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 16rem;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface-sunken);
+}
+.stage-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stage-art-empty {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  color: var(--color-ink-faint);
+}
+.stage-art-empty svg {
+  width: 44px;
+  height: 44px;
+}
+.stage-info {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem 1.75rem;
+}
+.stage-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.stage-num {
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  border-radius: var(--chip-radius);
+  background: var(--chip-bg);
+  color: var(--chip-fg);
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+  font-variant-numeric: tabular-nums;
+}
+.stage-blurb {
+  margin: 0;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* Label ....... value rows, shared by the stage stats and the credits roll. */
+.stage-stats,
+.roll {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+}
+.stage-stats > div,
+.roll > div {
+  display: flex;
+  align-items: baseline;
+}
+.stage-stats > div::after,
+.roll > div::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  min-width: 1.5rem;
+  margin: 0 0.6rem;
+  border-bottom: 1px dotted color-mix(in srgb, var(--color-ink) 30%, transparent);
+}
+.stage-stats dd,
+.roll dd {
+  order: 2;
+  margin: 0;
+  text-align: right;
+}
+.stage-stats {
+  font-size: var(--typography-label);
+}
+.stage-stats dt {
+  color: var(--color-ink-muted);
+}
+
+.stage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0.25rem 0 0;
+  font-size: var(--typography-label);
+}
+.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  font-weight: var(--primitive-fontWeight-medium);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.play svg {
+  width: 14px;
+  height: 14px;
+}
+.play:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-2px);
+}
+.play:active {
+  transform: scale(0.97);
+  transition-duration: var(--motion-press);
+}
+
+/* --- credits --- */
+.gd-credits {
+  display: grid;
+  justify-items: center;
+  margin-top: clamp(5rem, 14vh, 8rem);
+  scroll-margin-top: 1rem;
+}
+.roll {
+  width: min(100%, 32rem);
+  gap: 0.7rem;
+  font-size: var(--typography-label);
+}
+.roll dt {
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.roll dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.roll a {
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.roll a:hover {
+  color: var(--color-accent);
+}
+.thanks {
+  margin: var(--spacing-stack-lg) 0 0;
+  color: var(--color-ink-muted);
+}
+.gd-credits .back {
+  margin-top: var(--spacing-stack-lg);
+}
+
+/* ============================================================
+   DEVLOG — /games/stage/[slug]. The header is the stage's intro screen:
+   cover as a wide banner, then chip, title, facts, and play. The reading
+   column and rail come from story.css.
+   ============================================================ */
+.gd-story {
+  text-align: left;
+}
+.stage-head {
+  /* Collapses on its own width, not the window's — the editor renders it in
+     a half-width pane where a viewport query would never fire. */
+  container-type: inline-size;
+  overflow: hidden;
+  margin: clamp(1.5rem, 5vh, 3rem) 0 clamp(2.5rem, 7vh, 4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+}
+.stage-banner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 21 / 8;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-sunken);
+}
+.stage-banner img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stage-head-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1rem 2.5rem;
+  padding: 1.75rem 2rem 2rem;
+}
+.stage-head-body > .stage-title,
+.stage-head-body > .stage-blurb {
+  grid-column: 1;
+}
+.stage-head-body > .stage-stats {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: start;
+}
+.stage-title-lg {
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+}
+@container (max-width: 44rem) {
+  .stage-banner {
+    aspect-ratio: 63 / 50;
+  }
+  .stage-head-body {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.25rem;
+  }
+  .stage-head-body > .stage-stats {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* --- small screens --- */
+@media (max-width: 720px) {
+  .stage-swap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stage-art {
+    min-height: 0;
+    aspect-ratio: 63 / 50;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .stage-info {
+    padding: 1.25rem;
+  }
+  .stage-node {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-node,
+  .start,
+  .play {
+    transform: none !important;
+  }
+  .pawn {
+    transition: none;
+  }
+}

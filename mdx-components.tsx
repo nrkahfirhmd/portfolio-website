@@ -1,4 +1,5 @@
 import type { MDXComponents } from "mdx/types";
+import { StageHeader } from "@/app/games/stage-header";
 import { ArticleHeader } from "@/app/software/story-components";
 import { baseComponents } from "@/app/story/components";
 
@@ -6,5 +7,5 @@ import { baseComponents } from "@/app/story/components";
 // through — imported by the shared preview editor too, so preview and the
 // real story pages can't drift. Shared blocks plus each section's header.
 export function useMDXComponents(): MDXComponents {
-  return { ...baseComponents, ArticleHeader };
+  return { ...baseComponents, ArticleHeader, StageHeader };
 }
