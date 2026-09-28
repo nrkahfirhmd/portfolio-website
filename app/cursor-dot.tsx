@@ -8,7 +8,7 @@ import {
 } from "./fine-pointer";
 
 /** Elements the dot grows over — the same set that gets a focus ring. */
-const INTERACTIVE = "a, button, input, [tabindex]";
+const INTERACTIVE = "a, button, input, summary, [tabindex]";
 /** Follow tightness per frame — how much of the remaining gap to the real
  * pointer the dot closes each tick. Lower drifts and floats more; higher
  * snaps closer to instant. 0.2 reads as a trailing circle, not a lagging one. */

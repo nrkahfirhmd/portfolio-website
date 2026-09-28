@@ -26,7 +26,11 @@ type GithubEvent = {
   type: string;
   repo: { name: string };
   created_at: string;
-  payload?: Record<string, any>;
+  payload?: {
+    action?: string;
+    ref_type?: string;
+    pull_request?: { merged?: boolean };
+  };
 };
 
 type Activity = { id: string; time: string; label: string };
@@ -52,11 +56,11 @@ function summarize(e: GithubEvent): Activity | null {
     case "PullRequestEvent": {
       const action = e.payload?.action;
       const merged = action === "closed" && e.payload?.pull_request?.merged;
-      const verb = merged ? "Merged" : (ACTION_VERB[action] ?? "Updated");
+      const verb = merged ? "Merged" : (ACTION_VERB[action ?? ""] ?? "Updated");
       return { ...base, label: `${verb} PR on ${repo}` };
     }
     case "IssuesEvent":
-      return { ...base, label: `${ACTION_VERB[e.payload?.action] ?? "Updated"} issue on ${repo}` };
+      return { ...base, label: `${ACTION_VERB[e.payload?.action ?? ""] ?? "Updated"} issue on ${repo}` };
     case "CreateEvent":
       return {
         ...base,

@@ -472,9 +472,9 @@
 /* --- gateways --- */
 .gates {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(0.5rem, 1.2vw, var(--spacing-stack-xs));
-  width: min(100%, 62rem);
+  width: min(100%, 44rem);
   margin-top: clamp(0.25rem, 1.5vh, var(--spacing-stack-sm));
 }
 
@@ -660,8 +660,8 @@
 }
 
 /* ============================================================
-   MUSIC ISLAND — Dynamic-Island-style player, centred on the eyebrow row
-   between the KV mark and the clock. Inverted (ink surface / paper text),
+   GITHUB ISLAND — Dynamic-Island-style status card, centred on the eyebrow
+   row between the KV mark and the clock. Inverted (ink surface / paper text),
    reusing the same language as the `chip` token group.
 
    Absolute, never in flow: collapsed it would be taller than the caption-sized
@@ -681,7 +681,7 @@
   translate: -50% 0;
   overflow: hidden;
   /* .eyebrow uppercases and letterspaces everything inside it, which is right
-     for a caption row and wrong for track titles. Children that do want the
+     for a caption row and wrong for status text. Children that do want the
      tracking ask for it themselves. */
   text-transform: none;
   letter-spacing: normal;

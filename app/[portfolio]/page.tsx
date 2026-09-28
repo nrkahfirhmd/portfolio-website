@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { GATEWAYS } from "../gateways";
 import "../home.css";
 
-/** Only the three known slugs exist — anything else still 404s properly. */
+/** Placeholders only for portfolios not yet live — a live one has its own
+ * static route. Anything else still 404s properly. */
 export function generateStaticParams() {
-  return GATEWAYS.map((g) => ({ portfolio: g.slug }));
+  return GATEWAYS.filter((g) => !g.live).map((g) => ({ portfolio: g.slug }));
 }
 
 export const dynamicParams = false;
@@ -34,7 +35,7 @@ export default async function PortfolioPage({
   params: Promise<{ portfolio: string }>;
 }) {
   const gateway = find((await params).portfolio);
-  if (!gateway) notFound();
+  if (!gateway || gateway.live) notFound();
 
   return (
     <main className="soon-page">

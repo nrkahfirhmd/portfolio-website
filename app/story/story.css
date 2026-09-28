@@ -1,0 +1,340 @@
+/* Story pages (/software/work/[slug]) and the dev-only MDX editor
+   (/software/preview). Element styling for MDX output lives here rather than
+   in a typography plugin; the component map in story-components.tsx only
+   hands out class names. */
+
+/* --- header: `git show <sha>` --- */
+.story-head {
+  display: grid;
+  gap: var(--spacing-stack-sm);
+  justify-items: start;
+  padding-block: clamp(2.5rem, 8vh, 4.5rem) clamp(2rem, 6vh, 3.5rem);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: clamp(2rem, 6vh, 3.5rem);
+}
+.story-head .sw-cmd {
+  margin: 0;
+}
+.story-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 6.5vw, 4rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+  text-wrap: balance;
+}
+.story-msg {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--typography-tagline);
+  color: var(--color-ink-muted);
+  text-wrap: pretty;
+}
+.story-head .commit-line {
+  margin: 0;
+}
+.story-head .sha {
+  color: var(--color-accent-active);
+}
+
+/* --- rail + reading column --- */
+.story-grid {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: var(--spacing-gutter-lg);
+}
+.story-nav {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+.story-nav ul {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--typography-label);
+}
+.story-nav a {
+  display: block;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--color-border);
+  color: var(--color-ink-muted);
+  transition:
+    color var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.story-nav a:hover {
+  color: var(--color-accent);
+}
+.story-nav a[aria-current="true"] {
+  color: var(--color-ink);
+  font-weight: var(--primitive-fontWeight-medium);
+  border-left-color: var(--color-accent);
+}
+.story-back {
+  margin-top: clamp(3rem, 10vh, 5rem);
+}
+
+@media (max-width: 900px) {
+  .story-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .story-nav {
+    display: none;
+  }
+}
+
+/* --- prose: rhythm + measure, and the plain markdown elements --- */
+.prose {
+  max-width: 42rem;
+  line-height: 1.7;
+}
+.prose > * {
+  margin: 0;
+}
+.prose > * + * {
+  margin-top: var(--spacing-stack);
+}
+.prose > * + :is(.st-h2, .st-h3) {
+  margin-top: var(--spacing-stack-lg);
+}
+.prose > :is(.st-h2, .st-h3) + * {
+  margin-top: var(--spacing-stack-sm);
+}
+.prose p,
+.prose li {
+  text-wrap: pretty;
+}
+.prose ul,
+.prose ol {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+}
+.prose li::marker {
+  color: var(--color-accent);
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+.prose strong {
+  font-weight: var(--primitive-fontWeight-bold);
+}
+
+.st-h2 {
+  font-size: var(--typography-tagline);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.3;
+  text-wrap: balance;
+  /* Clears the page top when a rail link jumps here. */
+  scroll-margin-top: 2rem;
+}
+.st-h3 {
+  font-size: var(--typography-body);
+  font-weight: var(--primitive-fontWeight-bold);
+}
+.st-quote {
+  padding-left: 1rem;
+  border-left: 1px solid var(--color-accent);
+  font-family: var(--font-flourish), var(--primitive-fontFamily-flourish);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.45;
+}
+.st-quote p {
+  margin: 0;
+}
+.st-link {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.st-link:hover {
+  color: var(--color-accent-hover);
+}
+.st-code {
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--primitive-radius-sm);
+  background: var(--color-surface-sunken);
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+/* --- components --- */
+.st-figure {
+  display: grid;
+  gap: 0.5rem;
+}
+.st-figure img,
+.st-figure-empty {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+}
+.st-figure-empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--color-surface-sunken);
+  font-size: var(--typography-caption);
+  color: var(--color-ink-muted);
+}
+.st-figure figcaption {
+  font-size: var(--typography-caption);
+  color: var(--color-ink-muted);
+}
+
+.st-points,
+.st-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+}
+.st-points {
+  gap: 0.75rem;
+}
+.st-point {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-surface);
+  font-size: var(--typography-label);
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+}
+.st-point-title {
+  margin: 0 0 0.3rem;
+  font-weight: var(--primitive-fontWeight-bold);
+  color: var(--color-ink);
+}
+
+.st-stats {
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-border);
+}
+.st-stats > div {
+  padding: 0.75rem 1rem;
+  background: var(--color-surface);
+}
+.st-stats dt {
+  font-size: var(--typography-caption);
+  color: var(--color-ink-muted);
+}
+.st-stats dd {
+  margin: 0.2rem 0 0;
+  font-weight: var(--primitive-fontWeight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.st-callout {
+  padding: 1rem 1.15rem;
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-accent-soft);
+}
+.st-callout p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .st-points,
+  .st-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   EDITOR — dev-only. Source left, live render right; both panes scroll
+   internally so the page never does.
+   ============================================================ */
+.ed {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  height: 100dvh;
+  overflow: hidden;
+}
+.ed-source {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--color-border);
+}
+.ed-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem var(--spacing-gutter);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-sunken);
+  font-size: var(--typography-caption);
+  color: var(--color-ink-muted);
+}
+.ed-bar button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: inherit;
+  cursor: pointer;
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.ed-bar button:hover {
+  color: var(--color-accent);
+}
+.ed textarea {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  padding: var(--spacing-gutter);
+  border: 0;
+  outline: none;
+  background: var(--color-surface-sunken);
+  font: inherit;
+  font-size: var(--typography-label);
+  line-height: 1.7;
+  color: var(--color-ink);
+  tab-size: 2;
+}
+.ed-output {
+  position: relative;
+  overflow-y: auto;
+  background: var(--color-surface);
+}
+.ed-error {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0.6rem var(--spacing-gutter);
+  background: var(--color-surface-sunken);
+  font-size: var(--typography-caption);
+  color: var(--color-danger);
+}
+.ed-page {
+  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
+}
+
+@media (max-width: 900px) {
+  .ed {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 45dvh minmax(0, 1fr);
+  }
+  .ed-source {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+}

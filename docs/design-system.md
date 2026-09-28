@@ -52,7 +52,7 @@ Component tokens reference semantic tokens only — never a raw hex. That is the
 
 ## Type
 
-**Primary: JetBrains Mono** (falls back to IBM Plex Mono → system mono). Carries nav, labels, body copy, gateway names — the "professional mono" identity, and it directly signals the AI/Systems Engineering half of Kv's work.
+**Primary: JetBrains Mono** (falls back to IBM Plex Mono → system mono). Carries nav, labels, body copy, gateway names — the "professional mono" identity, and it directly signals the software-engineering half of Kv's work.
 
 **Accent: Fraunces**, italic, used in exactly one place — a single word or short phrase inside the intro line (e.g. the tagline's key verb) — as the "aesthetic touch." It's a high-personality serif against a monospace field, so it should stay rare; if it shows up more than once on screen it stops reading as a flourish and starts reading as an inconsistent system.
 
@@ -90,7 +90,7 @@ No ambient gray shadows at rest — surfaces sit flush against the page with a 1
 
 ## Component tokens (initial set)
 
-- `gateway-card-*` — the three portfolio links: name + short description only, no eyebrow/number label. Hairline at rest → green glow + lift on hover/focus.
+- `gateway-card-*` — the two portfolio links: name + short description only, no eyebrow/number label. Hairline at rest → green glow + lift on hover/focus.
 - `social-icon-*` — circular, 44px (meets tap-target minimum), fills with `accent-soft` and borders in `accent` on hover.
 - `focus-ring-*` — 2px solid `focus-ring` color, 3px offset, applies uniformly to every interactive element regardless of its own hover treatment. Never suppressed.
 - `chip-*` — inverted (ink bg / white fg) pill, reserved for the "coming soon" badge on gateways whose destination isn't live yet.
@@ -100,4 +100,4 @@ No ambient gray shadows at rest — surfaces sit flush against the page with a 1
 - Photo treatment (duotone in ink/accent? full color? masked shape?) — affects whether we need an extra `--color-photo-*` token group.
 - Whether the Fraunces flourish appears in the name or only in the tagline — affects `--typography-display` font-family.
 - Which accent ships as the default. `green` is current; `amber`, `indigo`, and `clay` are built and contrast-verified.
-- Whether the theme/accent/density controls stay user-facing on the live page or are a build-time choice only. They currently live in the `/options` preview chrome, not the page itself.
+- Whether the theme/accent/density controls ever become user-facing. Today they are a build-time choice only, set on `<html>` in `app/layout.tsx`.
