@@ -410,8 +410,8 @@
   transition-duration: var(--motion-press);
 }
 
-/* --- credits --- */
-.gd-credits {
+/* --- contact: the credits roll --- */
+.gd-contact {
   display: grid;
   justify-items: center;
   margin-top: clamp(5rem, 14vh, 8rem);
@@ -443,7 +443,7 @@
   margin: var(--spacing-stack-lg) 0 0;
   color: var(--color-ink-muted);
 }
-.gd-credits .back {
+.gd-contact .back {
   margin-top: var(--spacing-stack-lg);
 }
 

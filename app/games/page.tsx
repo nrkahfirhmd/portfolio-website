@@ -26,10 +26,6 @@ export default function GamesPage() {
         <Link href="/" className="gd-home" aria-label="Back to the index">
           kv<span aria-hidden="true">/</span>games
         </Link>
-        <nav aria-label="Sections" className="gd-nav">
-          <a href="#levels">Levels</a>
-          <a href="#credits">Credits</a>
-        </nav>
       </header>
 
       {/* Title screen: centred, the way a game boots. The portrait is served
@@ -71,7 +67,7 @@ export default function GamesPage() {
         <LevelMap stages={STAGES} />
       </section>
 
-      <section id="credits" className="gd-credits" aria-labelledby="credits-heading">
+      <footer id="contact" className="gd-contact" aria-labelledby="credits-heading">
         <h2 id="credits-heading" className="gd-h2">
           Credits
         </h2>
@@ -97,7 +93,7 @@ export default function GamesPage() {
           <BackArrow />
           Back to index
         </Link>
-      </section>
+      </footer>
     </main>
   );
 }

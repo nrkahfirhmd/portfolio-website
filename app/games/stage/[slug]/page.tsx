@@ -47,7 +47,7 @@ export default async function StagePage({
         </Link>
         <nav aria-label="Sections" className="gd-nav">
           <Link href="/games#levels">Levels</Link>
-          <Link href="/games#credits">Credits</Link>
+          <Link href="/games#contact">Contact</Link>
         </nav>
       </header>
 
