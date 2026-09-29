@@ -9,6 +9,9 @@ import {
 
 /** Elements the dot grows over — the same set that gets a focus ring. */
 const INTERACTIVE = "a, button, input, summary, [tabindex]";
+/** Elements that swap the dot for a labelled pill (eye + the attribute's
+ * text), e.g. `data-cursor-label="Read the devlog"`. */
+const LABELLED = "[data-cursor-label]";
 /** Follow tightness per frame — how much of the remaining gap to the real
  * pointer the dot closes each tick. Lower drifts and floats more; higher
  * snaps closer to instant. 0.2 reads as a trailing circle, not a lagging one. */
@@ -54,6 +57,7 @@ const SETTLE_EPSILON = 0.05;
 export function CursorDot() {
   const wrap = useRef<HTMLDivElement>(null);
   const dot = useRef<HTMLDivElement>(null);
+  const label = useRef<HTMLSpanElement>(null);
   const enabled = useSyncExternalStore(
     subscribeFinePointer,
     getFinePointerSnapshot,
@@ -107,15 +111,14 @@ export function CursorDot() {
       }
       if (!raf) raf = requestAnimationFrame(tick);
     };
+    // pointerover fires on every element the pointer enters, so each one
+    // settles the dot's whole state: labelled pill, shrunk dot, or plain.
     const over = (e: PointerEvent) => {
-      if ((e.target as Element)?.closest?.(INTERACTIVE)) {
-        d!.classList.add("cursor-dot--active");
-      }
-    };
-    const out = (e: PointerEvent) => {
-      if ((e.target as Element)?.closest?.(INTERACTIVE)) {
-        d!.classList.remove("cursor-dot--active");
-      }
+      const t = e.target as Element;
+      const labelled = t?.closest?.<HTMLElement>(LABELLED);
+      if (labelled && label.current) label.current.textContent = labelled.dataset.cursorLabel ?? "";
+      w!.classList.toggle("cursor-wrap--label", !!labelled);
+      d!.classList.toggle("cursor-dot--active", !labelled && !!t?.closest?.(INTERACTIVE));
     };
     // Leaving the whole viewport (into the OS chrome) has no target to check
     // against INTERACTIVE, so hide the dot outright rather than leave it
@@ -126,13 +129,11 @@ export function CursorDot() {
 
     addEventListener("pointermove", move, { passive: true });
     addEventListener("pointerover", over, { passive: true });
-    addEventListener("pointerout", out, { passive: true });
     addEventListener("pointerleave", leave, { passive: true });
     return () => {
       if (raf) cancelAnimationFrame(raf);
       removeEventListener("pointermove", move);
       removeEventListener("pointerover", over);
-      removeEventListener("pointerout", out);
       removeEventListener("pointerleave", leave);
     };
   }, [enabled]);
@@ -142,6 +143,13 @@ export function CursorDot() {
   return (
     <div ref={wrap} className="cursor-wrap" aria-hidden="true">
       <div ref={dot} className="cursor-dot" />
+      <div className="cursor-label">
+        <svg viewBox="0 0 24 24">
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+        <span ref={label} />
+      </div>
     </div>
   );
 }

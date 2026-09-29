@@ -187,6 +187,48 @@
 .cursor-dot--active {
   --cursor-scale: 0.5;
 }
+/* Over a [data-cursor-label] element the dot pops out and a pill pops in
+   centred on the pointer, carrying the element's label. Solid ink rather
+   than the dot's inversion: a pill of inverted pixels behind text would be
+   unreadable over cover art. */
+.cursor-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-ink) 22%, transparent);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition:
+    transform var(--motion-playful) var(--motion-ease-playful),
+    opacity var(--motion-hover) var(--motion-ease-default);
+}
+.cursor-label svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cursor-wrap--label .cursor-label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.cursor-wrap--label .cursor-dot {
+  --cursor-scale: 0;
+}
 
 /* Native cursor off wherever this is mounted (set by CursorDot on <html>),
    with one carve-out: the clock's editable city field, where a caret
