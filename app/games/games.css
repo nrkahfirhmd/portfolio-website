@@ -1,5 +1,5 @@
 /* /games — the game dev portfolio, told as a game's own screens: title
-   screen, level select, credits. Same world as the rest of the site
+   screen, level select (a shelf of memory cartridges), credits. Same world as the rest of the site
    (cutting-mat paper, mono, one green accent that only marks what you can
    touch); different structure from /software's git log. Every value resolves
    from docs/design-tokens.css. No raw hex here. */
@@ -157,149 +157,247 @@
 }
 
 /* ============================================================
-   LEVEL MAP — a dotted trail with a node per stage and a pawn that hops
-   between them. Nodes are HTML buttons laid over the SVG in % of its
-   viewBox, so they stay focusable while the trail scales.
+   SHELF — every game at once, as a cartridge: grip ridges, box art, label.
+   The top-right corner is cut the way a handheld cart's is. A clip-path
+   eats borders, so the edge is the shell's background showing through a
+   2px gap around the body, clipped to a slightly smaller cut.
    ============================================================ */
-.map {
-  position: relative;
-  width: 100%;
-  margin-inline: auto;
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  text-align: left;
 }
-.map > svg {
+.cart {
+  --cart-cut: 22px;
+  --cart-edge: var(--color-border);
+  position: relative;
+  display: flex;
+  min-width: 0;
+  color: inherit;
+  filter: drop-shadow(0 1px 1px color-mix(in srgb, var(--color-ink) 8%, transparent))
+    drop-shadow(0 6px 14px color-mix(in srgb, var(--color-ink) 7%, transparent));
+  transition:
+    translate var(--motion-playful) var(--motion-ease-playful),
+    filter var(--motion-hover) var(--motion-ease-default);
+}
+.cart[data-featured] {
+  --cart-cut: 34px;
+  grid-column: span 2;
+  grid-row: span 2;
+}
+.cart-shell,
+.cart-body {
+  --cut: var(--cart-cut);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+.cart-shell {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  padding: 2px;
+  background: var(--cart-edge);
+  transition: background var(--motion-hover) var(--motion-ease-default);
+}
+.cart-body {
+  /* 2px gap on a 45° cut needs ~1px less cut to stay parallel. */
+  --cut: calc(var(--cart-cut) - 1px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+}
+/* Grip ridges along the top, stopping short of the cut corner. */
+.cart-grip {
+  height: 12px;
+  margin: 8px calc(var(--cart-cut) + 6px) 0 12px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-ink) 16%, transparent) 0 2px,
+    transparent 2px 6px
+  );
+  border-radius: 1px;
+}
+.cart-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  aspect-ratio: 1;
+  margin: 10px 10px 0;
+  overflow: hidden;
+  border-radius: var(--primitive-radius-sm);
+  /* Cutting-mat dots for carts with no box art yet. */
+  background:
+    radial-gradient(color-mix(in srgb, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px,
+    var(--color-surface-sunken);
+}
+.cart[data-featured] .cart-art {
+  aspect-ratio: auto;
+  min-height: 12rem;
+}
+.cart-art img {
+  object-fit: cover;
+  transition: scale 600ms var(--motion-ease-default);
+}
+.cart-art-empty {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-faint);
+}
+.cart-art-empty svg {
+  width: 32px;
+  height: 32px;
+}
+/* The label: name, then a way in. */
+.cart-label {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  padding: 0.75rem 0.85rem 0.9rem;
+}
+.cart-name {
+  margin: 0;
+  font-size: var(--typography-label);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.cart[data-featured] .cart-name {
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+}
+/* The devlog link is the name, stretched over the whole cart; the Play
+   button and fallback link sit above it so they stay clickable. */
+.cart-link::after {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
 }
-.trail {
-  fill: none;
-  stroke: color-mix(in srgb, var(--color-ink) 28%, transparent);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-dasharray: 0.5 12;
-  vector-effect: non-scaling-stroke;
+.cart-link:focus-visible {
+  outline: none;
 }
-.map-tall {
+.cart:has(.cart-link:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+.cart-play,
+.cart-go {
+  position: relative;
+  z-index: 1;
+}
+.cart-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.75rem;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.cart-play svg {
+  width: 12px;
+  height: 12px;
+}
+.cart-play:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+.cart-play:active {
+  transform: scale(0.96);
+  transition-duration: var(--motion-press);
+}
+.cart-play:focus-visible,
+.cart-go:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+/* Where the cursor pill can't say "Read the devlog" (touch, reduced
+   motion), the cart says it itself. */
+.cart-hint {
   display: none;
-  max-width: 22rem;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-accent);
 }
-@media (max-width: 720px) {
-  .map-wide {
-    display: none;
-  }
-  .map-tall {
+/* The cursor dot's own gate (fine-pointer.ts), inverted — a media query
+   rather than its html attribute, so there's no flash before hydration. */
+@media not (pointer: fine), (prefers-reduced-motion: reduce) {
+  .cart-hint {
     display: block;
   }
 }
+.cart-go {
+  white-space: nowrap;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-accent);
+}
+.cart-go svg {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: 0.3rem;
+  vertical-align: -2px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: translate var(--motion-playful) var(--motion-ease-playful);
+}
 
-.stage-node {
-  position: absolute;
-  translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  border: 2px solid var(--color-ink);
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-hairline);
-  font: inherit;
-  font-size: var(--typography-label);
-  font-weight: var(--primitive-fontWeight-bold);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink);
-  cursor: pointer;
-  transition:
-    background var(--motion-hover) var(--motion-ease-default),
-    border-color var(--motion-hover) var(--motion-ease-default),
-    color var(--motion-hover) var(--motion-ease-default),
-    transform var(--motion-playful) var(--motion-ease-playful);
+.cart:has(.cart-link):hover {
+  --cart-edge: var(--color-accent);
+  translate: 0 -4px;
+  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--color-ink) 10%, transparent))
+    drop-shadow(0 14px 24px color-mix(in srgb, var(--color-ink) 12%, transparent));
 }
-.stage-node:hover {
-  background: var(--color-accent-soft);
-  border-color: var(--color-accent);
-  transform: scale(1.08);
+.cart:has(.cart-link):hover .cart-art img {
+  scale: 1.04;
 }
-.stage-node:active {
-  transform: scale(0.94);
+.cart-go:hover svg {
+  translate: 2px -1px;
+}
+.cart:has(.cart-link:active) {
+  translate: 0 -1px;
   transition-duration: var(--motion-press);
 }
-.stage-node[aria-pressed="true"] {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-accent-foreground);
+/* A sealed cart: hatched art, muted name. */
+.cart[data-locked] .cart-art {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--color-ink) 7%, transparent) 0 1px,
+      transparent 1px 9px
+    ),
+    var(--color-surface-sunken);
 }
-.stage-node[data-locked] {
-  border-style: dashed;
+.cart[data-locked] .cart-name {
   color: var(--color-ink-muted);
 }
-.stage-node[data-locked][aria-pressed="true"] {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  color: var(--color-surface);
-}
 
-.pawn {
-  position: absolute;
-  z-index: 2;
-  translate: -50% calc(-100% - 32px);
-  pointer-events: none;
-  transition:
-    left 620ms var(--motion-ease-default),
-    top 620ms var(--motion-ease-default);
-}
-.pawn svg {
-  display: block;
-  fill: var(--color-ink);
-}
-.pawn-shadow {
-  fill: color-mix(in srgb, var(--color-ink) 18%, transparent);
-}
-.pawn-hop {
-  animation: hop 620ms var(--motion-ease-default);
-}
-@keyframes hop {
-  45% {
-    transform: translateY(-28px);
+@media (max-width: 720px) {
+  .shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cart[data-featured] {
+    grid-row: auto;
+  }
+  .cart[data-featured] .cart-art {
+    aspect-ratio: 63 / 50;
   }
 }
 
-/* --- stage card --- */
-.stage-card {
-  max-width: 54rem;
-  margin: var(--spacing-stack-lg) auto 0;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-xl);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-lift);
-  text-align: left;
-}
-.stage-swap {
-  display: grid;
-  grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
-  animation: enter var(--motion-enter) var(--motion-ease-default);
-}
-/* Fills the row beside the info column on desktop (cover cropped to fit),
-   takes the cover's own proportions once stacked on phones. */
-.stage-art {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 16rem;
-  border-right: 1px solid var(--color-border);
-  background: var(--color-surface-sunken);
-}
-.stage-art img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+/* --- stage facts, shared with the devlog header --- */
 .stage-art-empty {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: var(--primitive-fontWeight-bold);
@@ -308,12 +406,6 @@
 .stage-art-empty svg {
   width: 44px;
   height: 44px;
-}
-.stage-info {
-  display: grid;
-  align-content: start;
-  gap: 1rem;
-  padding: 1.5rem 1.75rem 1.75rem;
 }
 .stage-title {
   display: flex;
@@ -513,33 +605,12 @@
   }
 }
 
-/* --- small screens --- */
-@media (max-width: 720px) {
-  .stage-swap {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .stage-art {
-    min-height: 0;
-    aspect-ratio: 63 / 50;
-    border-right: 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .stage-info {
-    padding: 1.25rem;
-  }
-  .stage-node {
-    width: 48px;
-    height: 48px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .stage-node,
+  .cart {
+    translate: none !important;
+  }
   .start,
   .play {
     transform: none !important;
-  }
-  .pawn {
-    transition: none;
   }
 }

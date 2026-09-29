@@ -97,6 +97,14 @@ export const STAGES: Stage[] = [
   },
 ];
 
+/** Shelf order: the newest stage with cover art takes the big slot, then the
+ * rest newest-first, and the locked teaser always sits at the end. */
+export function shelve(stages: Stage[]) {
+  const open = stages.filter((s) => !s.locked).reverse();
+  const featured = open.find((s) => s.cover) ?? open[0];
+  return [featured, ...open.filter((s) => s !== featured), ...stages.filter((s) => s.locked)].filter(Boolean);
+}
+
 /** Stages with a devlog at `content/games/<slug>.mdx`. */
 export const STORY_SLUGS = new Set<string>(["body-count"]);
 

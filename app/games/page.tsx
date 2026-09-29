@@ -6,7 +6,7 @@ import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "../software/parts";
 import { STAGES, STUDIO } from "./games";
-import { LevelMap } from "./level-map";
+import { Shelf } from "./shelf";
 import "../home.css";
 import "./games.css";
 
@@ -64,7 +64,7 @@ export default function GamesPage() {
         <h2 id="levels-heading" className="gd-h2">
           Level select
         </h2>
-        <LevelMap stages={STAGES} />
+        <Shelf stages={STAGES} />
       </section>
 
       <footer id="contact" className="gd-contact" aria-labelledby="credits-heading">
