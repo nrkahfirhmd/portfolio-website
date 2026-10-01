@@ -47,10 +47,6 @@ export default async function StoryPage({
         <Link href="/software" className="sw-home">
           kv<span aria-hidden="true">/</span>software
         </Link>
-        <nav aria-label="Sections" className="sw-nav">
-          <Link href="/software#work">Work</Link>
-          <Link href="/software#contact">Contact</Link>
-        </nav>
       </header>
 
       <ArticleHeader slug={slug} />

@@ -3,7 +3,7 @@
    in a typography plugin; the component map in story-components.tsx only
    hands out class names. */
 
-/* --- header: `git show <sha>` --- */
+/* --- header --- */
 .story-head {
   display: grid;
   gap: var(--spacing-stack-sm);
@@ -12,8 +12,11 @@
   border-bottom: 1px solid var(--color-border);
   margin-bottom: clamp(2rem, 6vh, 3.5rem);
 }
-.story-head .sw-cmd {
+.story-meta {
   margin: 0;
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+  color: var(--color-ink-muted);
 }
 .story-title {
   margin: 0;
@@ -40,12 +43,6 @@
 .story-soon {
   margin: 0 0 var(--spacing-gutter-lg);
   color: var(--color-ink-muted);
-}
-.story-head .commit-line {
-  margin: 0;
-}
-.story-head .sha {
-  color: var(--color-accent-active);
 }
 
 /* --- rail + reading column --- */

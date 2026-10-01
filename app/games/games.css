@@ -36,19 +36,10 @@
 .gd-home span {
   color: var(--color-ink-faint);
 }
-.gd-nav {
-  display: flex;
-  gap: var(--spacing-stack);
-}
-.gd-nav a {
-  color: var(--color-ink-muted);
-}
-.gd-home,
-.gd-nav a {
+.gd-home {
   transition: color var(--motion-hover) var(--motion-ease-default);
 }
-.gd-home:hover,
-.gd-nav a:hover {
+.gd-home:hover {
   color: var(--color-accent);
 }
 
@@ -206,56 +197,16 @@
   outline-offset: 3px;
 }
 
-/* --- stage facts, shared with the devlog header --- */
-.stage-art-empty {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  color: var(--color-ink-faint);
-}
-.stage-art-empty svg {
-  width: 44px;
-  height: 44px;
-}
-.stage-title {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 0.75rem;
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1.25;
-  text-wrap: balance;
-}
-.stage-num {
-  padding: var(--chip-padding-y) var(--chip-padding-x);
-  border-radius: var(--chip-radius);
-  background: var(--chip-bg);
-  color: var(--chip-fg);
-  font-size: var(--typography-caption);
-  letter-spacing: var(--primitive-tracking-wide);
-  font-variant-numeric: tabular-nums;
-}
-.stage-blurb {
-  margin: 0;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-/* Label ....... value rows, shared by the stage stats and the credits roll. */
-.stage-stats,
+/* Label ....... value rows: the credits roll. */
 .roll {
   display: grid;
   gap: 0.4rem;
   margin: 0;
 }
-.stage-stats > div,
 .roll > div {
   display: flex;
   align-items: baseline;
 }
-.stage-stats > div::after,
 .roll > div::after {
   content: "";
   order: 1;
@@ -264,51 +215,17 @@
   margin: 0 0.6rem;
   border-bottom: 1px dotted color-mix(in srgb, var(--color-ink) 30%, transparent);
 }
-.stage-stats dd,
 .roll dd {
   order: 2;
   margin: 0;
   text-align: right;
 }
-.stage-stats {
-  font-size: var(--typography-label);
-}
-.stage-stats dt {
-  color: var(--color-ink-muted);
-}
-
 .stage-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.25rem;
-  margin: 0.25rem 0 0;
+  gap: var(--spacing-stack);
+  margin: 0;
   font-size: var(--typography-label);
-}
-.play {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.7rem 1.2rem;
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-accent);
-  color: var(--color-accent-foreground);
-  font-weight: var(--primitive-fontWeight-medium);
-  transition:
-    background var(--motion-hover) var(--motion-ease-default),
-    transform var(--motion-playful) var(--motion-ease-playful);
-}
-.play svg {
-  width: 14px;
-  height: 14px;
-}
-.play:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-2px);
-}
-.play:active {
-  transform: scale(0.97);
-  transition-duration: var(--motion-press);
 }
 
 /* --- contact: the credits roll --- */
@@ -349,73 +266,9 @@
 }
 
 /* ============================================================
-   DEVLOG — /games/stage/[slug]. The header is the stage's intro screen:
-   cover as a wide banner, then chip, title, facts, and play. The reading
-   column and rail come from story.css.
+   DEVLOG — /games/stage/[slug]. Header and reading column come from
+   story.css, shared with software stories.
    ============================================================ */
 .gd-story {
   text-align: left;
-}
-.stage-head {
-  /* Collapses on its own width, not the window's — the editor renders it in
-     a half-width pane where a viewport query would never fire. */
-  container-type: inline-size;
-  overflow: hidden;
-  margin: clamp(1.5rem, 5vh, 3rem) 0 clamp(2.5rem, 7vh, 4rem);
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-xl);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-lift);
-}
-.stage-banner {
-  position: relative;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 21 / 8;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface-sunken);
-}
-.stage-banner img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.stage-head-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 1rem 2.5rem;
-  padding: 1.75rem 2rem 2rem;
-}
-.stage-head-body > .stage-title,
-.stage-head-body > .stage-blurb {
-  grid-column: 1;
-}
-.stage-head-body > .stage-stats {
-  grid-column: 2;
-  grid-row: 1 / span 3;
-  align-self: start;
-}
-.stage-title-lg {
-  font-size: clamp(1.6rem, 4vw, 2.5rem);
-}
-@container (max-width: 44rem) {
-  .stage-banner {
-    aspect-ratio: 63 / 50;
-  }
-  .stage-head-body {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 1.25rem;
-  }
-  .stage-head-body > .stage-stats {
-    grid-column: 1;
-    grid-row: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .play {
-    transform: none !important;
-  }
 }

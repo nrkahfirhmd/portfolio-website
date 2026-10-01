@@ -1,48 +1,14 @@
-import Link from "next/link";
 import { PERSON } from "@/content/site";
 import { STUDIO, type Stage } from "./games";
 
-/** Label ....... value rows: the stage's facts. */
-export function StageStats({ stage }: { stage: Stage }) {
-  const rows = (
-    [
-      ["Genre", stage.genre],
-      ["Engine", stage.engine],
-      ["Platforms", stage.platforms],
-      ["Role", stage.role],
-      ["Made for", stage.jam],
-      ["Year", stage.year],
-      ["Status", stage.status],
-    ] as const
-  ).filter(([, v]) => v);
-  return (
-    <dl className="stage-stats">
-      {rows.map(([k, v]) => (
-        <div key={k}>
-          <dt>{k}</dt>
-          <dd>{v}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-/** Play / devlog / source / follow, whichever the stage has. */
-export function StageActions({ stage, devlog }: { stage: Stage; devlog?: boolean }) {
+/** Play / source / follow, whichever the stage has. */
+export function StageActions({ stage }: { stage: Stage }) {
   return (
     <p className="stage-actions">
       {stage.play && (
-        <a className="play" href={stage.play}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />
-          </svg>
+        <a className="stage-link" href={stage.play}>
           Play in browser
         </a>
-      )}
-      {devlog && (
-        <Link className="stage-link" href={`/games/stage/${stage.slug}`}>
-          Read the devlog
-        </Link>
       )}
       {stage.repo && (
         <a className="stage-link" href={`https://github.com/${PERSON.github}/${stage.repo}`}>

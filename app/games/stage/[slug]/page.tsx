@@ -45,10 +45,6 @@ export default async function StagePage({
         <Link href="/games" className="gd-home">
           kv<span aria-hidden="true">/</span>games
         </Link>
-        <nav aria-label="Sections" className="gd-nav">
-          <Link href="/games#library">Library</Link>
-          <Link href="/games#contact">Contact</Link>
-        </nav>
       </header>
 
       <StageHeader slug={slug} />

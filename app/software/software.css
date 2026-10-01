@@ -43,16 +43,7 @@
 .sw-home span {
   color: var(--color-ink-faint);
 }
-.sw-nav {
-  display: flex;
-  gap: var(--spacing-stack);
-}
-.sw-nav a {
-  color: var(--color-ink-muted);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.sw-home:hover,
-.sw-nav a:hover {
+.sw-home:hover {
   color: var(--color-accent);
 }
 
@@ -106,67 +97,6 @@
 }
 .sw-status:hover {
   color: var(--color-ink);
-}
-
-/* --- section headings: the command that prints what follows --- */
-.sw-cmd {
-  margin: 0 0 var(--spacing-stack-sm);
-  font-size: var(--typography-label);
-  font-weight: var(--primitive-fontWeight-medium);
-  color: var(--color-ink);
-}
-.sw-cmd span {
-  color: var(--color-accent);
-}
-
-/* --- the story header's `git show` line (story-components.tsx) --- */
-.commit-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.6rem;
-  font-size: var(--typography-caption);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink-muted);
-}
-.sha {
-  font-family: inherit;
-  font-weight: var(--primitive-fontWeight-medium);
-  color: var(--color-ink-muted);
-}
-.refs {
-  color: var(--color-ink-faint);
-}
-.ref {
-  color: var(--color-ink-muted);
-}
-.ref-head {
-  color: var(--color-accent-active);
-  font-weight: var(--primitive-fontWeight-medium);
-}
-
-.diffstat {
-  display: grid;
-  grid-template-columns: max-content max-content minmax(0, 1fr);
-  gap: 0.2rem 1rem;
-  font-size: var(--typography-caption);
-  font-variant-numeric: tabular-nums;
-}
-.diff-row {
-  display: contents;
-}
-.diff-lang {
-  color: var(--color-ink);
-}
-.diff-pct {
-  color: var(--color-ink-muted);
-  text-align: right;
-}
-.diff-bar {
-  overflow: hidden;
-  white-space: nowrap;
-  color: var(--color-accent);
-  letter-spacing: -0.04em;
 }
 
 .show-links {

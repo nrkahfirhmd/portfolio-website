@@ -7,15 +7,14 @@ export type Project = {
   /** GitHub repo name under PERSON.github. Also the React key. */
   repo: string;
   name: string;
-  /** One line, conventional-commit voice. The log's subject line. */
-  message: string;
-  /** Shown when the entry is expanded. Plain facts, no metrics. */
+  /** One line under the name: what it is. */
+  tagline: string;
+  /** A short paragraph on the project page. Plain facts, no metrics. */
   body: string;
-  sha: string;
   /** Human period, e.g. "Aug 2026" or "Dec 2025 – Feb 2026". */
   period: string;
-  /** Extra git-style refs beside the hash (`tag: live` is added from `live`). */
-  refs?: string[];
+  /** Context shown beside the date, e.g. "hackathon". */
+  tags?: string[];
   live?: string;
   languages: Record<string, number>;
   /** Tile image on /software, in public/. Width and height are the file's
