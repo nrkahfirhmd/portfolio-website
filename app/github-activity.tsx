@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-/** github.com/nrkahfirhmd — same handle as the footer's GitHub link. */
-const USERNAME = "nrkahfirhmd";
 /** Public events endpoint needs no key, so there's nothing to leak
  * client-side — unauthenticated rate limit is 60/hr per visitor IP, plenty
  * for a personal page polled this slowly. */
@@ -12,11 +10,6 @@ const POLL_MS = 5 * 60_000;
  * many fit the panel width. */
 const DOT_DAYS = 11;
 
-/** What Kv is building right now. Not derived from GitHub — a repo slug
- * rarely matches how a project actually gets talked about — so this is the
- * list to edit by hand when the focus changes. The collapsed pill shows the
- * count; the expanded panel lists them. */
-const NOW_BUILDING = ["Project Akar Fehu", "Final Challenge ADA", "Omawe"];
 
 /** Octocat mark — same path as the footer's GitHub link in app/page.tsx. */
 const GITHUB_ICON_D =
@@ -112,7 +105,15 @@ function activeDaysFrom(events: GithubEvent[]) {
  * a day-by-day activity row, so the tagline's "building things" claim is
  * backed by live data instead of just stated.
  */
-export function GithubActivity() {
+export function GithubActivity({
+  username,
+  nowBuilding: NOW_BUILDING,
+}: {
+  /** GitHub handle whose public events feed the island. */
+  username: string;
+  /** What Kv is building right now (content/site.ts). */
+  nowBuilding: readonly string[];
+}) {
   const pill = useRef<HTMLButtonElement>(null);
   const close = useRef<HTMLButtonElement>(null);
 
@@ -128,7 +129,7 @@ export function GithubActivity() {
     async function load() {
       try {
         const res = await fetch(
-          `https://api.github.com/users/${USERNAME}/events/public`,
+          `https://api.github.com/users/${username}/events/public`,
           { headers: { Accept: "application/vnd.github+json" } },
         );
         if (!res.ok) throw new Error(String(res.status));
@@ -158,7 +159,7 @@ export function GithubActivity() {
       cancelled = true;
       clearInterval(id);
     };
-  }, []);
+  }, [username]);
 
   const live = !broken && !loading;
   const latestLine = broken

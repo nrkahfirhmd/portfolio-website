@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PERSON } from "@/content/site";
 import { STUDIO, type Stage } from "./games";
 
 /** Label ....... value rows: the stage's facts. */
@@ -44,7 +45,7 @@ export function StageActions({ stage, devlog }: { stage: Stage; devlog?: boolean
         </Link>
       )}
       {stage.repo && (
-        <a className="stage-link" href={`https://github.com/nrkahfirhmd/${stage.repo}`}>
+        <a className="stage-link" href={`https://github.com/${PERSON.github}/${stage.repo}`}>
           Source
         </a>
       )}

@@ -5,15 +5,14 @@ import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "./parts";
 import { Bento } from "./project-lists";
-import { CURRENT } from "./projects";
+import { CURRENT, PERSON, SOFTWARE } from "@/content/site";
 import "../home.css";
 import "./software.css";
 import "./project-lists.css";
 
 export const metadata: Metadata = {
-  title: "Software Engineering — Kv",
-  description:
-    "Software engineering work by Kahfi Rahmada: web apps, backends, smart contracts, and data systems.",
+  title: SOFTWARE.title,
+  description: SOFTWARE.description,
 };
 
 export default function SoftwarePage() {
@@ -31,26 +30,26 @@ export default function SoftwarePage() {
       <section className="sw-intro" aria-labelledby="sw-name">
         <div className="sw-intro-text">
           <h1 id="sw-name" className="sw-name">
-            Kahfi Rahmada
+            {PERSON.name}
           </h1>
           {CURRENT && (
             <p className="sw-now">
               {CURRENT.role} @ <a href={CURRENT.companyUrl}>{CURRENT.company}</a>
             </p>
           )}
-          <p className="sw-lede">
-            I build software that makes everyday life a little better, with the small details that make it feel like home. Mobile, web, backend, blockchain, AI: whatever the product needs, I take it to done.
-          </p>
-          <a href="#contact" className="status sw-status">
-            Open to work
-          </a>
+          <p className="sw-lede">{SOFTWARE.summary}</p>
+          {PERSON.openToWork && (
+            <a href="#contact" className="status sw-status">
+              Open to work
+            </a>
+          )}
         </div>
       </section>
 
       <section id="work" className="sw-work" aria-labelledby="work-heading">
         <div className="sw-work-head">
           <h2 id="work-heading" className="sw-h2">
-            Selected work
+            {SOFTWARE.workHeading}
           </h2>
         </div>
         <Bento />

@@ -10,6 +10,7 @@ import { PaintName } from "./paint-name";
 import { PortraitToggle } from "./portrait-toggle";
 import { SOCIALS } from "./socials";
 import { SparkWord } from "./spark-word";
+import { HOME, PERSON } from "@/content/site";
 import "./home.css";
 
 export default function Home() {
@@ -38,20 +39,24 @@ export default function Home() {
         {/* Absolutely centred on this row, so it lines up with the KV mark and
             the clock without taking part in their justify-between split — and
             so expanding it can't push either one around. */}
-        <GithubActivity />
+        <GithubActivity username={PERSON.github} nowBuilding={HOME.nowBuilding} />
         <BaliClock />
       </div>
 
       <div className="stage">
         <div className="halo" data-enter style={{ "--i": 1 } as React.CSSProperties}>
-          <PortraitToggle />
+          <PortraitToggle name={PERSON.name} />
         </div>
 
-        <PaintName>Kahfi Rahmada</PaintName>
+        <PaintName>{PERSON.name}</PaintName>
 
         <p className="tagline" data-enter style={{ "--i": 3 } as React.CSSProperties}>
-          I make software <SparkWord>behave</SparkWord> and games <SparkWord>misbehave</SparkWord>, on <SparkWord>purpose</SparkWord>. <br/>
-          <span className="muted">Full-stack engineer, AI tinkerer, Game maker.</span>
+          {/* "[word]" in the tagline marks a spark: split puts those at odd indexes. */}
+          {HOME.tagline.split(/\[(.+?)\]/).map((part, i) =>
+            i % 2 ? <SparkWord key={i}>{part}</SparkWord> : part,
+          )}
+          <br />
+          <span className="muted">{HOME.roles}</span>
         </p>
 
         <nav className="gates" aria-label="Portfolios">
@@ -103,7 +108,7 @@ export default function Home() {
             </a>
           ))}
         </nav>
-        <span className="status">Open to work</span>
+        {PERSON.openToWork && <span className="status">Open to work</span>}
       </footer>
     </main>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PERSON } from "@/content/site";
 import type { Project } from "./projects";
 
 /** Width of a full diffstat bar, in `+` signs — git's own default is 60,
@@ -94,7 +95,7 @@ export function ProjectLinks({ project, story }: { project: Project; story?: boo
       {story && (
         <Link href={`/software/work/${project.repo}`}>Read the story</Link>
       )}
-      <a href={`https://github.com/nrkahfirhmd/${project.repo}`}>
+      <a href={`https://github.com/${PERSON.github}/${project.repo}`}>
         Source <Arrow />
       </a>
       {project.live && (

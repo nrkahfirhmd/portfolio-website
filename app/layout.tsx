@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Fraunces } from "next/font/google";
+import { HOME } from "@/content/site";
 import "./globals.css";
 
 const mono = JetBrains_Mono({
@@ -15,9 +16,8 @@ const flourish = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Kahfi R — Technology Orchestrator",
-  description:
-    "Kahfi Rahmada. Systems that think, play, and hold up under load.",
+  title: HOME.title,
+  description: HOME.description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

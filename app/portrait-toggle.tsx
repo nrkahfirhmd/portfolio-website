@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { BrushReveal } from "./brush-reveal";
 
-export function PortraitToggle() {
+export function PortraitToggle({ name }: { name: string }) {
   const [spider, setSpider] = useState(false);
 
   const toggle = () => setSpider((s) => !s);
@@ -14,7 +14,7 @@ export function PortraitToggle() {
       className="photo"
       tabIndex={0}
       role="img"
-      aria-label="Portrait of Kahfi Rahmada"
+      aria-label={`Portrait of ${name}`}
       data-revealed={spider ? "spider" : "portrait"}
       onClick={toggle}
       onKeyDown={(e) => {

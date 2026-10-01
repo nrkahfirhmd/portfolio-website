@@ -4,16 +4,15 @@ import { CursorDot } from "../cursor-dot";
 import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "../software/parts";
-import { STAGES, STUDIO } from "./games";
+import { GAMES, PERSON, STAGES, STUDIO } from "@/content/site";
 import { Library } from "./library";
 import "../home.css";
 import "../software/project-lists.css";
 import "./games.css";
 
 export const metadata: Metadata = {
-  title: "Game Development — Kv",
-  description:
-    "Games by Kahfi Rahmada with Batang Kayu Studio: stealth comedy, crowd-spotting puzzles, and whatever's next in the forge.",
+  title: GAMES.title,
+  description: GAMES.description,
 };
 
 export default function GamesPage() {
@@ -32,20 +31,17 @@ export default function GamesPage() {
           page, text left-aligned inside. */}
       <section className="gd-intro" aria-labelledby="gd-name">
         <h1 id="gd-name" className="gd-name">
-          Kahfi Rahmada
+          {PERSON.name}
         </h1>
         <p className="gd-role">
-          Game Developer @ <a href={STUDIO.url}>{STUDIO.name}</a>
+          {GAMES.role} @ <a href={STUDIO.url}>{STUDIO.name}</a>
         </p>
-        {/* TODO(kv): draft; say it your way. */}
-        <p className="gd-lede">
-          I make games that stay with you long after the credits roll. Design, code, art, sound: whatever it needs, I take it to done.
-        </p>
+        <p className="gd-lede">{GAMES.summary}</p>
       </section>
 
       <section id="library" className="gd-library" aria-labelledby="library-heading">
         <h2 id="library-heading" className="gd-h2">
-          Library
+          {GAMES.libraryHeading}
         </h2>
         <Library stages={STAGES} />
       </section>
@@ -70,7 +66,7 @@ export default function GamesPage() {
             </div>
           ))}
         </dl>
-        <p className="thanks">Thanks for playing.</p>
+        <p className="thanks">{GAMES.thanks}</p>
 
         <Link className="back" href="/">
           <BackArrow />
