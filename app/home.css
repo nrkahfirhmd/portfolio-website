@@ -452,7 +452,7 @@
 
 .tagline {
   margin: 0;
-  max-width: 44ch;
+  max-width: 60ch;
   font-size: clamp(1rem, 1.6vw, var(--typography-tagline));
   line-height: 1.55;
 }
@@ -749,7 +749,9 @@
 }
 .island[data-open] {
   width: min(21rem, calc(100vw - 2rem));
-  height: 6.5rem;
+  /* Base panel plus one list row per active project (--projects is set
+     inline from NOW_BUILDING). Explicit so the morph can still animate it. */
+  height: calc(7rem + var(--projects, 1) * 1.25rem);
   border-radius: var(--primitive-radius-xl);
 }
 
@@ -782,53 +784,31 @@
   font: inherit;
   cursor: pointer;
 }
-.island-dot {
-  width: 0.75rem;
-  height: 0.75rem;
-  flex: none;
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-accent);
+.island-pill {
+  justify-content: space-between;
 }
-/* Pulses once activity has loaded — reuses .status::before's own keyframes
-   (below), so "alive" reads the same way in the footer and the island. */
-.island[data-live] .island-dot {
-  animation: pulse var(--primitive-duration-ambient)
+.island-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: var(--typography-caption);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+}
+.island-count svg {
+  width: 14px;
+  height: 14px;
+}
+/* Breathes once activity has loaded, so the mark reads as live. Opacity only:
+   the footer's `pulse` ring would spill past the pill's clipped edge. */
+.island[data-live] .island-pill .island-gh-icon {
+  animation: pulse-soft var(--primitive-duration-ambient)
     var(--primitive-easing-linear) infinite;
 }
-.island-title {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: left;
-  font-size: var(--typography-caption);
-  letter-spacing: var(--primitive-tracking-wide);
-}
-.island-title-text {
-  display: inline-block;
-}
-/* Only mounted once JS has measured real overflow, so a headline that fits
-   never pays for the animation. Bounces rather than loops so there is
-   exactly one text node — a looping marquee needs a duplicated copy, which a
-   screen reader would announce twice. */
-.island-title[data-marquee] {
-  text-overflow: clip;
-}
-.island-title[data-marquee] .island-title-text {
-  animation: marquee var(--marquee-duration, 3s) ease-in-out infinite;
-}
-@keyframes marquee {
-  0%,
-  12% {
-    transform: translateX(0);
-  }
-  45%,
-  60% {
-    transform: translateX(var(--marquee-distance));
-  }
-  100% {
-    transform: translateX(0);
+@keyframes pulse-soft {
+  50% {
+    opacity: 0.55;
   }
 }
 
@@ -862,9 +842,6 @@
   text-align: left;
   font-size: var(--typography-caption);
 }
-.island-gh-user strong {
-  font-weight: var(--primitive-fontWeight-medium);
-}
 .island-gh-muted {
   color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
 }
@@ -897,6 +874,34 @@
   /* The chevron points up: it dismisses back into the notch. */
   width: 16px;
   height: 16px;
+}
+
+.island-now {
+  display: grid;
+  flex: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  text-align: left;
+}
+.island-now li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.25rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.island-now li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
 }
 
 .island-gh-row {
@@ -947,12 +952,6 @@
      the collapsed pill has to give up width before it collides with them. */
   .island {
     width: 8.5rem;
-  }
-  .island-pill {
-    justify-content: space-between;
-  }
-  .island-title {
-    display: none;
   }
 }
 
@@ -1050,15 +1049,8 @@
   .gate,
   .social,
   .gate .arrow,
-  .spark,
-  .island-title-text {
+  .spark {
     transform: none !important;
-  }
-  /* The animation above is stripped, so a long headline would otherwise
-     hard-cut mid-word with no signal there's more. Ellipsis is the resting
-     state everywhere else on the page — restore it here too. */
-  .island-title[data-marquee] {
-    text-overflow: ellipsis;
   }
   .gate::after {
     display: none;

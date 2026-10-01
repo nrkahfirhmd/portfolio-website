@@ -14,8 +14,9 @@ const DOT_DAYS = 11;
 
 /** What Kv is building right now. Not derived from GitHub — a repo slug
  * rarely matches how a project actually gets talked about — so this is the
- * one line to edit by hand when the focus changes. */
-const NOW_BUILDING = "Project Akar Fehu";
+ * list to edit by hand when the focus changes. The collapsed pill shows the
+ * count; the expanded panel lists them. */
+const NOW_BUILDING = ["Project Akar Fehu", "Final Challenge ADA", "Omawe"];
 
 /** Octocat mark — same path as the footer's GitHub link in app/page.tsx. */
 const GITHUB_ICON_D =
@@ -105,23 +106,21 @@ function activeDaysFrom(events: GithubEvent[]) {
 
 /**
  * Dynamic-Island-style status card — same collapse/expand shell as the music
- * island this replaced (app/music-island.tsx). Collapsed shows the stable
- * "what Kv is building" line; expanded adds the latest real GitHub event and
+ * island this replaced (app/music-island.tsx). Collapsed follows iOS's
+ * compact leading/trailing layout: GitHub mark left, active project count
+ * right; expanded lists what Kv is building, adds the latest real GitHub event and
  * a day-by-day activity row, so the tagline's "building things" claim is
  * backed by live data instead of just stated.
  */
 export function GithubActivity() {
   const pill = useRef<HTMLButtonElement>(null);
   const close = useRef<HTMLButtonElement>(null);
-  const titleBox = useRef<HTMLSpanElement>(null);
-  const titleText = useRef<HTMLSpanElement>(null);
 
   const [open, setOpen] = useState(false);
   const [latest, setLatest] = useState<Activity | null>(null);
   const [activeDays, setActiveDays] = useState<boolean[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [broken, setBroken] = useState(false);
-  const [overflow, setOverflow] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -169,20 +168,6 @@ export function GithubActivity() {
       : (latest?.label ?? "No recent activity");
   const dots = activeDays ?? Array<boolean>(DOT_DAYS).fill(false);
 
-  // Same overflow measurement as the artist/game marquee this replaced: only
-  // text that's actually clipped should ever move.
-  useEffect(() => {
-    const box = titleBox.current;
-    const text = titleText.current;
-    if (!box || !text) return;
-    const measure = () => setOverflow(Math.max(0, text.scrollWidth - box.clientWidth));
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(box);
-    ro.observe(text);
-    return () => ro.disconnect();
-  }, []);
-
   // Escape collapses, matching every other dismissible overlay.
   useEffect(() => {
     if (!open) return;
@@ -208,6 +193,7 @@ export function GithubActivity() {
       className="island"
       data-open={open || undefined}
       data-live={live || undefined}
+      style={{ "--projects": NOW_BUILDING.length } as React.CSSProperties}
       onBlur={(e) => {
         if (open && e.relatedTarget && !e.currentTarget.contains(e.relatedTarget))
           setOpen(false);
@@ -219,7 +205,7 @@ export function GithubActivity() {
         type="button"
         className="island-pill"
         aria-expanded={open}
-        aria-label={`Working on ${NOW_BUILDING}. Expand for GitHub activity`}
+        aria-label={`Working on ${NOW_BUILDING.length} ${NOW_BUILDING.length === 1 ? "project" : "projects"}. Expand for the list and GitHub activity`}
         onClick={() => setOpen(true)}
         inert={open}
       >
@@ -235,22 +221,22 @@ export function GithubActivity() {
         >
           <path d={GITHUB_ICON_D} />
         </svg>
-        <span
-          className="island-title"
-          ref={titleBox}
-          data-marquee={overflow > 0 || undefined}
-          style={
-            {
-              "--marquee-distance": `-${overflow}px`,
-              "--marquee-duration": `${(2.6 + overflow / 28).toFixed(1)}s`,
-            } as React.CSSProperties
-          }
-        >
-          <span className="island-title-text" ref={titleText}>
-            Working on {NOW_BUILDING}
-          </span>
+        {/* iOS compact layout: leading and trailing glyphs hug the edges,
+            the middle stays empty where the camera cutout would be. */}
+        <span className="island-count">
+          {NOW_BUILDING.length}
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          </svg>
         </span>
-        <span className="island-dot" aria-hidden="true" />
       </button>
 
       {/* --- expanded --- */}
@@ -268,9 +254,8 @@ export function GithubActivity() {
           >
             <path d={GITHUB_ICON_D} />
           </svg>
-          <p className="island-gh-user">
-            <span className="island-gh-muted">Working on </span>
-            <strong>{NOW_BUILDING}</strong>
+          <p className="island-gh-user island-gh-muted" id="island-now">
+            Working on
           </p>
           <button
             ref={close}
@@ -292,6 +277,12 @@ export function GithubActivity() {
             </svg>
           </button>
         </div>
+
+        <ul className="island-now" aria-labelledby="island-now">
+          {NOW_BUILDING.map((name) => (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
 
         <div className="island-gh-row">
           <span className="island-gh-text">{latestLine}</span>
