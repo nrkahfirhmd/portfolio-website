@@ -11,9 +11,10 @@ import "../../../home.css";
 import "../../software.css";
 import "../../../story/story.css";
 
-/** Only repos with a story get a page; anything else 404s. */
+/** Every project gets a page, since every tile on /software links here. The
+ * header carries the details; the long-form story only where one exists. */
 export function generateStaticParams() {
-  return [...STORY_REPOS].map((slug) => ({ slug }));
+  return PROJECTS.map((p) => ({ slug: p.repo }));
 }
 
 export const dynamicParams = false;
@@ -31,9 +32,11 @@ export default async function StoryPage({
   params,
 }: PageProps<"/software/work/[slug]">) {
   const { slug } = await params;
-  if (!STORY_REPOS.has(slug)) notFound();
+  if (!PROJECTS.some((p) => p.repo === slug)) notFound();
 
-  const { default: Story } = await import(`@/content/software/${slug}.mdx`);
+  const Story = STORY_REPOS.has(slug)
+    ? (await import(`@/content/software/${slug}.mdx`)).default
+    : null;
 
   return (
     <main className="sw">
@@ -45,23 +48,27 @@ export default async function StoryPage({
           kv<span aria-hidden="true">/</span>software
         </Link>
         <nav aria-label="Sections" className="sw-nav">
-          <Link href="/software#log">Log</Link>
+          <Link href="/software#work">Work</Link>
           <Link href="/software#contact">Contact</Link>
         </nav>
       </header>
 
       <ArticleHeader slug={slug} />
 
-      <div className="story-grid">
-        <StoryNav />
-        <article className="prose">
-          <Story components={storyComponents} />
-        </article>
-      </div>
+      {Story ? (
+        <div className="story-grid">
+          <StoryNav />
+          <article className="prose">
+            <Story components={storyComponents} />
+          </article>
+        </div>
+      ) : (
+        <p className="story-soon">The full write-up is on its way.</p>
+      )}
 
-      <Link className="back story-back" href="/software#log">
+      <Link className="back story-back" href="/software#work">
         <BackArrow />
-        Back to the log
+        Back to the work
       </Link>
     </main>
   );

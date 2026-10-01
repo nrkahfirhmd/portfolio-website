@@ -1,4 +1,4 @@
-/* /software — one-page portfolio, told as a `git log --graph`.
+/* /software — one-page portfolio: intro, selected work, contact.
    Same world as the gateway: cutting-mat paper, mono, one green accent that
    only ever marks something you can touch. Every value resolves from
    docs/design-tokens.css. No raw hex here. */
@@ -11,6 +11,12 @@
   margin: 0 auto;
   padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
   text-align: left;
+}
+
+/* The portfolio index spans the viewport; story pages keep the 54rem column
+   their two-column layout is sized against. Text blocks cap themselves in ch. */
+.sw-full {
+  max-width: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -51,47 +57,34 @@
 }
 
 /* --- intro --- */
+/* A compact block centred on the page, its text left-aligned inside. */
 .sw-intro {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: clamp(1.5rem, 4vw, 2.75rem);
+  max-width: 40rem;
+  margin-inline: auto;
   padding-block: clamp(3rem, 10vh, 6rem) clamp(3.5rem, 9vh, 5.5rem);
 }
-.sw-halo::before {
-  inset: -10px;
-}
-.sw-photo {
-  display: block;
-  width: clamp(96px, 16vw, 148px);
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: var(--primitive-radius-full);
-  border: 1px solid var(--color-border);
-  filter: grayscale(0.35);
-  transition: filter var(--motion-hover) var(--motion-ease-default);
-}
-.sw-halo:hover .sw-photo {
-  filter: none;
+.sw-intro-text {
+  display: grid;
+  justify-items: start;
 }
 .sw-name {
   margin: 0;
-  font-size: clamp(2.25rem, 6.5vw, 4rem);
+  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
   font-weight: var(--primitive-fontWeight-bold);
   letter-spacing: var(--primitive-tracking-tight);
   line-height: 1;
   text-wrap: balance;
 }
 .sw-lede {
+  /* No cap of its own: .sw-intro's width is the line length, so the text
+     fills the block and the block sits truly centred. */
   margin: 1rem 0 0;
-  max-width: 46ch;
   font-size: var(--typography-tagline);
   line-height: 1.55;
   text-wrap: pretty;
 }
 .sw-now {
-  margin: 0.75rem 0 0;
+  margin: 0.4rem 0 0;
   font-size: var(--typography-label);
   color: var(--color-ink-muted);
 }
@@ -126,93 +119,7 @@
   color: var(--color-accent);
 }
 
-/* ============================================================
-   THE GRAPH — a rail with one node per commit. On load the rail draws
-   downward and each node pops in as the line reaches it: the page's one
-   authored motion moment.
-   ============================================================ */
-.graph {
-  --rail: 1.25rem;
-  position: relative;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.graph::before {
-  content: "";
-  position: absolute;
-  left: calc(var(--rail) - 1px);
-  top: 1.6rem;
-  bottom: 1.6rem;
-  width: 2px;
-  background: var(--color-border);
-  transform-origin: top;
-  animation: rail-draw 900ms var(--motion-ease-default) both;
-}
-@keyframes rail-draw {
-  from {
-    transform: scaleY(0);
-  }
-}
-
-.commit summary {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  column-gap: 1rem;
-  row-gap: 0.2rem;
-  padding: 0.95rem 1rem 0.95rem calc(var(--rail) * 2 + 0.5rem);
-  border-radius: var(--primitive-radius-lg);
-  list-style: none;
-  cursor: pointer;
-  transition: background var(--motion-hover) var(--motion-ease-default);
-}
-.commit summary::-webkit-details-marker {
-  display: none;
-}
-.commit summary:hover,
-.commit details[open] > summary {
-  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
-}
-
-.node {
-  position: absolute;
-  left: calc(var(--rail) - 6px);
-  top: 1.2rem;
-  width: 12px;
-  height: 12px;
-  border-radius: var(--primitive-radius-full);
-  border: 2px solid var(--color-ink-faint);
-  background: var(--color-surface);
-  transition:
-    background var(--motion-hover) var(--motion-ease-default),
-    border-color var(--motion-hover) var(--motion-ease-default),
-    transform var(--motion-playful) var(--motion-ease-playful);
-  animation: node-pop var(--motion-playful) var(--motion-ease-playful) backwards;
-  animation-delay: calc(180ms + var(--i, 0) * 110ms);
-}
-@keyframes node-pop {
-  from {
-    transform: scale(0);
-  }
-}
-.commit summary:hover .node {
-  border-color: var(--color-accent);
-  transform: scale(1.2);
-}
-.commit details[open] .node {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-}
-
-.commit-line,
-.commit-name,
-.commit-msg {
-  grid-column: 1;
-  min-width: 0;
-  animation: enter var(--motion-enter) var(--motion-ease-default) backwards;
-  animation-delay: calc(220ms + var(--i, 0) * 110ms);
-}
+/* --- the story header's `git show` line (story-components.tsx) --- */
 .commit-line {
   display: flex;
   flex-wrap: wrap;
@@ -226,11 +133,6 @@
   font-family: inherit;
   font-weight: var(--primitive-fontWeight-medium);
   color: var(--color-ink-muted);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.commit summary:hover .sha,
-.commit details[open] .sha {
-  color: var(--color-accent-active);
 }
 .refs {
   color: var(--color-ink-faint);
@@ -241,73 +143,6 @@
 .ref-head {
   color: var(--color-accent-active);
   font-weight: var(--primitive-fontWeight-medium);
-}
-.date {
-  margin-left: auto;
-}
-.commit-name {
-  margin-top: 0.15rem;
-  font-size: var(--typography-tagline);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  color: var(--color-ink);
-}
-.commit-msg {
-  font-size: var(--typography-label);
-  color: var(--color-ink-muted);
-  text-wrap: pretty;
-}
-
-/* Plus that turns into a close X, on the spring. */
-.toggle {
-  grid-column: 2;
-  grid-row: 1 / span 3;
-  align-self: center;
-  width: 16px;
-  height: 16px;
-  color: var(--color-ink-faint);
-  transition:
-    color var(--motion-hover) var(--motion-ease-default),
-    transform var(--motion-playful) var(--motion-ease-playful);
-}
-.commit summary:hover .toggle {
-  color: var(--color-accent);
-}
-.commit details[open] .toggle {
-  color: var(--color-accent);
-  transform: rotate(45deg);
-}
-
-/* --- expanded: `git show` --- */
-.commit details::details-content {
-  block-size: 0;
-  overflow: clip;
-  transition:
-    block-size var(--motion-playful) var(--motion-ease-default),
-    content-visibility var(--motion-playful) allow-discrete;
-}
-.commit details[open]::details-content {
-  block-size: auto;
-}
-.show {
-  display: grid;
-  gap: var(--spacing-stack-sm);
-  padding: 0.6rem 1rem 1.4rem calc(var(--rail) * 2 + 0.5rem);
-  transition:
-    opacity var(--motion-enter) var(--motion-ease-default),
-    translate var(--motion-enter) var(--motion-ease-default);
-}
-@starting-style {
-  .commit details[open] .show {
-    opacity: 0;
-    translate: 0 -6px;
-  }
-}
-.show-body {
-  margin: 0;
-  max-width: 64ch;
-  line-height: 1.65;
-  text-wrap: pretty;
 }
 
 .diffstat {
@@ -346,21 +181,33 @@
   gap: 0.35rem;
 }
 
-/* --- contact: `git remote -v` --- */
+/* --- footer: contact remotes + way home --- */
 .sw-contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-stack);
   margin-top: clamp(4rem, 12vh, 7rem);
+  padding-top: var(--spacing-stack);
+  border-top: 1px solid var(--color-border);
+}
+.sw-contact .back {
+  margin: 0;
 }
 .remotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
   list-style: none;
-  margin: 0 0 var(--spacing-stack-lg);
+  margin: 0;
   padding: 0;
 }
 .remote {
-  display: grid;
-  grid-template-columns: 18px 5.5rem minmax(0, 1fr) auto;
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
   border-radius: var(--primitive-radius-lg);
   font-size: var(--typography-label);
   transition: background var(--motion-hover) var(--motion-ease-default);
@@ -376,22 +223,10 @@
 .remote-name {
   font-weight: var(--primitive-fontWeight-medium);
 }
-.remote-url {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--color-ink-muted);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.remote-dir {
-  font-size: var(--typography-caption);
-  color: var(--color-ink-faint);
-}
 .remote:hover {
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
 }
-.remote:hover svg,
-.remote:hover .remote-url {
+.remote:hover svg {
   color: var(--color-accent);
 }
 .remote:hover svg {
@@ -399,42 +234,7 @@
 }
 
 /* --- small screens --- */
-@media (max-width: 640px) {
-  .sw-intro {
-    grid-template-columns: 1fr;
-    justify-items: start;
-  }
-  .graph {
-    --rail: 0.9rem;
-  }
-  .commit summary,
-  .show {
-    padding-right: 0.75rem;
-  }
-  /* Dates flow inline after the refs instead of stranding on their own
-     right-aligned line once the row wraps. */
-  .date {
-    margin-left: 0;
-  }
-  /* Name above address, so the address gets the full line and an email is
-     never ellipsised — it's the one thing on this list people copy. */
-  .remote {
-    grid-template-columns: 18px minmax(0, 1fr);
-    row-gap: 0.1rem;
-  }
-  .remote-url {
-    grid-column: 2;
-    white-space: normal;
-    overflow-wrap: anywhere;
-  }
-  .remote-dir {
-    display: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .node,
-  .toggle,
   .remote svg {
     transform: none !important;
   }

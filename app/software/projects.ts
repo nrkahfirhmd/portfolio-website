@@ -22,10 +22,21 @@ export type Project = {
   refs?: string[];
   live?: string;
   languages: Record<string, number>;
+  /** Tile image on /software, in public/. Width and height are the file's
+   * own, so the masonry keeps its aspect ratio. Without one the tile shows
+   * the system diagram. */
+  cover?: { src: string; width: number; height: number };
+  /** How the pieces connect, drawn as a diagram. Only parts the body (or the
+   * story) actually names — no invented components. `x`/`y` are grid cells. */
+  system: {
+    nodes: { id: string; label: string; sub?: string; x: number; y: number }[];
+    edges: [from: string, to: string][];
+  };
 };
 
-export const CURRENT = {
-  role: "iOS Applied AI Engineer",
+/** Current role, shown under the name on /software. `null` hides the line. */
+export const CURRENT: { role: string; company: string; companyUrl: string } | null = {
+  role: "Junior iOS Developer",
   company: "Apple Developer Academy",
   companyUrl: "https://developeracademy.apps.binus.ac.id/bali/",
 };
@@ -39,6 +50,15 @@ export const PROJECTS: Project[] = [
     sha: "495b53f",
     period: "Aug 2026",
     languages: { TypeScript: 125247, CSS: 34356 },
+    system: {
+      nodes: [
+        { id: "event", label: "Event workspace", sub: "name, frame, count", x: 0, y: 0 },
+        { id: "phone", label: "Guest's phone", sub: "opens the link", x: 0, y: 1 },
+        { id: "strip", label: "Photo strip", sub: "shoot + preview", x: 1, y: 1 },
+        { id: "email", label: "Email", sub: "event's sender", x: 2, y: 1 },
+      ],
+      edges: [["event", "strip"], ["phone", "strip"], ["strip", "email"]],
+    },
   },
   {
     repo: "base-hackathon",
@@ -50,6 +70,17 @@ export const PROJECTS: Project[] = [
     refs: ["hackathon"],
     live: "https://deqrypt.vercel.app",
     languages: { TypeScript: 201729, Python: 63129, Solidity: 31665 },
+    system: {
+      nodes: [
+        { id: "qr", label: "QR payment", sub: "mUSDC, mIDRX", x: 0, y: 0 },
+        { id: "router", label: "Payment router", sub: "Solidity", x: 1, y: 0 },
+        { id: "pool", label: "Lending pool", sub: "Solidity", x: 1, y: 1 },
+        { id: "api", label: "Event listener", sub: "Python, FastAPI", x: 2, y: 0 },
+        { id: "agent", label: "Portfolio agent", sub: "LangChain, Gemini", x: 3, y: 0 },
+        { id: "web", label: "Web app", sub: "TypeScript", x: 3, y: 1 },
+      ],
+      edges: [["qr", "router"], ["router", "api"], ["pool", "api"], ["api", "agent"], ["api", "web"]],
+    },
   },
   {
     repo: "hpc-dashboard",
@@ -60,6 +91,15 @@ export const PROJECTS: Project[] = [
     sha: "85e9a71",
     period: "Dec 2025",
     languages: { Python: 19963, "Jupyter Notebook": 3285 },
+    system: {
+      nodes: [
+        { id: "mpi", label: "MPI workload", x: 0, y: 0 },
+        { id: "k8s", label: "Kubernetes", sub: "scheduled", x: 1, y: 0 },
+        { id: "data", label: "Performance", sub: "Python, notebooks", x: 2, y: 0 },
+        { id: "dash", label: "Dashboard", sub: "analysis", x: 3, y: 0 },
+      ],
+      edges: [["mpi", "k8s"], ["k8s", "data"], ["data", "dash"]],
+    },
   },
   {
     repo: "kamus-aksara-kawi",
@@ -70,6 +110,15 @@ export const PROJECTS: Project[] = [
     period: "Jun 2025",
     live: "https://kamus-aksara-kawi.streamlit.app/",
     languages: { Python: 13936 },
+    system: {
+      nodes: [
+        { id: "rdf", label: "Kawi entries", sub: "RDF", x: 0, y: 0 },
+        { id: "fuseki", label: "Jena Fuseki", sub: "Google Cloud VM", x: 1, y: 0 },
+        { id: "sparql", label: "SPARQL", sub: "queries", x: 2, y: 0 },
+        { id: "ui", label: "Streamlit", sub: "Python", x: 3, y: 0 },
+      ],
+      edges: [["rdf", "fuseki"], ["fuseki", "sparql"], ["sparql", "ui"]],
+    },
   },
   {
     repo: "isc-diesco",
@@ -80,6 +129,15 @@ export const PROJECTS: Project[] = [
     period: "Jul – Aug 2024",
     refs: ["competition"],
     languages: { Blade: 155763, PHP: 78959, CSS: 49334 },
+    system: {
+      nodes: [
+        { id: "customer", label: "Customer", x: 0, y: 0 },
+        { id: "app", label: "Dekorin", sub: "Laravel, Blade", x: 1, y: 0 },
+        { id: "booking", label: "Booking", x: 2, y: 0 },
+        { id: "vendor", label: "Decor vendor", sub: "layout, lighting", x: 3, y: 0 },
+      ],
+      edges: [["customer", "app"], ["app", "booking"], ["booking", "vendor"]],
+    },
   },
 ];
 

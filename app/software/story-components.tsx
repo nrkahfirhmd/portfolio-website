@@ -16,6 +16,7 @@ export function ArticleHeader({ slug }: { slug: string }) {
       </p>
       <h1 className="story-title">{project.name}</h1>
       <p className="story-msg">{project.message}</p>
+      <p className="story-body">{project.body}</p>
       <p className="commit-line">
         <code className="sha">{project.sha}</code>
         <Refs project={project} />

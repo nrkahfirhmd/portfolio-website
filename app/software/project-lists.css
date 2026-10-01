@@ -1,0 +1,194 @@
+/* /software — "Selected work", a masonry of project tiles (project-lists.tsx).
+   Same world as the rest of the site: cutting-mat paper, ink hairlines, mono,
+   and green only on what you can touch.
+   Every value resolves from docs/design-tokens.css. No raw hex here. */
+
+.sw-work {
+  scroll-margin-top: 1rem;
+}
+.sw-work-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: var(--spacing-stack);
+}
+.sw-h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.1;
+}
+
+/* ============================================================
+   SYSTEM DIAGRAM — the cover until a project has an image
+   ============================================================ */
+/* --- system diagram --- */
+.sys-frame {
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background:
+    radial-gradient(color-mix(in srgb, var(--color-ink) 12%, transparent) 1px, transparent 1.5px) 0 0 / 14px 14px,
+    var(--color-surface-sunken);
+  transition: border-color var(--motion-hover) var(--motion-ease-default);
+}
+.sys {
+  display: block;
+  width: min(100%, var(--sys-w));
+  height: auto;
+  overflow: visible;
+  font-family: inherit;
+}
+.sys-node rect {
+  fill: var(--color-surface);
+  stroke: var(--color-ink);
+  stroke-width: 1;
+  transition: stroke var(--motion-hover) var(--motion-ease-default);
+}
+.sys-label {
+  font-size: 12px;
+  font-weight: var(--primitive-fontWeight-medium);
+  fill: var(--color-ink);
+}
+.sys-sub {
+  font-size: 10px;
+  fill: var(--color-ink-muted);
+}
+.sys-wire,
+.sys-flow {
+  fill: none;
+  stroke-linecap: round;
+}
+.sys-wire {
+  stroke: var(--color-ink-faint);
+  stroke-width: 1.25;
+}
+/* Data running along the wires: a short accent dash travelling each edge,
+   staggered by edge order so the flow reads as a sequence, not a blink. Off
+   until the diagram's owner is hovered, focused, or opened. */
+.sys-flow {
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-dasharray: 0.12 0.88;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.tile:is(:hover, :focus-visible) .sys-flow {
+  opacity: 1;
+  animation: flow 1.4s linear infinite;
+  animation-delay: calc(var(--e, 0) * 180ms);
+}
+@keyframes flow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ============================================================
+   MASONRY — Pinterest-style columns; tiles keep their natural height
+   ============================================================ */
+.bento {
+  /* As many ~18rem columns as fit. masonry.tsx switches the rows to 1px and
+     spans each tile by its height, so tiles pack left to right; without it
+     this is a plain grid with aligned rows. */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1rem);
+  align-items: start;
+}
+.bento[data-masonry] {
+  grid-auto-rows: 1px;
+  row-gap: 0;
+}
+.bento[data-masonry] > .tile {
+  grid-row-end: span var(--span);
+}
+.tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-hairline);
+  transition:
+    translate var(--motion-playful) var(--motion-ease-playful),
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.tile:is(:hover, :focus-visible, :has(:focus-visible)) {
+  translate: 0 -3px;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow-accent);
+}
+.tile-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Square until the file loads, then its own ratio. A cover with no known
+     size would otherwise sit at 0px tall, never scroll into view, and so
+     never lazy-load. */
+  aspect-ratio: auto 1 / 1;
+}
+.tile .sys-frame {
+  border: 0;
+  border-radius: 0;
+}
+
+/* Name and date, hidden until the tile is hovered or focused. A scrim over
+   the bottom of the image keeps them legible on any cover. */
+.tile-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  gap: 0.15rem;
+  padding: 2.5rem 1rem 0.9rem;
+  background: linear-gradient(to top, color-mix(in srgb, var(--chip-bg) 88%, transparent), transparent);
+  color: var(--chip-fg);
+  opacity: 0;
+  translate: 0 0.5rem;
+  transition:
+    opacity var(--motion-hover) var(--motion-ease-default),
+    translate var(--motion-playful) var(--motion-ease-playful);
+}
+.tile:is(:hover, :focus-visible, :has(:focus-visible)) .tile-caption {
+  opacity: 1;
+  translate: 0 0;
+}
+/* No hover on touch: the caption would never show, so keep it up. */
+@media (hover: none) {
+  .tile-caption {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+.tile-name {
+  font-size: var(--typography-body);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  text-wrap: balance;
+}
+.tile-when {
+  font-size: var(--typography-caption);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--primitive-tracking-wide);
+  color: color-mix(in srgb, var(--chip-fg) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The global rule strips animation; keep the wires lit so hover still
+     answers, just without the travelling dash. */
+  .tile:is(:hover, :focus-visible) .sys-flow {
+    stroke-dasharray: none;
+  }
+  .tile,
+  .tile-caption {
+    translate: none !important;
+  }
+}

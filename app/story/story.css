@@ -30,6 +30,17 @@
   color: var(--color-ink-muted);
   text-wrap: pretty;
 }
+.story-body {
+  margin: 0;
+  max-width: 62ch;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+/* A project page with no long-form story yet: just the header. */
+.story-soon {
+  margin: 0 0 var(--spacing-gutter-lg);
+  color: var(--color-ink-muted);
+}
 .story-head .commit-line {
   margin: 0;
 }
