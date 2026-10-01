@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { CursorDot } from "../cursor-dot";
 import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "../software/parts";
 import { STAGES, STUDIO } from "./games";
-import { Shelf } from "./shelf";
+import { Library } from "./library";
 import "../home.css";
+import "../software/project-lists.css";
 import "./games.css";
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function GamesPage() {
   return (
-    <main className="gd">
+    <main className="gd gd-full">
       <CursorDot />
       <MagneticGrid />
 
@@ -28,43 +28,26 @@ export default function GamesPage() {
         </Link>
       </header>
 
-      {/* Title screen: centred, the way a game boots. The portrait is served
-          tiny and scaled up with nearest-neighbour, so the same photo the
-          rest of the site uses turns up here as a sprite. */}
-      <section className="gd-title" aria-labelledby="gd-name">
-        <Image
-          className="gd-sprite"
-          src="/portrait.png"
-          alt="Kahfi Rahmada, as a pixel sprite"
-          // 16px at 1x, 32px at 2x — few enough pixels that each one reads
-          // as a block once CSS scales it up.
-          width={16}
-          height={16}
-          priority
-        />
+      {/* Same shape as /software's intro: a compact block centred on the
+          page, text left-aligned inside. */}
+      <section className="gd-intro" aria-labelledby="gd-name">
         <h1 id="gd-name" className="gd-name">
           Kahfi Rahmada
         </h1>
+        <p className="gd-role">
+          Game Developer @ <a href={STUDIO.url}>{STUDIO.name}</a>
+        </p>
+        {/* TODO(kv): draft; say it your way. */}
         <p className="gd-lede">
-          Designing systems, mechanics, and moments worth{" "}
-          <span className="flourish">playing</span>.
+          I make games that stay with you long after the credits roll. Design, code, art, sound: whatever it needs, I take it to done.
         </p>
-        <p className="gd-studio">
-          Making games with <a href={STUDIO.url}>{STUDIO.name}</a>.
-        </p>
-        <a className="start" href="#levels">
-          Press start
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />
-          </svg>
-        </a>
       </section>
 
-      <section id="levels" className="gd-levels" aria-labelledby="levels-heading">
-        <h2 id="levels-heading" className="gd-h2">
-          Level select
+      <section id="library" className="gd-library" aria-labelledby="library-heading">
+        <h2 id="library-heading" className="gd-h2">
+          Library
         </h2>
-        <Shelf stages={STAGES} />
+        <Library stages={STAGES} />
       </section>
 
       <footer id="contact" className="gd-contact" aria-labelledby="credits-heading">

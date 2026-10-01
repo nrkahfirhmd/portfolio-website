@@ -46,7 +46,7 @@ export default async function StagePage({
           kv<span aria-hidden="true">/</span>games
         </Link>
         <nav aria-label="Sections" className="gd-nav">
-          <Link href="/games#levels">Levels</Link>
+          <Link href="/games#library">Library</Link>
           <Link href="/games#contact">Contact</Link>
         </nav>
       </header>
@@ -60,9 +60,9 @@ export default async function StagePage({
         </article>
       </div>
 
-      <Link className="back story-back" href="/games#levels">
+      <Link className="back story-back" href="/games#library">
         <BackArrow />
-        Back to level select
+        Back to the library
       </Link>
     </main>
   );

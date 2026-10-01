@@ -1,4 +1,4 @@
-// Stages on the level-select map, oldest to newest, left to right. Facts come
+// Entries in the /games library, oldest to newest. Facts come
 // from the itch.io pages (Batang Kayu Studio) and the public GitHub repos.
 // TODO(kv): fill the gaps marked below — your role on Body Count, what
 // CoralScape AR and Green Sapphire actually are, and years where missing.
@@ -7,6 +7,9 @@
 // sealed node rather than a card with nothing in it.
 
 export type Stage = {
+  /** What the entry is. Defaults to "game"; anything else gets a chip
+   * saying so in the library. */
+  kind?: "game" | "art" | "video" | "music";
   /** "1-1", "1-2", … — printed on the node and the stage card. */
   id: string;
   /** URL segment for the stage's devlog, /games/stage/<slug>. */
@@ -21,8 +24,13 @@ export type Stage = {
   jam?: string;
   status: string;
   year?: string;
-  /** Cover art. Remote hosts must be allowed in next.config.ts. */
+  /** Cover art; for art pieces the piece itself, for video the poster, for
+   * music the album art. Remote hosts must be allowed in next.config.ts. */
   cover?: string;
+  /** A video file (e.g. in public/), previewed on its tile. */
+  video?: string;
+  /** An audio file (e.g. in public/music/), played from its tile. */
+  audio?: string;
   /** Primary action — a playable build. */
   play?: string;
   /** GitHub repo under nrkahfirhmd. */
@@ -97,7 +105,7 @@ export const STAGES: Stage[] = [
   },
 ];
 
-/** Shelf order: the newest stage with cover art takes the big slot, then the
+/** Library order: the newest stage with cover art takes the big slot, then the
  * rest newest-first, and the locked teaser always sits at the end. */
 export function shelve(stages: Stage[]) {
   const open = stages.filter((s) => !s.locked).reverse();
@@ -106,7 +114,7 @@ export function shelve(stages: Stage[]) {
 }
 
 /** Stages with a devlog at `content/games/<slug>.mdx`. */
-export const STORY_SLUGS = new Set<string>(["body-count"]);
+export const STORY_SLUGS = new Set<string>(["coralscape-ar", "warnet", "body-count", "green-sapphire"]);
 
 /** Throws on an unknown slug — in the MDX preview that lands as an error
  * message rather than a crash. */
