@@ -5,6 +5,7 @@ import { CursorDot } from "../../../cursor-dot";
 import { MagneticGrid } from "../../../magnetic-grid";
 import { BackArrow } from "../../../software/parts";
 import { StoryNav } from "../../../story/story-nav";
+import { PERSON } from "@/content/site";
 import { STAGES, STORY_SLUGS } from "../../games";
 import { StageHeader } from "../../stage-header";
 import { baseComponents } from "../../../story/components";
@@ -25,7 +26,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const stage = STAGES.find((s) => s.slug === slug);
   if (!stage) return {};
-  return { title: `${stage.name} devlog — Kv`, description: stage.blurb };
+  return { title: `${PERSON.shortName} — ${stage.name}`, description: stage.blurb };
 }
 
 export default async function StagePage({

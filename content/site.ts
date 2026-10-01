@@ -17,6 +17,8 @@ import type { IconName } from "@/app/socials";
 
 export const PERSON = {
   name: "Kahfi Rahmada",
+  /** Article tab titles read "<shortName> — <article title>". */
+  shortName: "Kahfi R",
   /** GitHub handle: source links and the live activity island. */
   github: "nrkahfirhmd",
   /** Shows the pulsing "Open to work" badge. */

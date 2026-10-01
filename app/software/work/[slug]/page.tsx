@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CursorDot } from "../../../cursor-dot";
 import { MagneticGrid } from "../../../magnetic-grid";
 import { BackArrow } from "../../parts";
+import { PERSON } from "@/content/site";
 import { PROJECTS, STORY_REPOS } from "../../projects";
 import { ArticleHeader, storyComponents } from "../../story-components";
 import { StoryNav } from "../../../story/story-nav";
@@ -25,7 +26,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.repo === slug);
   if (!project) return {};
-  return { title: `${project.name} — Kv`, description: project.body };
+  return { title: `${PERSON.shortName} — ${project.name}`, description: project.body };
 }
 
 export default async function StoryPage({
