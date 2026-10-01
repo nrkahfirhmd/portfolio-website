@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Masonry } from "./masonry";
 import { PROJECTS, type Project } from "./projects";
+import { SharedTitle } from "../page-transition";
 
 // "Selected work" on /software: a Pinterest-style masonry of project covers.
 // A tile is only its image; hover or focus reveals the name and date, and the
@@ -87,8 +88,9 @@ export function Bento() {
       {PROJECTS.map((p) => (
         <Link
           key={p.repo}
-          className="tile"
+          className="tile reveal"
           href={`/software/work/${p.repo}`}
+          transitionTypes={["nav-forward"]}
           data-cursor-label="Read the story"
         >
           {p.cover ? (
@@ -109,7 +111,9 @@ export function Bento() {
             </span>
           )}
           <span className="tile-caption">
-            <span className="tile-name">{p.name}</span>
+            <SharedTitle name={`title-${p.repo}`}>
+              <span className="tile-name">{p.name}</span>
+            </SharedTitle>
             <span className="tile-when">{p.period}</span>
           </span>
         </Link>

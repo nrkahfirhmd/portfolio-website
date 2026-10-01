@@ -4,6 +4,7 @@ import { Masonry } from "../software/masonry";
 import { CartAudio, CartVideo } from "./cart-media";
 import { shelve, STORY_SLUGS, STUDIO, type Stage } from "./games";
 import { LockIcon } from "./stage-parts";
+import { SharedTitle } from "../page-transition";
 
 const KIND_LABEL = { art: "Art", video: "Video", music: "Music" } as const;
 
@@ -28,7 +29,7 @@ export function Library({ stages }: { stages: Stage[] }) {
         const name = s.locked ? "Coming soon" : s.name;
 
         return (
-          <article key={s.id} className="tile" data-locked={s.locked || undefined}>
+          <article key={s.id} className="tile reveal" data-locked={s.locked || undefined}>
             {s.video ? (
               <CartVideo src={s.video} poster={s.cover} />
             ) : s.cover ? (
@@ -52,6 +53,7 @@ export function Library({ stages }: { stages: Stage[] }) {
               <Link
                 className="tile-link"
                 href={to}
+                transitionTypes={["nav-forward"]}
                 aria-label={name}
                 data-cursor-label={s.kind && s.kind !== "game" ? "Read more" : "Read the devlog"}
               />
@@ -60,7 +62,9 @@ export function Library({ stages }: { stages: Stage[] }) {
             )}
             <span className="tile-caption" aria-hidden={!(s.play || s.audio) || undefined}>
               {s.kind && s.kind !== "game" && <span className="tile-kind">{KIND_LABEL[s.kind]}</span>}
-              <span className="tile-name">{name}</span>
+              <SharedTitle name={`title-${s.slug}`}>
+                <span className="tile-name">{name}</span>
+              </SharedTitle>
               <span className="tile-when">{s.year ?? s.status}</span>
               {(s.play || s.audio) && (
                 <span className="tile-actions">

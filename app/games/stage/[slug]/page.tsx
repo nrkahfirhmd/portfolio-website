@@ -12,6 +12,7 @@ import { baseComponents } from "../../../story/components";
 import "../../../home.css";
 import "../../../story/story.css";
 import "../../games.css";
+import { PageTransition } from "../../../page-transition";
 
 /** Only stages with a devlog get a page; anything else 404s. */
 export function generateStaticParams() {
@@ -38,29 +39,31 @@ export default async function StagePage({
   const { default: Story } = await import(`@/content/games/${slug}.mdx`);
 
   return (
-    <main className="gd gd-story">
-      <CursorDot />
-      <MagneticGrid />
+    <PageTransition>
+      <main className="gd gd-story">
+        <CursorDot />
+        <MagneticGrid />
 
-      <header className="gd-bar">
-        <Link href="/games" className="gd-home">
-          kv<span aria-hidden="true">/</span>games
+        <header className="gd-bar">
+          <Link href="/games" className="gd-home" transitionTypes={["nav-back"]}>
+            kv<span aria-hidden="true">/</span>games
+          </Link>
+        </header>
+
+        <StageHeader slug={slug} />
+
+        <div className="story-grid">
+          <StoryNav />
+          <article className="prose">
+            <Story components={{ ...baseComponents, StageHeader }} />
+          </article>
+        </div>
+
+        <Link className="back story-back" href="/games#library" transitionTypes={["nav-back"]}>
+          <BackArrow />
+          Back to the library
         </Link>
-      </header>
-
-      <StageHeader slug={slug} />
-
-      <div className="story-grid">
-        <StoryNav />
-        <article className="prose">
-          <Story components={{ ...baseComponents, StageHeader }} />
-        </article>
-      </div>
-
-      <Link className="back story-back" href="/games#library">
-        <BackArrow />
-        Back to the library
-      </Link>
-    </main>
+      </main>
+    </PageTransition>
   );
 }

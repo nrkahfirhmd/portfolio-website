@@ -66,3 +66,105 @@ a {
   outline-offset: var(--focus-ring-offset);
   border-radius: var(--primitive-radius-sm);
 }
+
+/* ============================================================
+   MOTION — page transitions, entrances, and scroll reveals, shared by every
+   page. Reduced motion turns all of it off (bottom of this block).
+   ============================================================ */
+
+/* Page slides (page-transition.tsx): forward pushes the old page left and
+   brings the new one in from the right; back does the mirror. */
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes vt-slide {
+  from {
+    translate: var(--slide) 0;
+  }
+}
+::view-transition-old(.nav-forward),
+::view-transition-old(.nav-back) {
+  animation:
+    160ms var(--motion-ease-default) both reverse vt-fade,
+    420ms var(--motion-ease-default) both reverse vt-slide;
+}
+::view-transition-new(.nav-forward),
+::view-transition-new(.nav-back) {
+  animation:
+    260ms 80ms var(--motion-ease-default) both vt-fade,
+    420ms var(--motion-ease-default) both vt-slide;
+}
+::view-transition-old(.nav-forward) {
+  --slide: -48px;
+}
+::view-transition-new(.nav-forward) {
+  --slide: 48px;
+}
+::view-transition-old(.nav-back) {
+  --slide: 48px;
+}
+::view-transition-new(.nav-back) {
+  --slide: -48px;
+}
+
+/* A tile's name flying into the article title. The blur hides the text
+   being scaled between two sizes mid-flight. */
+::view-transition-group(.morph) {
+  animation-duration: 460ms;
+  animation-timing-function: var(--motion-ease-default);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-soften;
+}
+@keyframes vt-soften {
+  40% {
+    filter: blur(2px);
+  }
+}
+
+/* Staggered entrance for intro blocks and article headers: each direct
+   child rises in a beat after the one before. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+.rise > * {
+  animation: rise 640ms var(--motion-ease-default) backwards;
+  animation-delay: calc(80ms + var(--n, 0) * 70ms);
+}
+.rise > :nth-child(2) { --n: 1; }
+.rise > :nth-child(3) { --n: 2; }
+.rise > :nth-child(4) { --n: 3; }
+.rise > :nth-child(5) { --n: 4; }
+.rise > :nth-child(6) { --n: 5; }
+.rise > :nth-child(n + 7) { --n: 6; }
+
+/* Scroll reveal: elements marked .reveal (and every block in an article
+   body) rise in as they enter the viewport, driven by scroll position, not
+   JS. Opacity and translate only: the masonry measures tile heights, and a
+   scale would skew them. Browsers without scroll timelines just show them. */
+@supports (animation-timeline: view()) {
+  .reveal,
+  .prose > * {
+    animation: rise linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 70%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  .rise > *,
+  .reveal,
+  .prose > * {
+    animation: none !important;
+  }
+}

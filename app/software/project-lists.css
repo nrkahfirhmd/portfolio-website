@@ -136,6 +136,14 @@
      never lazy-load. */
   aspect-ratio: auto 1 / 1;
 }
+/* The cover leans in a little on hover, inside the tile's clipped edge. */
+.tile-cover,
+.tile > video {
+  transition: scale 700ms var(--motion-ease-default);
+}
+.tile:is(:hover, :focus-visible, :has(:focus-visible)) :is(.tile-cover, video) {
+  scale: 1.045;
+}
 .tile .sys-frame {
   border: 0;
   border-radius: 0;
