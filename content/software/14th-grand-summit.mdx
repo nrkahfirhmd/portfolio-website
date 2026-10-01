@@ -1,0 +1,33 @@
+export const metadata = { title: "14th Grand Summit" };
+
+{/* TODO(kv): draft built from the private grand-summit-14 repo and your
+    answers. Rewrite in your own voice, add what you did as project manager,
+    and swap the figure placeholder for a real screenshot (put it in public/
+    and pass src="/…"). */}
+
+Grand Summit is StudentsxCEOs Bandung's annual event, and its 14th edition
+ran two case competitions for undergraduates from national and international
+universities. This was its website: where teams learned about the
+competitions, registered, and kept track of their entry.
+
+## What it does
+
+<Points>
+  <Point title="Two competitions">Pages for the Business Case Competition and the Mini Case Competition, with benefits, timelines, and case collaborators.</Point>
+  <Point title="Guided registration">A seven-step form that walks a team through technical instructions, each member's details, document upload, the agreement, and a final preview.</Point>
+  <Point title="Participant dashboard">After logging in, a team sees its registration and submissions in one place.</Point>
+</Points>
+
+## How it's built
+
+Two parts in one repo. The site is Next.js. Behind it, an
+Express.js API handles registration, login, and the dashboard: entries are
+written to Google Sheets, uploaded documents go to Google Drive, and
+sessions are signed with JWTs.
+
+<Figure caption="Screenshot goes here: the registration stepper or the participant dashboard." />
+
+## My role
+
+I was the project manager on a team of seven, volunteering from March to
+August 2025.

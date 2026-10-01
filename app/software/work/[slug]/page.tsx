@@ -16,7 +16,7 @@ import { PageTransition } from "../../../page-transition";
 /** Every project gets a page, since every tile on /software links here. The
  * header carries the details; the long-form story only where one exists. */
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.repo }));
+  return PROJECTS.map((p) => ({ slug: p.slug }));
 }
 
 export const dynamicParams = false;
@@ -25,16 +25,16 @@ export async function generateMetadata({
   params,
 }: PageProps<"/software/work/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = PROJECTS.find((p) => p.repo === slug);
+  const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) return {};
-  return { title: `${PERSON.shortName} — ${project.name}`, description: project.body };
+  return { title: `${PERSON.shortName} — ${project.name}`, description: project.body ?? project.tagline };
 }
 
 export default async function StoryPage({
   params,
 }: PageProps<"/software/work/[slug]">) {
   const { slug } = await params;
-  if (!PROJECTS.some((p) => p.repo === slug)) notFound();
+  if (!PROJECTS.some((p) => p.slug === slug)) notFound();
 
   const Story = STORY_REPOS.has(slug)
     ? (await import(`@/content/software/${slug}.mdx`)).default

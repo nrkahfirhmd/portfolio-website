@@ -91,107 +91,76 @@ export const CURRENT: { role: string; company: string; companyUrl: string } | nu
   companyUrl: "https://developeracademy.apps.binus.ac.id/bali/",
 };
 
-// Projects, newest first. `languages` is GitHub's bytes per language and
-// doesn't update itself; refresh with
-//   gh api repos/<github>/<repo>/languages
-// `system` is the diagram shown until a project has a `cover` image.
+// Projects, newest first. Only `slug` and `name` are required; add the rest
+// as you write it up. A `live` link to the App Store is labelled "App Store".
+// `system` is a diagram shown until a project has a `cover` image.
 export const PROJECTS: Project[] = [
   {
-    repo: "custom-photobooth",
-    name: "Custom Photobooth",
-    tagline: "Self-hosted event photobooth that runs on the guest's own phone",
-    body: "Guests open a link on their own phone, take a strip of photos, preview it, and get it emailed to them. Every event is its own workspace with its own name, frame, photo count, and email sender.",
-    period: "Aug 2026",
-    languages: { TypeScript: 125247, CSS: 34356 },
-    system: {
-      nodes: [
-        { id: "event", label: "Event workspace", sub: "name, frame, count", x: 0, y: 0 },
-        { id: "phone", label: "Guest's phone", sub: "opens the link", x: 0, y: 1 },
-        { id: "strip", label: "Photo strip", sub: "shoot + preview", x: 1, y: 1 },
-        { id: "email", label: "Email", sub: "event's sender", x: 2, y: 1 },
-      ],
-      edges: [["event", "strip"], ["phone", "strip"], ["strip", "email"]],
-    },
+    slug: "omawe",
+    name: "Omawe",
+    tagline: "Group trips, without the \"where are you?\" texts",
+    body: "An iOS app that turns passive location sharing into active trip awareness. Everyone heading to the same place shows up on the Lock Screen and in the Dynamic Island as on the way, running late, or arrived, so the group knows when to leave without sending a single message.",
+    period: "Jun 2026 – now",
+    tags: ["Apple Developer Academy", "on the App Store"],
+    role: "Project Manager, team of 5",
+    stack: ["Swift", "Go"],
+    live: "https://apps.apple.com/id/app/omawe-group-trip-tracker/id6788641544",
   },
   {
-    repo: "base-hackathon",
-    name: "DeQRypt",
-    tagline: "Scan-to-pay QR payments and a lending pool on Base",
-    body: "A hackathon build on Base Sepolia: a multi-asset lending pool and an atomic payment router in Solidity, a Python/FastAPI backend that listens to on-chain events, and a LangChain + Gemini agent that manages a portfolio from plain-language requests.",
-    period: "Dec 2025 – Feb 2026",
-    tags: ["hackathon"],
-    live: "https://deqrypt.vercel.app",
-    languages: { TypeScript: 201729, Python: 63129, Solidity: 31665 },
-    system: {
-      nodes: [
-        { id: "qr", label: "QR payment", sub: "mUSDC, mIDRX", x: 0, y: 0 },
-        { id: "router", label: "Payment router", sub: "Solidity", x: 1, y: 0 },
-        { id: "pool", label: "Lending pool", sub: "Solidity", x: 1, y: 1 },
-        { id: "api", label: "Event listener", sub: "Python, FastAPI", x: 2, y: 0 },
-        { id: "agent", label: "Portfolio agent", sub: "LangChain, Gemini", x: 3, y: 0 },
-        { id: "web", label: "Web app", sub: "TypeScript", x: 3, y: 1 },
-      ],
-      edges: [["qr", "router"], ["router", "api"], ["pool", "api"], ["api", "agent"], ["api", "web"]],
-    },
+    slug: "katamata",
+    name: "KataMata",
+    tagline: "Word collecting for expats learning the language of where they live",
+    body: "An iOS app for expats who need the everyday language of the country they're living in. Collect a word and KataMata translates it, explains it, and shows how it's used, generated with Apple's Foundation Models.",
+    period: "May – Jun 2026",
+    tags: ["Apple Developer Academy"],
+    role: "iOS Applied AI Engineer",
+    stack: ["SwiftUI", "Apple Foundation Models"],
   },
   {
-    repo: "hpc-dashboard",
-    name: "HPC Dashboard",
-    tagline: "Dashboard for MPI performance analysis on Kubernetes",
-    // TODO(kv): one or two lines on what it measured and what it showed.
-    body: "A dashboard for analysing how MPI workloads perform when they are scheduled on a Kubernetes cluster.",
-    period: "Dec 2025",
-    languages: { Python: 19963, "Jupyter Notebook": 3285 },
-    system: {
-      nodes: [
-        { id: "mpi", label: "MPI workload", x: 0, y: 0 },
-        { id: "k8s", label: "Kubernetes", sub: "scheduled", x: 1, y: 0 },
-        { id: "data", label: "Performance", sub: "Python, notebooks", x: 2, y: 0 },
-        { id: "dash", label: "Dashboard", sub: "analysis", x: 3, y: 0 },
-      ],
-      edges: [["mpi", "k8s"], ["k8s", "data"], ["data", "dash"]],
-    },
+    slug: "himatif-apps-v2",
+    name: "Himatif Apps v2",
+    tagline: "A superapp for Universitas Padjadjaran's Informatics Engineering student association",
+    body: "Himatif's web superapp keeps the association's records in one place: members, competitions, events, and more. Version 2 rebuilds it on a current stack, with Next.js and Express.js.",
+    period: "Feb – Dec 2025",
+    tags: ["freelance"],
+    role: "Project Manager",
+    stack: ["Next.js", "Express.js"],
+    live: "https://apps.himatif.org",
   },
   {
-    repo: "kamus-aksara-kawi",
-    name: "Kamus Aksara Kawi",
-    tagline: "Kawi script dictionary on a SPARQL knowledge graph",
-    body: "A dictionary for Old Javanese (Kawi) script. Entries live as RDF in Apache Jena Fuseki on a Google Cloud VM and are queried with SPARQL; the front end is Streamlit.",
-    period: "Jun 2025",
-    live: "https://kamus-aksara-kawi.streamlit.app/",
-    languages: { Python: 13936 },
-    system: {
-      nodes: [
-        { id: "rdf", label: "Kawi entries", sub: "RDF", x: 0, y: 0 },
-        { id: "fuseki", label: "Jena Fuseki", sub: "Google Cloud VM", x: 1, y: 0 },
-        { id: "sparql", label: "SPARQL", sub: "queries", x: 2, y: 0 },
-        { id: "ui", label: "Streamlit", sub: "Python", x: 3, y: 0 },
-      ],
-      edges: [["rdf", "fuseki"], ["fuseki", "sparql"], ["sparql", "ui"]],
-    },
+    slug: "prabu-2025",
+    name: "Prabu 2025",
+    tagline: "The website for the 2025 university orientation, used by 5,000+ new students",
+    body: "The orientation's home on the web: the university's profile, the learning material new students work through, and the place they hand in their orientation tasks.",
+    period: "Jun – Aug 2025",
+    tags: ["freelance"],
+    role: "Lead Frontend Engineer",
+    stack: ["Next.js"],
   },
   {
-    repo: "isc-diesco",
-    name: "Dekorin",
-    tagline: "Marketplace for booking home-decoration vendors",
-    body: "An e-commerce platform for booking home-decoration services such as furniture layout and lighting, built in Laravel for the ISC Tech Dev competition at Diesco 2024.",
-    period: "Jul – Aug 2024",
-    tags: ["competition"],
-    languages: { Blade: 155763, PHP: 78959, CSS: 49334 },
-    system: {
-      nodes: [
-        { id: "customer", label: "Customer", x: 0, y: 0 },
-        { id: "app", label: "Dekorin", sub: "Laravel, Blade", x: 1, y: 0 },
-        { id: "booking", label: "Booking", x: 2, y: 0 },
-        { id: "vendor", label: "Decor vendor", sub: "layout, lighting", x: 3, y: 0 },
-      ],
-      edges: [["customer", "app"], ["app", "booking"], ["booking", "vendor"]],
-    },
+    slug: "14th-grand-summit",
+    name: "14th Grand Summit",
+    tagline: "Registration and participant dashboard for Grand Summit, StudentsxCEOs Bandung's annual student business case competition",
+    body: "The website for the 14th Grand Summit, StudentsxCEOs Bandung's annual event for undergraduates from national and international universities. Teams read up on the Business Case and Mini Case Competitions, register in a guided multi-step form, and follow their entry from a participant dashboard.",
+    period: "Mar – Aug 2025",
+    tags: ["volunteering"],
+    role: "Project Manager, team of 7",
+    stack: ["Next.js", "Express.js", "Google Sheets & Drive API"],
+  },
+  {
+    slug: "coretax-scraper",
+    name: "Coretax Scraper",
+    tagline: "A Chrome extension that automates pulling tax data out of Coretax",
+    body: "The tax team used to export Coretax data by hand, one table page at a time. This extension does the extraction for them, cutting manual processing time by 97.5%: from 10 minutes to under 15 seconds per task.",
+    period: "Oct – Dec 2025",
+    tags: ["internship"],
+    role: "Automation Engineer & Data Analyst, solo",
+    stack: ["JavaScript", "Chrome Extension (Manifest V3)"],
   },
 ];
 
-/** Projects with a long-form story at content/software/<repo>.mdx. */
-export const STORY_REPOS = new Set<string>(["base-hackathon"]);
+/** Projects with a long-form story at content/software/<slug>.mdx. */
+export const STORY_REPOS = new Set<string>(["omawe", "katamata", "himatif-apps-v2", "prabu-2025", "14th-grand-summit", "coretax-scraper"]);
 
 // ============================================================
 // GAME DEVELOPMENT — /games
@@ -220,19 +189,8 @@ export const STUDIO = {
 export const STAGES: Stage[] = [
   {
     id: "1-1",
-    slug: "coralscape-ar",
-    name: "CoralScape AR",
-    blurb: "An augmented-reality coral reef built in Unity, with custom shaders doing the underwater look.",
-    engine: "Unity",
-    platforms: "Mobile AR",
-    status: "Cleared",
-    year: "2025",
-    repo: "coralscape-ar",
-  },
-  {
-    id: "1-2",
     slug: "warnet",
-    name: "WarNet",
+    name: "WarNet: War on The Bandwidth",
     blurb:
       "A 2D comedy stealth sim set in an early-2000s Indonesian internet café. Sneak an enormous download to 100% before your session runs out, without the operator catching on.",
     genre: "Stealth / survival",
@@ -245,7 +203,7 @@ export const STAGES: Stage[] = [
     play: "https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc",
   },
   {
-    id: "1-3",
+    id: "1-2",
     slug: "body-count",
     name: "Body Count: Shibuya Crossing",
     blurb:
@@ -259,25 +217,9 @@ export const STAGES: Stage[] = [
     cover: "https://img.itch.zone/aW1nLzMwMjk0Mzc3LnBuZw==/original/IZKj17.png",
     play: "https://batangkayu.itch.io/body-count-shibuya-crossing",
   },
-  {
-    id: "1-4",
-    slug: "green-sapphire",
-    name: "Project Green Sapphire",
-    blurb: "A Godot project in active development. Details stay under wraps until there's something to play.",
-    engine: "Godot",
-    status: "In progress",
-    year: "2026",
-    repo: "project-green-sapphire",
-  },
-  {
-    id: "1-5",
-    slug: "next",
-    name: "???",
-    blurb: "The next level is still being built. Follow the studio on itch.io to catch it the day it opens.",
-    status: "Locked",
-    locked: true,
-  },
+  // TODO(kv): fill in details.
+  { id: "1-3", slug: "akar-fehu", name: "Project Akar Fehu", blurb: "", status: "In development" },
 ];
 
 /** Entries with a devlog at content/games/<slug>.mdx. */
-export const STORY_SLUGS = new Set<string>(["coralscape-ar", "warnet", "body-count", "green-sapphire"]);
+export const STORY_SLUGS = new Set<string>(["warnet", "body-count"]);

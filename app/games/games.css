@@ -114,22 +114,6 @@
 .tile-actions {
   pointer-events: auto;
 }
-.tile-empty {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink-faint);
-  background:
-    radial-gradient(color-mix(in srgb, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px,
-    var(--color-surface-sunken);
-}
-.tile-empty svg {
-  width: 32px;
-  height: 32px;
-}
 .tile[data-locked] .tile-empty {
   background:
     repeating-linear-gradient(-45deg, color-mix(in srgb, var(--color-ink) 7%, transparent) 0 1px, transparent 1px 9px),

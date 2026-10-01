@@ -23,7 +23,7 @@ export default async function PreviewStoryPage({
   // Whitelist against known repos before touching the filesystem — this is
   // what stops `slug` being a path-traversal payload. A repo with no story
   // file yet also 404s, below; create content/software/<repo>.mdx first.
-  if (!PROJECTS.some((p) => p.repo === slug)) notFound();
+  if (!PROJECTS.some((p) => p.slug === slug)) notFound();
 
   const relPath = join("content", "software", `${slug}.mdx`);
   let source: string;

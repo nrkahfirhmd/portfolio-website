@@ -41,14 +41,16 @@ export function ProjectLinks({ project, story }: { project: Project; story?: boo
   return (
     <p className="show-links">
       {story && (
-        <Link href={`/software/work/${project.repo}`}>Read the story</Link>
+        <Link href={`/software/work/${project.slug}`}>Read the story</Link>
       )}
-      <a href={`https://github.com/${PERSON.github}/${project.repo}`}>
-        Source <Arrow />
-      </a>
+      {project.repo && (
+        <a href={`https://github.com/${PERSON.github}/${project.repo}`}>
+          Source <Arrow />
+        </a>
+      )}
       {project.live && (
         <a href={project.live}>
-          Live <Arrow />
+          {project.live.includes("apps.apple.com") ? "App Store" : "Live"} <Arrow />
         </a>
       )}
     </p>

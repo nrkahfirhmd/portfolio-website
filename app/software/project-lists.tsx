@@ -20,8 +20,16 @@ const PAD = 2;
 /** One project's `system` as SVG. `vertical` transposes the grid (x <-> y)
  * so a four-step pipeline reads top-down on a phone instead of shrinking to
  * unreadable type. */
-function SystemDiagram({ project, vertical = false }: { project: Project; vertical?: boolean }) {
-  const nodes = project.system.nodes.map((n) => ({ ...n, gx: vertical ? n.y : n.x, gy: vertical ? n.x : n.y }));
+function SystemDiagram({
+  name,
+  system,
+  vertical = false,
+}: {
+  name: string;
+  system: NonNullable<Project["system"]>;
+  vertical?: boolean;
+}) {
+  const nodes = system.nodes.map((n) => ({ ...n, gx: vertical ? n.y : n.x, gy: vertical ? n.x : n.y }));
   const cols = Math.max(...nodes.map((n) => n.gx)) + 1;
   const rows = Math.max(...nodes.map((n) => n.gy)) + 1;
   const w = cols * BOX_W + (cols - 1) * GAP_X + PAD * 2;
@@ -38,11 +46,11 @@ function SystemDiagram({ project, vertical = false }: { project: Project; vertic
       // the labels are drawn at 12px and should stay there.
       style={{ "--sys-w": `${w}px` } as React.CSSProperties}
       role="img"
-      aria-label={`${project.name}: ${project.system.edges
+      aria-label={`${name}: ${system.edges
         .map(([a, b]) => `${at.get(a)!.n.label} to ${at.get(b)!.n.label}`)
         .join(", ")}`}
     >
-      {project.system.edges.map(([a, b], i) => {
+      {system.edges.map(([a, b], i) => {
         const A = at.get(a)!;
         const B = at.get(b)!;
         // Leave along the main axis when the target is further along it,
@@ -87,9 +95,9 @@ export function Bento() {
     <Masonry className="bento">
       {PROJECTS.map((p) => (
         <Link
-          key={p.repo}
+          key={p.slug}
           className="tile reveal"
-          href={`/software/work/${p.repo}`}
+          href={`/software/work/${p.slug}`}
           transitionTypes={["nav-forward"]}
           data-cursor-label="Read the story"
         >
@@ -102,19 +110,23 @@ export function Bento() {
               sizes="(max-width: 640px) 100vw, 22rem"
               alt=""
             />
-          ) : (
+          ) : p.system ? (
             // Top-down: a masonry column is narrow at every width, and a
             // pipeline shrunk sideways would be unreadable type. Hidden from
             // screen readers: the caption already names the link.
             <span className="sys-frame" aria-hidden="true">
-              <SystemDiagram project={p} vertical />
+              <SystemDiagram name={p.name} system={p.system} vertical />
+            </span>
+          ) : (
+            <span className="tile-empty" aria-hidden="true">
+              {p.name}
             </span>
           )}
           <span className="tile-caption">
-            <SharedTitle name={`title-${p.repo}`}>
+            <SharedTitle name={`title-${p.slug}`}>
               <span className="tile-name">{p.name}</span>
             </SharedTitle>
-            <span className="tile-when">{p.period}</span>
+            {p.period && <span className="tile-when">{p.period}</span>}
           </span>
         </Link>
       ))}

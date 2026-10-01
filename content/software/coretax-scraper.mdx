@@ -1,0 +1,39 @@
+export const metadata = { title: "Coretax Scraper" };
+
+{/* TODO(kv): draft built from your answers. Rewrite in your own voice, add
+    how the extension finds and collects the data and what the team does with
+    it next, and swap the figure placeholder for a real screenshot (put it in
+    public/ and pass src="/…"). Check the stack line too. */}
+
+The tax team's data lives in Coretax, and getting it out was slow: the
+records sit in a paged table, and each page could only be downloaded on its
+own, by hand. Coretax Scraper is a Chrome extension that does that
+extraction for them, built during my internship.
+
+<Stats
+  items={[
+    { label: "Less processing time", value: "97.5%" },
+    { label: "Per task, before", value: "10 min" },
+    { label: "Per task, after", value: "< 15 s" },
+  ]}
+/>
+
+## What it does
+
+<Points>
+  <Point title="Before">Someone on the tax team opened each page of the table and downloaded it, one page at a time.</Point>
+  <Point title="After">The extension pulls the data across the pages in one go, inside the Coretax page they already have open.</Point>
+  <Point title="The result">A task that took about ten minutes now takes under fifteen seconds.</Point>
+</Points>
+
+## How it's built
+
+A Chrome extension written in JavaScript. It runs in the browser alongside
+Coretax, so it works with the same session the team already uses.
+
+<Figure caption="Screenshot goes here: the extension running on a Coretax table." />
+
+## My role
+
+I built it on my own from October to December 2025, as the automation
+engineer and data analyst on the project.
