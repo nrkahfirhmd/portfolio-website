@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CartVideo } from "../games/cart-media";
 import { Masonry } from "./masonry";
 import { PROJECTS, type Project } from "./projects";
 import { SharedTitle } from "../page-transition";
@@ -7,7 +8,8 @@ import { SharedTitle } from "../page-transition";
 // "Selected work" on /software: a Pinterest-style masonry of project covers.
 // A tile is only its image; hover or focus reveals the name and date, and the
 // whole tile opens the project's page, whose header carries the details.
-// Projects without a `cover` yet show their system diagram instead.
+// Projects without a `cover` yet show their system diagram instead. Mobile
+// and web projects are a showcase: a device screen over a blurred backdrop.
 
 // --- the system diagram, the fallback cover ---------------------------------
 
@@ -90,6 +92,40 @@ function SystemDiagram({
   );
 }
 
+/**
+ * A showcase tile's media: the cover, blurred, as a backdrop, and in front of
+ * it either the screen (mobile or web: shaped like an iPhone or a Mac window,
+ * with the recording or a still inside) or, on a square tile, the logo.
+ * Decorative: the caption names it.
+ */
+function Showcase({ project: p }: { project: Project }) {
+  const video = p.screen && /\.(mp4|webm|mov)$/i.test(p.screen);
+  return (
+    <span className="showcase" aria-hidden="true">
+      {p.cover && (
+        <Image className="showcase-bg" src={p.cover.src} alt="" fill sizes="(max-width: 640px) 100vw, 40rem" />
+      )}
+      {!p.platform && p.logo ? (
+        <span className="showcase-logo">
+          <Image src={p.logo} alt="" fill sizes="(max-width: 640px) 50vw, 12rem" />
+        </span>
+      ) : (
+        <span className="showcase-screen">
+          {video ? (
+            // "#t=0.1" makes browsers paint that frame while the video sits
+            // paused, rather than a blank screen until the first hover.
+            <CartVideo src={`${p.screen}#t=0.1`} />
+          ) : p.screen ? (
+            <Image src={p.screen} alt="" fill sizes="(max-width: 640px) 80vw, 24rem" />
+          ) : (
+            <span className="showcase-blank">{p.name}</span>
+          )}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export function Bento() {
   return (
     <Masonry className="bento">
@@ -97,11 +133,14 @@ export function Bento() {
         <Link
           key={p.slug}
           className="tile reveal"
+          data-platform={p.platform}
           href={`/software/work/${p.slug}`}
           transitionTypes={["nav-forward"]}
           data-cursor-label="Read the story"
         >
-          {p.cover ? (
+          {p.platform || p.logo ? (
+            <Showcase project={p} />
+          ) : p.cover ? (
             <Image
               className="tile-cover"
               src={p.cover.src}

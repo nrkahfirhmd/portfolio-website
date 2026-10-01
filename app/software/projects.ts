@@ -9,6 +9,10 @@ export type Project = {
   /** URL segment, /software/work/<slug>. Also the React key. */
   slug: string;
   name: string;
+  /** Sets the tile's shape to fit its screenshots: "mobile" stands two cells
+   * tall (a phone screen), "web" lies two cells wide (a browser window).
+   * Leave it out for a square tile. */
+  platform?: "mobile" | "web";
   /** GitHub repo name under PERSON.github; adds a Source link. */
   repo?: string;
   /** One line under the name: what it is. */
@@ -26,8 +30,15 @@ export type Project = {
   role?: string;
   /** Tile image on /software, in public/. Width and height are the file's
    * own, so the masonry keeps its aspect ratio. Without one the tile shows
-   * the system diagram, or a plain placeholder. */
+   * the system diagram, or a plain placeholder. On a mobile or web project
+   * it's the blurred backdrop behind the device screen or logo instead. */
   cover?: { src: string; width: number; height: number };
+  /** Mobile and web projects only: what plays on the device screen, a video
+   * (.mp4 / .webm / .mov, plays on hover) or an image, in public/. */
+  screen?: string;
+  /** No platform: a square tile with this logo (transparent PNG works best)
+   * centred over the blurred `cover`, or over a soft wash without one. */
+  logo?: string;
   /** How the pieces connect, drawn as a diagram. Only parts the body (or the
    * story) actually names — no invented components. `x`/`y` are grid cells. */
   system?: {

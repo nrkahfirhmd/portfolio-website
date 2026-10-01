@@ -94,10 +94,18 @@ export const CURRENT: { role: string; company: string; companyUrl: string } | nu
 // Projects, newest first. Only `slug` and `name` are required; add the rest
 // as you write it up. A `live` link to the App Store is labelled "App Store".
 // `system` is a diagram shown until a project has a `cover` image.
+// `platform: "mobile"` makes a tall tile (two cells down) for phone screenshots;
+// `platform: "web"` makes a wide one (two cells across) for browser ones.
+// Media, in public/: `cover` is the blurred backdrop, `screen` the video or
+// image on the device. Without a platform, `logo` makes a square tile with
+// the logo over the backdrop.
 export const PROJECTS: Project[] = [
   {
     slug: "omawe",
     name: "Omawe",
+    cover: { src: "/project-media/omawe_bg.jpg", width: 675, height: 1200 },
+    screen: "/project-media/omawe_recording.mp4",
+    platform: "mobile",
     tagline: "Group trips, without the \"where are you?\" texts",
     body: "An iOS app that turns passive location sharing into active trip awareness. Everyone heading to the same place shows up on the Lock Screen and in the Dynamic Island as on the way, running late, or arrived, so the group knows when to leave without sending a single message.",
     period: "Jun 2026 – now",
@@ -109,6 +117,9 @@ export const PROJECTS: Project[] = [
   {
     slug: "katamata",
     name: "KataMata",
+    cover: { src: "/project-media/katamata_bg.jpg", width: 400, height: 800 },
+    screen: "/project-media/katamata_recording.mp4",
+    platform: "mobile",
     tagline: "Word collecting for expats learning the language of where they live",
     body: "An iOS app for expats who need the everyday language of the country they're living in. Collect a word and KataMata translates it, explains it, and shows how it's used, generated with Apple's Foundation Models.",
     period: "May – Jun 2026",
@@ -119,6 +130,9 @@ export const PROJECTS: Project[] = [
   {
     slug: "himatif-apps-v2",
     name: "Himatif Apps v2",
+    cover: { src: "/project-media/himatif_bg.jpg", width: 563, height: 364 },
+    screen: "/project-media/himatif_capture.png",
+    platform: "web",
     tagline: "A superapp for Universitas Padjadjaran's Informatics Engineering student association",
     body: "Himatif's web superapp keeps the association's records in one place: members, competitions, events, and more. Version 2 rebuilds it on a current stack, with Next.js and Express.js.",
     period: "Feb – Dec 2025",
@@ -130,6 +144,8 @@ export const PROJECTS: Project[] = [
   {
     slug: "prabu-2025",
     name: "Prabu 2025",
+    cover: { src: "/project-media/prabu_bg.jpg", width: 1200, height: 675 },
+    logo: "/project-media/prabu_logo.png",
     tagline: "The website for the 2025 university orientation, used by 5,000+ new students",
     body: "The orientation's home on the web: the university's profile, the learning material new students work through, and the place they hand in their orientation tasks.",
     period: "Jun – Aug 2025",
@@ -140,6 +156,8 @@ export const PROJECTS: Project[] = [
   {
     slug: "14th-grand-summit",
     name: "14th Grand Summit",
+    cover: { src: "/project-media/gs14_bg.jpg", width: 735, height: 420 },
+    logo: "/project-media/gs14_logo.png",
     tagline: "Registration and participant dashboard for Grand Summit, StudentsxCEOs Bandung's annual student business case competition",
     body: "The website for the 14th Grand Summit, StudentsxCEOs Bandung's annual event for undergraduates from national and international universities. Teams read up on the Business Case and Mini Case Competitions, register in a guided multi-step form, and follow their entry from a participant dashboard.",
     period: "Mar – Aug 2025",
@@ -150,6 +168,8 @@ export const PROJECTS: Project[] = [
   {
     slug: "coretax-scraper",
     name: "Coretax Scraper",
+    cover: { src: "/project-media/coretax_bg.jpg", width: 735, height: 414 },
+    logo: "/project-media/coretax_logo.png",
     tagline: "A Chrome extension that automates pulling tax data out of Coretax",
     body: "The tax team used to export Coretax data by hand, one table page at a time. This extension does the extraction for them, cutting manual processing time by 97.5%: from 10 minutes to under 15 seconds per task.",
     period: "Oct – Dec 2025",
