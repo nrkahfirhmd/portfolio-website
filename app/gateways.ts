@@ -18,7 +18,7 @@ export const GATEWAYS: Gateway[] = [
   {
     slug: "software",
     name: "Software Engineering",
-    desc: "AI systems, infrastructure, and software built to stay up.",
+    desc: "Software that earns its place in your day, and feels like it was made for you.",
     blurb:
       "Applied models, agent systems, and infrastructure work — the unglamorous engineering that turns a demo into something people can rely on at 3am.",
     live: true,
@@ -26,7 +26,7 @@ export const GATEWAYS: Gateway[] = [
   {
     slug: "games",
     name: "Game Development",
-    desc: "Designing systems, mechanics, and moments worth playing.",
+    desc: "Great games stayed with me. I'm making ones that stay with you.",
     blurb:
       "Systems-driven games, the tools built to make them, and physics toys that exist mostly because they were fun to write.",
     live: true,

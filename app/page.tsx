@@ -50,10 +50,8 @@ export default function Home() {
         <PaintName>Kahfi Rahmada</PaintName>
 
         <p className="tagline" data-enter style={{ "--i": 3 } as React.CSSProperties}>
-          Building things that <SparkWord>think</SparkWord>.
-          Creating worlds that <SparkWord>play</SparkWord>.
-          Engineering systems that <SparkWord>last</SparkWord>. <br />
-          <span className="muted">I Orchestrate Technologies.</span>
+          I make software <SparkWord>behave</SparkWord> and games <SparkWord>misbehave</SparkWord>, on <SparkWord>purpose</SparkWord>. <br/>
+          <span className="muted">Full-stack engineer, AI tinkerer, Game maker.</span>
         </p>
 
         <nav className="gates" aria-label="Portfolios">
