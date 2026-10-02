@@ -93,6 +93,21 @@ export default function Home() {
           </nav>
         </div>
 
+        {/* The door out to the side quests, in the bottom-left corner. */}
+        <Link
+          href="/side-quests"
+          className="door"
+          aria-label="Side quests"
+          transitionTypes={["nav-forward"]}
+          data-enter
+          style={{ "--i": 8 } as React.CSSProperties}
+        >
+          <span className="door-frame" aria-hidden="true">
+            <span className="door-leaf" />
+          </span>
+          <span className="door-label">Side quests</span>
+        </Link>
+
         <footer className="foot" data-enter style={{ "--i": 7 } as React.CSSProperties}>
           <nav className="socials" aria-label="Contact and social">
             {SOCIALS.map((s) => (

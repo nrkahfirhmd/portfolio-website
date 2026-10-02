@@ -1,0 +1,626 @@
+/* /side-quests — the stories beyond work, ported from portfolio-website's
+   Experience bento onto this site's world: cutting-mat paper, mono, ink
+   hairlines, and green only on what you can touch. Every value resolves from
+   docs/design-tokens.css. No raw hex here. */
+
+.sq {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
+  text-align: left;
+}
+
+/* --- top bar, same as the portfolios' --- */
+.sq-bar {
+  display: flex;
+  align-items: center;
+  padding-block: var(--spacing-stack);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+}
+.sq-home {
+  color: var(--color-ink);
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.sq-home span {
+  color: var(--color-ink-faint);
+}
+.sq-home:hover {
+  color: var(--color-accent);
+}
+
+/* --- intro --- */
+.sq-intro {
+  max-width: 40rem;
+  padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
+}
+.sq-heading {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+}
+.sq-tagline {
+  margin: 1rem 0 0;
+  font-size: var(--typography-tagline);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* --- filters: accent pill when on --- */
+.sq-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+.sq-chip {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+  color: var(--color-ink-muted);
+  font: inherit;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  cursor: pointer;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.sq-chip:hover {
+  color: var(--color-ink);
+}
+.sq-chip[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+/* --- the grid: 6 columns of 10rem rows; one column on phones --- */
+.sq-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+.sq-cell {
+  min-height: 14rem;
+}
+.sq-cell:is([data-size="lg"], [data-size="tall"]) {
+  min-height: 20rem;
+}
+@media (min-width: 48rem) {
+  .sq-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: 10rem;
+  }
+  .sq-cell {
+    min-height: 0;
+    grid-column: span 2;
+  }
+  .sq-cell[data-size="lg"] {
+    grid-column: span 4;
+    grid-row: span 2;
+  }
+  .sq-cell[data-size="tall"] {
+    grid-row: span 2;
+  }
+  .sq-cell[data-size="wide"] {
+    grid-column: span 6;
+  }
+}
+.sq-fill {
+  height: 100%;
+}
+
+/* Shared surface: every cell is the index's gateway card — hairline at
+   rest, same radius and fill — so a card here reads as the same object. */
+.sq-card,
+.sq-album,
+.sq-play,
+.sq-flip-face {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--gateway-card-border);
+  border-radius: var(--gateway-card-radius);
+  background: var(--gateway-card-bg);
+  box-shadow: var(--gateway-card-shadow);
+}
+
+/* --- story card --- */
+.sq-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  cursor: pointer;
+  /* Same two clocks as .gate: a quick exit, and on enter a spring on the
+     lift alone so the border lands with it without flickering. */
+  transition:
+    translate var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.sq-card:hover,
+.sq-card:focus-visible {
+  translate: 0 var(--gateway-card-lift-hover);
+  border-color: var(--gateway-card-border-hover);
+  transition-duration: var(--motion-enter);
+  transition-timing-function: var(--motion-ease-playful), var(--motion-ease-default);
+}
+.sq-card:active {
+  translate: 0 -1px;
+  transition-duration: var(--motion-press);
+}
+.sq-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale var(--motion-playful) var(--motion-ease-default);
+}
+.sq-card:hover .sq-cover {
+  scale: 1.05;
+}
+/* Generated art: the title's first word over hatching, tinted by kind. Only
+   the site's own greens: the accent (or its darker hover step) fading to
+   accent-soft. */
+.sq-art {
+  display: block;
+  overflow: hidden;
+  --art: var(--color-accent);
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 14px, color-mix(in srgb, var(--color-surface) 16%, transparent) 14px 16px),
+    linear-gradient(135deg, var(--art), var(--color-accent-soft));
+}
+.sq-art[data-kind="career"],
+.sq-art[data-kind="community"] {
+  --art: var(--color-accent-hover);
+}
+.sq-art span {
+  position: absolute;
+  top: -0.15em;
+  right: -0.05em;
+  font-size: clamp(4rem, 9vw, 7rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  line-height: 1;
+  color: color-mix(in srgb, var(--color-surface) 40%, transparent);
+}
+/* Scrim keeps the copy readable over any cover. */
+.sq-scrim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 75%;
+  background: linear-gradient(to top, var(--color-surface), color-mix(in srgb, var(--color-surface) 80%, transparent) 45%, transparent);
+}
+.sq-card-text {
+  position: relative;
+  display: grid;
+  gap: var(--spacing-stack-xs);
+  padding: var(--spacing-stack-sm);
+}
+.sq-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-stack-xs);
+  margin: 0;
+  font-size: var(--typography-caption);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--primitive-tracking-wide);
+  color: var(--color-ink-muted);
+}
+/* Chip shape and caption caps, in the soft green the site uses for tints.
+   Fills with the accent when the card is hovered. */
+.sq-badge {
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  border-radius: var(--chip-radius);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-active);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.sq-card:is(:hover, :focus-visible) .sq-badge {
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  transition-duration: var(--motion-enter);
+}
+.sq-card-title {
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.05;
+  color: var(--color-ink);
+}
+.sq-card-summary {
+  display: -webkit-box;
+  max-width: 28rem;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: var(--typography-label);
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+/* --- album --- */
+.sq-album {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-sunken);
+}
+.sq-album-stage {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+.sq-album-slide {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.sq-album-slide:active {
+  cursor: grabbing;
+}
+.sq-album-slide img {
+  object-fit: cover;
+  pointer-events: none;
+}
+.sq-album-slide::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(to top, color-mix(in srgb, var(--color-ink) 80%, transparent), transparent);
+}
+.sq-album-caption {
+  position: absolute;
+  inset: auto 1rem 0.75rem;
+  z-index: 1;
+  font-weight: var(--primitive-fontWeight-bold);
+  line-height: 1.2;
+  color: var(--color-surface);
+  pointer-events: none;
+}
+.sq-tag {
+  position: absolute;
+  top: 0.9rem;
+  left: 0.9rem;
+  z-index: 1;
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  border-radius: var(--chip-radius);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  color: var(--color-ink);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.sq-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  translate: 0 -50%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: scale var(--motion-hover) var(--motion-ease-playful);
+}
+.sq-arrow:hover {
+  scale: 1.1;
+}
+.sq-arrow[data-dir="prev"] {
+  left: 0.5rem;
+}
+.sq-arrow[data-dir="next"] {
+  right: 0.5rem;
+}
+.sq-arrow svg,
+.sq-close svg,
+.sq-hint svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sq-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  background: var(--color-surface);
+}
+.sq-dots button {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition:
+    width var(--motion-hover) var(--motion-ease-default),
+    background var(--motion-hover) var(--motion-ease-default);
+}
+.sq-dots button[aria-current="true"] {
+  width: 1.25rem;
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+/* --- sticker pile and polaroids --- */
+.sq-pile {
+  background: var(--color-accent-soft);
+}
+.sq-keepsakes {
+  background: color-mix(in srgb, var(--color-ink) 6%, var(--color-surface));
+}
+.sq-play-title {
+  position: absolute;
+  top: 1.1rem;
+  left: 1.25rem;
+  max-width: 10rem;
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: var(--primitive-fontWeight-bold);
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+.sq-play-title--end {
+  left: auto;
+  right: 1.25rem;
+  text-align: right;
+}
+.sq-hint {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: var(--typography-caption);
+  color: var(--color-ink-muted);
+}
+.sq-hint svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2;
+}
+.sq-sticker {
+  position: absolute;
+  z-index: 1;
+  width: 4rem;
+  height: 4rem;
+  cursor: grab;
+  touch-action: none;
+}
+.sq-sticker:active,
+.sq-polaroid:active {
+  cursor: grabbing;
+}
+.sq-sticker img {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--color-ink) 22%, transparent));
+}
+.sq-polaroid {
+  position: absolute;
+  width: 7rem;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  cursor: grab;
+  touch-action: none;
+}
+.sq-polaroid-photo {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.sq-polaroid-photo img {
+  object-fit: cover;
+  pointer-events: none;
+}
+.sq-polaroid figcaption {
+  padding-top: 0.4rem;
+  font-size: var(--typography-caption);
+  text-align: center;
+  color: var(--color-ink);
+}
+
+/* --- flip card --- */
+.sq-flip {
+  perspective: 900px;
+}
+.sq-flip button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.sq-flip-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+.sq-flip-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  backface-visibility: hidden;
+  padding: 1.25rem;
+}
+.sq-flip-front {
+  flex-direction: column;
+  justify-content: space-between;
+  border-color: transparent;
+  background: var(--color-accent);
+}
+.sq-flip-front .sq-card-title {
+  color: var(--color-accent-foreground);
+}
+.sq-hint-inline {
+  font-size: var(--typography-caption);
+  color: color-mix(in srgb, var(--color-accent-foreground) 80%, transparent);
+}
+.sq-flip-back {
+  align-items: center;
+  transform: rotateY(180deg);
+  font-size: var(--typography-label);
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+
+/* --- the opened article --- */
+.sq-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  backdrop-filter: blur(4px);
+}
+.sq-dialog-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  pointer-events: none;
+}
+.sq-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 48rem;
+  max-height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  pointer-events: auto;
+}
+.sq-dialog-cover {
+  position: relative;
+  flex: none;
+  height: clamp(10rem, 28vh, 16rem);
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+}
+.sq-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: scale var(--motion-hover) var(--motion-ease-playful);
+}
+.sq-close:hover {
+  scale: 1.1;
+}
+.sq-dialog-body {
+  display: grid;
+  gap: 1.1rem;
+  overflow-y: auto;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+.sq-dialog-body p {
+  margin: 0;
+}
+.sq-dialog-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+  color: var(--color-ink);
+}
+.sq-org {
+  margin-top: 0.35rem !important;
+  font-size: var(--typography-label);
+}
+.sq-lead {
+  font-size: var(--typography-tagline);
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-ink);
+}
+.sq-dialog-body blockquote {
+  margin: 0;
+  padding: 1rem;
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-soft);
+  font-style: italic;
+  color: var(--color-ink);
+}
+.sq-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sq-skills li {
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  border-radius: var(--chip-radius);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-active);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+}
+
+.sq-back {
+  margin-top: calc(var(--spacing-gutter-lg) * 1.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sq-card:hover .sq-cover {
+    scale: none;
+  }
+  .sq-card:is(:hover, :focus-visible, :active) {
+    translate: none;
+  }
+}

@@ -627,6 +627,76 @@
   transition-duration: var(--motion-enter);
 }
 
+/* --- the door: bottom-left way out to /side-quests --- */
+.door {
+  position: absolute;
+  left: clamp(1rem, 4vw, var(--spacing-gutter-lg));
+  bottom: clamp(1rem, 3.5vh, var(--spacing-stack-lg));
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+/* The doorway: a hairline arch. Light spills out of it when the door opens. */
+.door-frame {
+  position: relative;
+  width: 20px;
+  height: 30px;
+  border: 1.5px solid currentColor;
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+  perspective: 120px;
+  background: transparent;
+  transition:
+    background var(--motion-playful) var(--motion-ease-default),
+    box-shadow var(--motion-playful) var(--motion-ease-default);
+}
+/* The leaf swings on its left hinge, like a real door. */
+.door-leaf {
+  position: absolute;
+  inset: 2px 2px 0;
+  border-radius: 7px 7px 0 0;
+  background: currentColor;
+  transform-origin: left center;
+  transition: transform var(--motion-playful) var(--motion-ease-playful);
+}
+.door-leaf::after {
+  content: "";
+  position: absolute;
+  top: 55%;
+  right: 3px;
+  width: 3px;
+  height: 3px;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+}
+.door:hover,
+.door:focus-visible {
+  color: var(--color-ink);
+}
+.door:hover .door-frame,
+.door:focus-visible .door-frame {
+  background: var(--color-accent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 55%, transparent);
+}
+.door:hover .door-leaf,
+.door:focus-visible .door-leaf {
+  transform: rotateY(-70deg);
+}
+/* Phones: the footer runs the full width, so the door keeps only its icon
+   (the link's aria-label still names it). */
+@media (max-width: 640px) {
+  .door-label {
+    display: none;
+  }
+}
+
 /* --- footer --- */
 .foot {
   display: grid;

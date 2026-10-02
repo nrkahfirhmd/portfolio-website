@@ -9,6 +9,7 @@
 import type { Stage } from "@/app/games/games";
 import type { Gateway } from "@/app/gateways";
 import type { Project } from "@/app/software/projects";
+import type { SideQuest, SideQuestPhoto } from "@/app/side-quests/types";
 import type { IconName } from "@/app/socials";
 
 // ============================================================
@@ -261,3 +262,148 @@ export const STAGES: Stage[] = [
 /** Entries with a devlog at content/games/<slug>.mdx. */
 export const STORY_SLUGS = new Set<string>(["warnet", "body-count"]);
 
+// ============================================================
+// SIDE QUESTS — /side-quests, the door at the bottom left of the index
+// ============================================================
+
+export const SIDE_QUESTS = {
+  title: "Kahfi R — Side Quests",
+  description: "The stories beyond work: teaching, leading, competing, and the things built out of boredom.",
+  heading: "Side Quests",
+  tagline: "My career tells only part of the story. These are the side quests and experiences beyond work that shaped how I think, create, and show up.",
+  /** The flip card at the end of the grid. */
+  funFact:
+    "I don't want to be known for one thing. I want to collect experiences that make me a better and more interesting person.",
+};
+
+// The story cards, in grid order. `kind` is "career", "volunteer", "project",
+// or "community" (a filter chip each); `size` is the cell: "lg" 4x2, "tall"
+// 2x2, "wide" 6x1, "sm" 2x1. `image` is a cover in public/; without one the
+// card gets generated art.
+export const SIDE_QUEST_ENTRIES: SideQuest[] = [
+  {
+    period: "2024",
+    title: "Practicum Assistant",
+    org: "Department of Computer Science Padjadjaran University",
+    kind: "volunteer",
+    size: "lg",
+    summary:
+      "Learning that teaching is as much about patience and empathy as it is about code.",
+    story:
+      "I stepped into the role of practicum assistant for Web Programming and Data Structures, responsible for guiding more than 40 students through two demanding courses. Preparing modules, delivering weekly sessions, reviewing assignments, and mentoring final projects taught me that explaining an idea clearly is often harder than understanding it yourself.",
+    body: [
+      "Across the semester, I taught topics ranging from HTML, CSS, JavaScript, PHP, APIs, web servers, and the CodeIgniter 4 framework to C++ pointers, linked lists, stacks, queues, and graphs. Beyond the lectures, I held consultation sessions, designed weekly exercises, and helped students overcome the bugs and roadblocks that inevitably appeared.",
+      "Every student learned differently. Some needed technical direction, while others simply needed confidence to keep going. Adapting my communication, staying patient under pressure, and solving problems together became just as important as teaching programming itself. The experience shaped my leadership, emotional awareness, and ability to break complex ideas into something approachable.",
+    ],
+    skills: ["Mentoring", "Code Review", "Public Speaking"],
+    highlight:
+      "The most rewarding moments were watching students become confident enough to solve problems without needing my help.",
+  },
+  {
+    period: "2025 — Now",
+    title: "This Portfolio",
+    org: "Product of Boredom",
+    kind: "project",
+    size: "lg",
+    summary: "The site you are scrolling and playing around right now.",
+    story:
+      "Most portfolios focus on what someone has built. I wanted mine to explain why I built those things and how I think along the way. That's why this site is written as a story instead of a résumé, so visitors leave understanding not only my work, but the person behind it.",
+    body: [
+      "Every interaction, animation, and paragraph exists for a reason. Rather than listing technologies and achievements, I wanted to create an experience that reflects how I approach problems: with curiosity, intention, and attention to detail. In many ways, this portfolio is a product as much as it is a personal website.",
+      "Skills alone rarely make someone memorable. Two people can know the same framework, use the same tools, and build similar products. What makes the difference is how they think, communicate, and make decisions. This portfolio is my attempt to show those parts, not just tell you they exist."
+    ],
+    skills: ["Storytelling", "Interaction Design"],
+    highlight:
+      "Anyone can list their skills. I wanted to show the person using them.",
+  },
+  {
+    period: "2024",
+    title: "Lead",
+    org: "Character Building Season 2024",
+    kind: "volunteer",
+    size: "tall",
+    summary:
+      "Learning that leadership is often about balancing people before projects.",
+    story:
+      "As Project Officer for Character Building Season, I led a committee of more than 70 people to design and deliver our department's orientation programme for incoming students. It was my first experience leading an organisation of this scale, where every decision had an impact on participants, committees, and university stakeholders alike.",
+    body: [
+      "Together with the Human Resource Management team, I shaped the programme around three core values—PRIMER: Proactive, Innovative, and Responsive. Beyond coordinating the event, I learned how to align different expectations, make decisions under uncertainty, manage my own energy, and create an environment where over 90 freshmen felt supported throughout their transition into university life. By the end, 98% of participants successfully completed the programme."
+    ],
+    skills: ["Leadership", "Public Speaking", "Stakeholder Management"],
+    highlight:
+      "The programme wasn't measured by how smoothly it ran, but by how confidently 90+ freshmen began their university journey.",
+    image: "/side-quests/cbs.jpg"
+  },
+  {
+    period: "2025 - Now",
+    title: "Competitionist",
+    org: "Part of Pushing Myself to The Brink",
+    kind: "project",
+    size: "tall",
+    summary:
+      "Using competitions as a playground to test ideas, challenge my limits, and measure how far I still have to go.",
+    story:
+      "People often say, 'Maximise your potential.' For me, competitions are how I do that. They give me the freedom to build products, validate ideas, and solve problems that rarely fit within the boundaries of university courses or day-to-day work. Every competition is an excuse to experiment and, when I make it far enough, to learn from people who consistently perform at the highest level.",
+    body: [
+      "The truth is that qualifying as a finalist, let alone winning, has been far harder than I expected. But that's exactly why I keep coming back. Every rejection exposes a gap I hadn't seen before, whether it's in my technical skills, product thinking, teamwork, or storytelling. I'm still grinding, still iterating, and still chasing the next opportunity, not because I expect every attempt to succeed, but because my curiosity hasn't been satisfied yet."
+    ],
+    skills: ["Rapid Prototyping", "Teamwork", "Pitching", "Ideation"],
+    highlight:
+      "The goal was never to collect trophies, it was to become someone capable of earning them.",
+    image: "/side-quests/compe.jpg"
+  },
+  {
+    period: "2026 - Now",
+    title: "Game Developer",
+    org: "Product of Boredom",
+    kind: "project",
+    size: "sm",
+    summary:
+      "Exploring game development by understanding why some games stay with us long after we stop playing them.",
+    story:
+      "Game development is my newest obsession. It began with playing games simply for fun, but eventually I found myself asking a different question: why do some games become masterpieces while others are quickly forgotten? Breaking down those experiences led me to game design, where I could study the systems, emotions, and decisions that make a game truly memorable.",
+    body: [
+      "I'm still early in this journey, but every prototype is an experiment in creating meaningful experiences. More than building mechanics, I want to create the same sense of wonder, attachment, and lasting memories that the games I love have given me. If a player walks away remembering how they felt rather than what they clicked, I've done something right."
+    ],
+    skills: ["Game Design", "Interaction Design", "Player Engagement"],
+  },
+  {
+    period: "Ongoing",
+    title: "Public Speaking Study",
+    org: "Part of Pushing Myself to The Brink",
+    kind: "project",
+    size: "sm",
+    summary:
+      "Studying communication as a skill to connect, influence, and adapt, not simply to speak with confidence.",
+    story:
+      "Public speaking started as a way to become more confident, but it quickly became something much deeper. The more I learned, the more I realised that speaking isn't about being heard, it's about making sure the message reaches the person on the other side.",
+    body: [
+      "Today, I study how words shape perception, how stories make ideas memorable, and how different audiences require different approaches. Every conversation is an opportunity to practise choosing better words, communicating with intention, and adapting to the people in front of me rather than expecting them to adapt to me."
+    ],
+    skills: ["Public Speaking", "Communication"],
+  },
+];
+
+/** The swipeable album cell. Photos in public/side-quests/. */
+export const SIDE_QUEST_ALBUM: SideQuestPhoto[] = [
+  { caption: "1st Time as A Lead", image: "/side-quests/gathering.jpg" },
+  { caption: "One of the memorable experience in College", image: "/side-quests/po_cbs.jpg" },
+  { caption: "The best friends that accompanied me along the journey", image: "/side-quests/bfr.jpg" },
+  { caption: "Apple Developer Academy Kick-Off", image: "/side-quests/academy.jpg" },
+  { caption: "Currently Building: Omawe", image: "/side-quests/omawe.jpg" },
+];
+
+/** The draggable polaroids cell. */
+export const SIDE_QUEST_KEEPSAKES: SideQuestPhoto[] = [
+  { caption: "hike", image: "/side-quests/hike.jpg" },
+  { caption: "being a great friend", image: "/side-quests/growing.jpg" },
+  { caption: "having fun", image: "/side-quests/fun.jpg" },
+];
+
+/** The draggable sticker pile ("Off-duty inventory"). */
+export const SIDE_QUEST_STICKERS = [
+  { src: "/side-quests/sushi.svg", alt: "Sushi sticker" },
+  { src: "/side-quests/controller.svg", alt: "Game controller sticker" },
+  { src: "/side-quests/billiard.svg", alt: "Billiard ball sticker" },
+  { src: "/side-quests/shoe.svg", alt: "Running shoe sticker" },
+];
