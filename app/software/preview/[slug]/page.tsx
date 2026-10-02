@@ -8,7 +8,7 @@ import "../../software.css";
 import "../../../story/story.css";
 
 // Swap `work` -> `preview` in any story URL to edit that file's MDX live:
-// /software/work/base-hackathon  ->  /software/preview/base-hackathon
+// /software/work/omawe  ->  /software/preview/omawe
 //
 // Dev-only. The 404 below is the security boundary — runtime MDX evaluation
 // runs arbitrary code, and `readFile` on a request-controlled path has no

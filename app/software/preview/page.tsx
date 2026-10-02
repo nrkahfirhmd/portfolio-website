@@ -5,7 +5,7 @@ import "../../story/story.css";
 
 const STARTER = `export const metadata = { title: "Draft" };
 
-<ArticleHeader slug="base-hackathon" />
+<ArticleHeader slug="omawe" />
 
 The opening paragraph. Write the way the finished story should read — the
 preview uses the same components and styles as /software/work/[slug].
