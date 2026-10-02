@@ -215,13 +215,14 @@ export const STAGES: Stage[] = [
     slug: "warnet",
     name: "WarNet: War on The Bandwidth",
     blurb:
-      "A 2D comedy stealth sim set in an early-2000s Indonesian internet café. Sneak an enormous download to 100% before your session runs out, without the operator catching on.",
-    genre: "Stealth / survival",
+      "A comedy stealth sim set in an early-2000s Indonesian internet café. Sneak an enormous download to 100% before your session runs out, without the operator catching on.",
+    genre: "Stealth / Survival",
     engine: "Unity",
     platforms: "Browser, Windows, macOS",
-    role: "Game designer",
-    jam: "GameSeed",
-    status: "In development",
+    role: "Game Designer & Programmer",
+    jam: "GameSeed, themes \"So Absurd, It's Cool\" and \"Childhood Dreams\"",
+    status: "Done",
+    year: "2026",
     cover: "/project-media/GD/warnet_cover.png",
     wide: true,
     play: "https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc",
@@ -231,19 +232,32 @@ export const STAGES: Stage[] = [
     slug: "body-count",
     name: "Body Count: Shibuya Crossing",
     blurb:
-      "A crowd-spotting puzzle on Shibuya's rush-hour crossing. Read the target's hair, shirt, pants, and bag, tap the one person who matches, and hit each wave's score before your catches run out.",
-    genre: "Puzzle",
+      "A crowd-spotting casual game on Shibuya's rush-hour crossing. Read the target's hair, shirt, pants, and bag, tap the one person who matches, and hit each wave's score before your catches run out.",
+    genre: "Casual / Arcade",
     engine: "Unity",
-    platforms: "Browser, macOS, iOS (TestFlight)",
-    jam: "Theme: Compact",
-    status: "In development",
+    platforms: "Browser, iOS (TestFlight)",
+    role: "Music Composer & Game Programmer",
+    jam: "Very Disco Game Jam Vol. 3, theme \"Compact\"",
+    status: "Done",
     year: "2026",
     cover: "/project-media/GD/bc_cover.png",
     play: "https://batangkayu.itch.io/body-count-shibuya-crossing",
   },
-  // TODO(kv): fill in details.
-  { id: "1-3", slug: "akar-fehu", name: "Project Akar Fehu", blurb: "", status: "In development" },
+  // TODO(kv): add engine, year, and what the player does; cover and `play`
+  // once they exist.
+  {
+    id: "1-3",
+    slug: "akar-fehu",
+    name: "Project Akar Fehu",
+    blurb:
+      "Batang Kayu Studio's first full-scale game, a puzzle adventure built for release on Steam rather than for a jam.",
+    genre: "Puzzle / adventure",
+    platforms: "PC (Steam)",
+    role: "Lead game designer, team of 12",
+    status: "In development",
+  },
 ];
 
 /** Entries with a devlog at content/games/<slug>.mdx. */
 export const STORY_SLUGS = new Set<string>(["warnet", "body-count"]);
+
