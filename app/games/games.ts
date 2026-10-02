@@ -21,11 +21,23 @@ export type Stage = {
   jam?: string;
   status: string;
   year?: string;
-  /** Cover art; for art pieces the piece itself, for video the poster, for
-   * music the album art. Remote hosts must be allowed in next.config.ts. */
+  /** Cover art, shown in front on the tile; for art pieces the piece itself,
+   * for video the poster, for music the album art. Remote hosts must be
+   * allowed in next.config.ts. */
   cover?: string;
-  /** A video file (e.g. in public/), previewed on its tile. */
+  /** Background behind the cover, blurred. Until there is one, the cover
+   * itself is blurred in. */
+  bg?: string;
+  /** A video file (e.g. in public/); on a wide tile, plays on its screen. */
   video?: string;
+  /** Lay the tile two cells wide, the front shown on a screen. */
+  wide?: boolean;
+  /** Wide tiles: a video (plays on hover) or image on the screen instead of
+   * the cover. */
+  screen?: string;
+  /** Square tiles: a logo in front instead of the cover. With neither, the
+   * name stands in as a wordmark. */
+  logo?: string;
   /** An audio file (e.g. in public/music/), played from its tile. */
   audio?: string;
   /** Primary action — a playable build. */

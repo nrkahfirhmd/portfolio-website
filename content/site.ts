@@ -204,8 +204,11 @@ export const STUDIO = {
 };
 
 // The library, oldest to newest. `kind` is "game" (default), "art", "video",
-// or "music". Media: `cover` (image / poster / album art), `video`, `audio`.
-// The newest entry with a cover leads; a `locked` entry always sits last.
+// or "music". Media: `cover` (image / poster / album art) sits in front,
+// `bg` behind it blurred (without a `bg`, the cover is blurred in instead),
+// plus `video` and `audio`. Two tile shapes: square (the default) and
+// `wide: true`, where the front shows on a screen. A `locked` entry always
+// sits last.
 export const STAGES: Stage[] = [
   {
     id: "1-1",
@@ -219,7 +222,8 @@ export const STAGES: Stage[] = [
     role: "Game designer",
     jam: "GameSeed",
     status: "In development",
-    cover: "https://img.itch.zone/aW1nLzI4MjY5NjExLnBuZw==/original/BZF7%2BY.png",
+    cover: "/project-media/GD/warnet_cover.png",
+    wide: true,
     play: "https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc",
   },
   {
@@ -234,7 +238,7 @@ export const STAGES: Stage[] = [
     jam: "Theme: Compact",
     status: "In development",
     year: "2026",
-    cover: "https://img.itch.zone/aW1nLzMwMjk0Mzc3LnBuZw==/original/IZKj17.png",
+    cover: "/project-media/GD/bc_cover.png",
     play: "https://batangkayu.itch.io/body-count-shibuya-crossing",
   },
   // TODO(kv): fill in details.

@@ -110,26 +110,27 @@
 .bento[data-masonry] > .tile {
   grid-row-end: span var(--span);
 }
-/* Shaped by platform, to fit the screenshots: a web project lies two cells
-   wide and one tall, a mobile project one wide and two tall. Heights come
+/* Tile shapes, shared by /software and the /games library: "wide" lies two
+   cells across and one down (a web project, a game), "tall" one across and
+   two down (a mobile project). No shape is a square. Heights come
    from the tile's own width (cqi) plus the gap, not an aspect ratio, so a
    tall tile lines up exactly with two square or wide tiles stacked beside it
    (an aspect ratio leaves out the gap between them). The 1px and 2px are the
    tile's border. */
-.tile[data-platform] {
+.tile[data-shape] {
   container-type: inline-size;
 }
-.tile[data-platform] > .showcase {
+.tile[data-shape] > .showcase {
   aspect-ratio: auto;
   object-fit: cover;
 }
-.tile[data-platform="web"] {
+.tile[data-shape="wide"] {
   grid-column: span 2;
 }
-.tile[data-platform="web"] > .showcase {
+.tile[data-shape="wide"] > .showcase {
   height: calc((100cqi - var(--bento-gap)) / 2 - 1px);
 }
-.tile[data-platform="mobile"] > .showcase {
+.tile[data-shape="tall"] > .showcase {
   height: calc(200cqi + 2px + var(--bento-gap));
 }
 /* The showcase: blurred backdrop, device screen centred in front. The
@@ -169,11 +170,11 @@
 /* Corner radii as a share of the screen's own width / height, so they keep
    Apple's proportions at any size: an iPhone's deep corners, a Mac window's
    gentle ones. */
-.tile[data-platform="mobile"] .showcase-screen {
+.tile[data-shape="tall"] .showcase-screen {
   aspect-ratio: 9 / 19.5;
   border-radius: 14% / 6.5%;
 }
-.tile[data-platform="web"] .showcase-screen {
+.tile[data-shape="wide"] .showcase-screen {
   aspect-ratio: 16 / 10;
   border-radius: 2% / 3.2%;
 }
@@ -199,8 +200,9 @@
 }
 /* A square showcase: the logo, kept to its own shape, centred over the
    backdrop with a soft shadow that follows its outline. */
-.tile:not([data-platform]) > .showcase {
+.tile:not([data-shape]) > :is(.showcase, .tile-cover, video) {
   aspect-ratio: 1;
+  object-fit: cover;
 }
 .showcase-logo {
   position: absolute;
@@ -212,6 +214,24 @@
 }
 .showcase-logo img {
   object-fit: contain;
+}
+.showcase-wordmark {
+  display: grid;
+  place-items: center;
+  inset: 12%;
+  text-align: center;
+  text-wrap: balance;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.15;
+  color: var(--color-surface);
+  filter: drop-shadow(0 2px 10px color-mix(in srgb, var(--color-ink) 45%, transparent));
+}
+/* No cover to sit on: ink on the light wash instead of white. */
+.showcase:not(:has(.showcase-bg)) .showcase-wordmark {
+  color: var(--color-ink-muted);
+  filter: none;
 }
 .tile:is(:hover, :focus-visible, :has(:focus-visible)) .showcase-logo {
   translate: 0 -6px;
@@ -232,7 +252,7 @@
 
 /* One column on phones: there is no second cell to span into. */
 @media (max-width: 640px) {
-  .tile[data-platform="web"] {
+  .tile[data-shape="wide"] {
     grid-column: auto;
   }
 }

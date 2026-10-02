@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Masonry } from "../software/masonry";
-import { CartAudio, CartVideo } from "./cart-media";
+import { Showcase } from "../software/project-lists";
+import { CartAudio } from "./cart-media";
 import { shelve, STORY_SLUGS, STUDIO, type Stage } from "./games";
-import { LockIcon } from "./stage-parts";
 import { SharedTitle } from "../page-transition";
 
 const KIND_LABEL = { art: "Art", video: "Video", music: "Music" } as const;
@@ -29,24 +28,23 @@ export function Library({ stages }: { stages: Stage[] }) {
         const name = s.locked ? "Coming soon" : s.name;
 
         return (
-          <article key={s.id} className="tile reveal" data-locked={s.locked || undefined}>
-            {s.video ? (
-              <CartVideo src={s.video} poster={s.cover} />
-            ) : s.cover ? (
-              <Image
-                className="tile-cover"
-                src={s.cover}
-                alt=""
-                // Remote covers have no known size; let the file set it.
-                width={0}
-                height={0}
-                sizes="(max-width: 640px) 100vw, 22rem"
-              />
-            ) : (
-              <span className="tile-empty" aria-hidden="true">
-                {s.locked ? <LockIcon /> : s.id}
-              </span>
-            )}
+          <article
+            key={s.id}
+            className="tile reveal"
+            data-shape={s.wide ? "wide" : undefined}
+            data-locked={s.locked || undefined}
+          >
+            {/* Every entry is a showcase: the cover in front (on a screen
+                when wide), over `bg` blurred, or the cover itself blurred
+                until there's a bg. A screen, video, or logo takes the
+                cover's place in front. */}
+            <Showcase
+              name={name}
+              shape={s.wide ? "wide" : "square"}
+              backdrop={s.bg ?? s.cover}
+              screen={s.screen ?? s.video ?? s.cover}
+              logo={s.logo ?? s.cover}
+            />
             {/* The whole tile is the link: an overlay rather than a wrapper,
                 since Play / Listen can't nest inside an <a>. */}
             {devlog ? (

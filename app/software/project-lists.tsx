@@ -92,39 +92,62 @@ function SystemDiagram({
   );
 }
 
+/** A tile's shape: "tall" one cell across and two down, "wide" two across
+ * and one down, or square. */
+export type Shape = "tall" | "wide" | "square";
+
 /**
- * A showcase tile's media: the cover, blurred, as a backdrop, and in front of
- * it either the screen (mobile or web: shaped like an iPhone or a Mac window,
- * with the recording or a still inside) or, on a square tile, the logo.
- * Decorative: the caption names it.
+ * A showcase tile's media, shared with the /games library: the backdrop,
+ * blurred, and in front of it either a screen (tall: an iPhone, wide: a Mac
+ * window, with the recording or a still inside) or, on a square tile, the
+ * logo. Decorative: the caption names it.
  */
-function Showcase({ project: p }: { project: Project }) {
-  const video = p.screen && /\.(mp4|webm|mov)$/i.test(p.screen);
+export function Showcase({
+  name,
+  shape,
+  backdrop,
+  screen,
+  logo,
+}: {
+  name: string;
+  shape: Shape;
+  backdrop?: string;
+  screen?: string;
+  logo?: string;
+}) {
+  const video = screen && /\.(mp4|webm|mov)$/i.test(screen);
   return (
     <span className="showcase" aria-hidden="true">
-      {p.cover && (
-        <Image className="showcase-bg" src={p.cover.src} alt="" fill sizes="(max-width: 640px) 100vw, 40rem" />
+      {backdrop && (
+        <Image className="showcase-bg" src={backdrop} alt="" fill sizes="(max-width: 640px) 100vw, 40rem" />
       )}
-      {!p.platform && p.logo ? (
-        <span className="showcase-logo">
-          <Image src={p.logo} alt="" fill sizes="(max-width: 640px) 50vw, 12rem" />
-        </span>
+      {shape === "square" ? (
+        logo ? (
+          <span className="showcase-logo">
+            <Image src={logo} alt="" fill sizes="(max-width: 640px) 50vw, 12rem" />
+          </span>
+        ) : (
+          // No logo yet: the name stands in as a wordmark.
+          <span className="showcase-logo showcase-wordmark">{name}</span>
+        )
       ) : (
         <span className="showcase-screen">
           {video ? (
             // "#t=0.1" makes browsers paint that frame while the video sits
             // paused, rather than a blank screen until the first hover.
-            <CartVideo src={`${p.screen}#t=0.1`} />
-          ) : p.screen ? (
-            <Image src={p.screen} alt="" fill sizes="(max-width: 640px) 80vw, 24rem" />
+            <CartVideo src={`${screen}#t=0.1`} />
+          ) : screen ? (
+            <Image src={screen} alt="" fill sizes="(max-width: 640px) 80vw, 24rem" />
           ) : (
-            <span className="showcase-blank">{p.name}</span>
+            <span className="showcase-blank">{name}</span>
           )}
         </span>
       )}
     </span>
   );
 }
+
+const SHAPE = { mobile: "tall", web: "wide" } as const;
 
 export function Bento() {
   return (
@@ -133,13 +156,19 @@ export function Bento() {
         <Link
           key={p.slug}
           className="tile reveal"
-          data-platform={p.platform}
+          data-shape={p.platform && SHAPE[p.platform]}
           href={`/software/work/${p.slug}`}
           transitionTypes={["nav-forward"]}
           data-cursor-label="Read the story"
         >
           {p.platform || p.logo ? (
-            <Showcase project={p} />
+            <Showcase
+              name={p.name}
+              shape={p.platform ? SHAPE[p.platform] : "square"}
+              backdrop={p.cover?.src}
+              screen={p.screen}
+              logo={p.logo}
+            />
           ) : p.cover ? (
             <Image
               className="tile-cover"
