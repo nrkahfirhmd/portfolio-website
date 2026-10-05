@@ -158,6 +158,9 @@
 .bento[data-masonry] {
   grid-auto-rows: 1px;
   row-gap: 0;
+  /* Back-fill: a later tile drops into any hole a wide one left behind,
+     at the cost of strict reading order. */
+  grid-auto-flow: dense;
 }
 .bento[data-masonry] > .tile {
   grid-row-end: span var(--span);
@@ -264,8 +267,17 @@
     translate var(--motion-playful) var(--motion-ease-playful),
     filter var(--motion-hover) var(--motion-ease-default);
 }
+/* Shrink-wrapped to the logo's own shape, centred, so the rounded corners
+   land on the image rather than on the empty letterbox around it. The
+   !important beats next/image's inline fill sizing. */
 .showcase-logo img {
-  object-fit: contain;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  border-radius: var(--primitive-radius-lg);
 }
 .showcase-wordmark {
   display: grid;

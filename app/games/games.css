@@ -267,9 +267,3 @@
 .gd-story {
   text-align: left;
 }
-
-/* A square tile's cover sits in front as a card of its own, rounded like the
-   tile around it. Scoped here: /software's logos are transparent cut-outs. */
-.gd .showcase-logo img {
-  border-radius: var(--primitive-radius-lg);
-}
