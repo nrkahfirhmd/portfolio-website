@@ -1,8 +1,7 @@
 /* /games — the game dev portfolio, told as a game's own screens: intro,
    library (the /software masonry), credits. Same world as the rest of the site
    (cutting-mat paper, mono, one green accent that only marks what you can
-   touch); different structure from /software's git log. Every value resolves
-   from docs/design-tokens.css. No raw hex here. */
+   touch). Every value resolves from docs/design-tokens.css. No raw hex here. */
 
 .gd {
   max-width: 60rem;

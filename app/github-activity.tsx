@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ICONS } from "./socials";
 
 /** Public events endpoint needs no key, so there's nothing to leak
  * client-side — unauthenticated rate limit is 60/hr per visitor IP, plenty
@@ -11,9 +12,8 @@ const POLL_MS = 5 * 60_000;
 const DOT_DAYS = 11;
 
 
-/** Octocat mark — same path as the footer's GitHub link in app/page.tsx. */
-const GITHUB_ICON_D =
-  "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 19.9 5a4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.7 12.7 0 0 0-6.6 0C6.9 1 5.8 1.4 5.8 1.4A4.9 4.9 0 0 0 5.7 5a5.2 5.2 0 0 0-1.4 3.7c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V22";
+/** Octocat mark — the same path the footer's GitHub link draws. */
+const GITHUB_ICON_D = ICONS.github;
 
 type GithubEvent = {
   id: string;
@@ -98,8 +98,7 @@ function activeDaysFrom(events: GithubEvent[]) {
 }
 
 /**
- * Dynamic-Island-style status card — same collapse/expand shell as the music
- * island this replaced (app/music-island.tsx). Collapsed follows iOS's
+ * Dynamic-Island-style status card. Collapsed follows iOS's
  * compact leading/trailing layout: GitHub mark left, active project count
  * right; expanded lists what Kv is building, adds the latest real GitHub event and
  * a day-by-day activity row, so the tagline's "building things" claim is

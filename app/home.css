@@ -132,7 +132,7 @@
 
 /* ============================================================
    CURSOR DOT — replaces the OS cursor with a solid circle. z-index sits
-   above the music island (highest other value on the page, 50) so nothing
+   above the GitHub island (highest other value on the page, 50) so nothing
    can paint over it.
 
    Split across two elements on purpose — position and scale are two
@@ -257,7 +257,7 @@
 }
 
 .eyebrow {
-  /* Containing block for the music island, which centres itself on this row. */
+  /* Containing block for the GitHub island, which centres itself on this row. */
   position: relative;
   margin: 0;
   font-size: var(--typography-caption);
