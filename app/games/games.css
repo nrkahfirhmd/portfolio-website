@@ -88,6 +88,18 @@
   font-weight: var(--primitive-fontWeight-bold);
   letter-spacing: var(--primitive-tracking-tight);
 }
+/* Heading left, autoplay switch far right — same row as /software's. */
+.gd-library-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: var(--spacing-stack-lg);
+}
+.gd-library-head .gd-h2 {
+  margin: 0;
+}
 .gd-library {
   padding-top: clamp(2rem, 8vh, 5rem);
   text-align: left;

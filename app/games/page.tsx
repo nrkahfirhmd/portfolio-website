@@ -4,6 +4,7 @@ import { CursorDot } from "../cursor-dot";
 import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "../software/parts";
+import { AutoplayToggle } from "./cart-media";
 import { GAMES, PERSON, STAGES, STUDIO } from "@/content/site";
 import { Library } from "./library";
 import "../home.css";
@@ -42,9 +43,12 @@ export default function GamesPage() {
         </section>
 
         <section id="library" className="gd-library" aria-labelledby="library-heading">
-          <h2 id="library-heading" className="gd-h2">
-            {GAMES.libraryHeading}
-          </h2>
+          <div className="gd-library-head">
+            <h2 id="library-heading" className="gd-h2">
+              {GAMES.libraryHeading}
+            </h2>
+            <AutoplayToggle />
+          </div>
           <Library stages={STAGES} />
         </section>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CursorDot } from "../cursor-dot";
+import { AutoplayToggle } from "../games/cart-media";
 import { MagneticGrid } from "../magnetic-grid";
 import { SOCIALS } from "../socials";
 import { BackArrow } from "./parts";
@@ -53,6 +54,7 @@ export default function SoftwarePage() {
             <h2 id="work-heading" className="sw-h2">
               {SOFTWARE.workHeading}
             </h2>
+            <AutoplayToggle />
           </div>
           <Bento />
         </section>
