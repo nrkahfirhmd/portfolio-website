@@ -3,17 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { ICONS } from "./socials";
 
-/** Public events endpoint needs no key, so there's nothing to leak
- * client-side — unauthenticated rate limit is 60/hr per visitor IP, plenty
- * for a personal page polled this slowly. */
+/** Keyless public endpoint: 60 req/hr per visitor IP is plenty at this rate. */
 const POLL_MS = 5 * 60_000;
-/** Days shown in the activity dot row. Not derived from anything — just how
- * many fit the panel width. */
+/** Days in the activity dot row: as many as fit the panel. */
 const DOT_DAYS = 11;
-
-
-/** Octocat mark — the same path the footer's GitHub link draws. */
-const GITHUB_ICON_D = ICONS.github;
 
 type GithubEvent = {
   id: string;
@@ -35,17 +28,13 @@ const ACTION_VERB: Record<string, string> = {
   reopened: "Reopened",
 };
 
-/** Maps one event to a headline, or null for types not worth surfacing
- * (stars, follows, etc. are noise, not "building"). Repo name is baked into
- * the label so the caller never has to re-join the two. */
+/** One event as a headline, or null for noise (stars, follows, …). */
 function summarize(e: GithubEvent): Activity | null {
   const repo = e.repo.name.split("/").pop() ?? e.repo.name;
   const base = { id: e.id, time: e.created_at };
   switch (e.type) {
     case "PushEvent":
-      // GitHub's events payload dropped the `commits` array (and any commit
-      // count) a while back — `ref`/`head`/`before` is all that's left, so
-      // this can say a push happened, not how many commits were in it.
+      // The events payload no longer carries commit counts.
       return { ...base, label: `Pushed to ${repo}` };
     case "PullRequestEvent": {
       const action = e.payload?.action;
@@ -81,10 +70,7 @@ function relativeTime(iso: string) {
   return `${Math.floor(h / 24)}d`;
 }
 
-/** One bool per of the last DOT_DAYS calendar days (oldest first): did any
- * public event land that day. The events feed only covers recent history, so
- * this reads as "active lately" rather than a real GitHub contribution
- * calendar — good enough for a decorative pulse, not pretending to be more. */
+/** Per day of the last DOT_DAYS (oldest first): did any public event land. "Active lately", not a contribution calendar. */
 function activeDaysFrom(events: GithubEvent[]) {
   const stamped = new Set(events.map((e) => e.created_at.slice(0, 10)));
   const days: boolean[] = [];
@@ -97,13 +83,7 @@ function activeDaysFrom(events: GithubEvent[]) {
   return days;
 }
 
-/**
- * Dynamic-Island-style status card. Collapsed follows iOS's
- * compact leading/trailing layout: GitHub mark left, active project count
- * right; expanded lists what Kv is building, adds the latest real GitHub event and
- * a day-by-day activity row, so the tagline's "building things" claim is
- * backed by live data instead of just stated.
- */
+/** Dynamic-Island-style card: collapsed shows the project count; expanded lists what's being built plus live GitHub activity. */
 export function GithubActivity({
   username,
   nowBuilding: NOW_BUILDING,
@@ -168,7 +148,6 @@ export function GithubActivity({
       : (latest?.label ?? "No recent activity");
   const dots = activeDays ?? Array<boolean>(DOT_DAYS).fill(false);
 
-  // Escape collapses, matching every other dismissible overlay.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -176,9 +155,7 @@ export function GithubActivity({
     return () => removeEventListener("keydown", onKey);
   }, [open]);
 
-  // Toggling flips which layer is `inert`, which drops focus inside it on
-  // the floor. Hand focus across to the layer that just became live; skip
-  // the first run so a page load doesn't yank focus into the island.
+  // Toggling `inert` drops focus; hand it to the layer now live (not on first render).
   const settled = useRef(false);
   useEffect(() => {
     if (!settled.current) {
@@ -219,10 +196,8 @@ export function GithubActivity({
           strokeLinejoin="round"
           aria-hidden="true"
         >
-          <path d={GITHUB_ICON_D} />
+          <path d={ICONS.github} />
         </svg>
-        {/* iOS compact layout: leading and trailing glyphs hug the edges,
-            the middle stays empty where the camera cutout would be. */}
         <span className="island-count">
           {NOW_BUILDING.length}
           <svg
@@ -252,7 +227,7 @@ export function GithubActivity({
             strokeLinejoin="round"
             aria-hidden="true"
           >
-            <path d={GITHUB_ICON_D} />
+            <path d={ICONS.github} />
           </svg>
           <p className="island-gh-user island-gh-muted" id="island-now">
             Working on

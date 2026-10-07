@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CursorDot } from "../../../cursor-dot";
-import { MagneticGrid } from "../../../magnetic-grid";
-import { BackArrow } from "../../../software/parts";
+import { PERSON, STAGES, STORY_SLUGS } from "@/content/site";
+import { BackLink, PageShell } from "../../../page-shell";
 import { StoryNav } from "../../../story/story-nav";
-import { PERSON } from "@/content/site";
-import { STAGES, STORY_SLUGS } from "../../games";
 import { StageHeader } from "../../stage-header";
-import { baseComponents } from "../../../story/components";
-import "../../../home.css";
 import "../../../story/story.css";
 import "../../games.css";
-import { PageTransition } from "../../../page-transition";
 
 /** Only stages with a devlog get a page; anything else 404s. */
 export function generateStaticParams() {
@@ -21,49 +14,34 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/games/stage/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/games/stage/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const stage = STAGES.find((s) => s.slug === slug);
   if (!stage) return {};
   return { title: `${PERSON.shortName} — ${stage.name}`, description: stage.blurb };
 }
 
-export default async function StagePage({
-  params,
-}: PageProps<"/games/stage/[slug]">) {
+export default async function StagePage({ params }: PageProps<"/games/stage/[slug]">) {
   const { slug } = await params;
   if (!STORY_SLUGS.has(slug)) notFound();
 
+  // MDX picks up its components from mdx-components.tsx.
   const { default: Story } = await import(`@/content/games/${slug}.mdx`);
 
   return (
-    <PageTransition>
-      <main className="gd gd-story">
-        <CursorDot />
-        <MagneticGrid />
+    <PageShell section="games" up="/games">
+      <StageHeader slug={slug} />
 
-        <header className="gd-bar">
-          <Link href="/games" className="gd-home" transitionTypes={["nav-back"]}>
-            kv<span aria-hidden="true">/</span>games
-          </Link>
-        </header>
+      <div className="story-grid">
+        <StoryNav />
+        <article className="prose">
+          <Story />
+        </article>
+      </div>
 
-        <StageHeader slug={slug} />
-
-        <div className="story-grid">
-          <StoryNav />
-          <article className="prose">
-            <Story components={{ ...baseComponents, StageHeader }} />
-          </article>
-        </div>
-
-        <Link className="back story-back" href="/games#library" transitionTypes={["nav-back"]}>
-          <BackArrow />
-          Back to the library
-        </Link>
-      </main>
-    </PageTransition>
+      <BackLink href="/games#library" className="page-back">
+        Back to the library
+      </BackLink>
+    </PageShell>
   );
 }

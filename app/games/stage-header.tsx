@@ -1,16 +1,12 @@
-import { stageBySlug } from "./games";
-import { StageActions } from "./stage-parts";
+import { PERSON, STUDIO } from "@/content/site";
 import { SharedTitle } from "../page-transition";
+import { stageBySlug } from "./games";
 
-/**
- * A devlog's title block, the same plain shape as a software story's
- * (story.css): year and status, name, genre, blurb, the making-of facts, and
- * links. `slug` is looked up in the stage registry and **throws** on an
- * unknown value — in the preview that lands as an error message, not a crash.
- */
+const line = (parts: (string | undefined)[]) => parts.filter(Boolean).join(" · ");
+
+/** A devlog's title block, same shape as a software story's. */
 export function StageHeader({ slug }: { slug: string }) {
   const stage = stageBySlug(slug);
-  const line = (parts: (string | undefined)[]) => parts.filter(Boolean).join(" · ");
   return (
     <header className="story-head rise">
       <p className="story-meta">{line([stage.year, stage.status, stage.jam])}</p>
@@ -20,7 +16,23 @@ export function StageHeader({ slug }: { slug: string }) {
       {stage.genre && <p className="story-msg">{stage.genre}</p>}
       <p className="story-body">{stage.blurb}</p>
       <p className="story-meta">{line([stage.engine, stage.platforms, stage.role])}</p>
-      <StageActions stage={stage} />
+      <p className="stage-actions">
+        {stage.play && (
+          <a href={stage.play}>
+            Play in browser
+          </a>
+        )}
+        {stage.repo && (
+          <a href={`https://github.com/${PERSON.github}/${stage.repo}`}>
+            Source
+          </a>
+        )}
+        {stage.locked && (
+          <a href={STUDIO.url}>
+            Follow on itch.io
+          </a>
+        )}
+      </p>
     </header>
   );
 }

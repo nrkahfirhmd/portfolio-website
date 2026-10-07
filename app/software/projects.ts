@@ -1,54 +1,31 @@
 import { PROJECTS } from "@/content/site";
 
-// Project data lives in content/site.ts; this file is the shape and lookups.
-export { CURRENT, PROJECTS, STORY_REPOS } from "@/content/site";
-
-// Only `slug` and `name` are required, so a project can go up before its
-// details are written; everything else shows once it's filled in.
+/** One /software project. Only `slug` and `name` are required; the rest shows once filled in. */
 export type Project = {
-  /** URL segment, /software/work/<slug>. Also the React key. */
+  /** URL segment: /software/work/<slug>. */
   slug: string;
   name: string;
-  /** Sets the tile's shape to fit its screenshots: "mobile" stands two cells
-   * tall (a phone screen), "web" lies two cells wide (a browser window).
-   * Leave it out for a square tile. */
+  /** Tile shape: "mobile" is a tall phone screen, "web" a wide browser window; omit for a square logo tile. */
   platform?: "mobile" | "web";
-  /** GitHub repo name under PERSON.github; adds a Source link. */
+  /** GitHub repo under PERSON.github; adds a Source link. */
   repo?: string;
-  /** One line under the name: what it is. */
   tagline?: string;
-  /** A short paragraph on the project page. Plain facts, no metrics. */
   body?: string;
-  /** Human period, e.g. "Aug 2026" or "Dec 2025 – Feb 2026". */
+  /** e.g. "Aug 2026" or "Dec 2025 – Feb 2026". */
   period?: string;
-  /** Context shown beside the date, e.g. "hackathon". */
   tags?: string[];
   live?: string;
-  /** Main languages and frameworks, in the order to show them. */
   stack?: string[];
-  /** Your part in it, e.g. "Project Manager, team of 5". */
   role?: string;
-  /** Tile image on /software, in public/. Width and height are the file's
-   * own, so the masonry keeps its aspect ratio. Without one the tile shows
-   * the system diagram, or a plain placeholder. On a mobile or web project
-   * it's the blurred backdrop behind the device screen or logo instead. */
-  cover?: { src: string; width: number; height: number };
-  /** Mobile and web projects only: what plays on the device screen, a video
-   * (.mp4 / .webm / .mov, plays on hover) or an image, in public/. */
+  /** Backdrop image in public/, shown blurred behind the screen or logo. */
+  cover?: string;
+  /** Mobile/web tiles: video (plays on the device) or image in public/. */
   screen?: string;
-  /** No platform: a square tile with this logo (transparent PNG works best)
-   * centred over the blurred `cover`, or over a soft wash without one. */
+  /** Square tiles: logo in front of the backdrop (transparent PNG works best). */
   logo?: string;
-  /** How the pieces connect, drawn as a diagram. Only parts the body (or the
-   * story) actually names — no invented components. `x`/`y` are grid cells. */
-  system?: {
-    nodes: { id: string; label: string; sub?: string; x: number; y: number }[];
-    edges: [from: string, to: string][];
-  };
 };
 
-/** Throws on an unknown repo — in the MDX preview that lands as an error
- * message rather than a crash. */
+/** Throws on an unknown slug; the MDX preview shows that as an error, not a crash. */
 export function projectBySlug(slug: string): Project {
   const found = PROJECTS.find((p) => p.slug === slug);
   if (!found) throw new Error(`Unknown project slug: "${slug}"`);

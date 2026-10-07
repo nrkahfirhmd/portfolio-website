@@ -1,31 +1,21 @@
-/* Gateway landing page — centre-stage layout.
-   Every value resolves from docs/design-tokens.css. No raw hex here. */
+/* The index: a single viewport, no scroll. Values come from docs/design-tokens.css. */
 
 .home {
+  position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
   justify-items: center;
-  text-align: center;
   height: 100dvh;
-  overflow: hidden;
-  /* The site's page column (76rem, gutter padding), shared with every other
-     page, so the corners line up as you move between them. Containing block
-     for the door. */
-  position: relative;
   max-width: 76rem;
   margin: 0 auto;
-  /* Vertically, density moves the ceiling; the fixed floor keeps the
-     single-viewport guarantee on small screens. */
+  overflow: hidden;
+  /* Fixed vertical floor keeps the no-scroll guarantee on small screens. */
   padding: clamp(1rem, 3.5vh, var(--spacing-stack-lg)) var(--spacing-gutter);
+  text-align: center;
 }
 
 /* ============================================================
-   CANOPY — dappled shade from offscreen foliage, thrown in from the bottom
-   right and thinning out toward the top left. Tinted and angled by
-   `data-daypart` on <html>. Decorative only, so it is aria-hidden in the
-   markup and sits behind everything on z-index -1: body's background
-   propagates to the canvas, which paints below negative z-index, so the
-   shade lands on the cutting mat without covering any content.
+   CANOPY — shade from an offscreen tree, tinted and angled by data-daypart
    ============================================================ */
 .canopy {
   position: fixed;
@@ -34,72 +24,44 @@
   pointer-events: none;
   overflow: hidden;
   opacity: var(--daylight-strength);
-  /* Tints the paper rather than laying a coloured film over it — white under
-     multiply takes the hue, which is what light on a surface actually does. */
+  /* Multiply tints the paper like real light, rather than laying a film on it. */
   mix-blend-mode: multiply;
   transition: opacity var(--motion-enter) var(--motion-ease-default);
 }
-/* The daypart only exists once the clock has mounted. Staying dark until then
-   avoids showing the default tint and then snapping to the real one. */
+/* Hidden until the clock sets a daypart, so the tint never snaps. */
 :root:not([data-daypart]) .canopy {
   opacity: 0;
 }
 
-/* Two layers of leaves rather than one: a single sway looks like a sheet of
-   paper moving, whereas two drifting at different speeds and phases never
-   line up, which is what sells it as depth rather than one flat cut-out. */
+/* Two layers swaying out of step read as depth, not one cut-out. */
 .leaves {
   position: absolute;
-  /* Viewport plus a margin on every side: the margin is what the sway swings
-     into, so no rotation can drag an edge into frame. A 1.5deg turn about the
-     corner moves the far side ~5vmax, so 12vmax of bleed is ample. */
+  /* Bleed past the viewport so no sway drags an edge into frame. */
   inset: -12vmax;
   width: auto;
   height: auto;
-  /* The daypart's sun angle. Kept on `rotate` so the sway below can own
-     `transform` outright without the two overwriting each other. */
+  /* The sun angle lives on `rotate` so the sway can own `transform`. */
   rotate: var(--daylight-angle);
-  /* Pivot at the trunk: a small rotation here swings the far leaves a long
-     way, which is how a branch actually moves. */
   transform-origin: bottom right;
-  transition: background-color var(--motion-enter) var(--motion-ease-default);
-}
-
-/* Leaf clusters, densest at the bottom-right anchor and scattering as they
-   reach across the page. Sizes and offsets are irregular on purpose — an even
-   distribution reads as a pattern, not as foliage. */
-/* The tree is drawn in canopy.tsx and inherits its colour from here, so one
-   token recolours limbs and leaves together. */
-.leaves {
   fill: var(--daylight-tint);
   stroke: var(--daylight-tint);
   transition:
     fill var(--motion-enter) var(--motion-ease-default),
     stroke var(--motion-enter) var(--motion-ease-default);
 }
-
 .leaves-near {
-  /* Barely blurred: a near shadow keeps its leaf edges, and softening it far
-     enough to lose them is exactly what stops it reading as a tree. */
   filter: blur(0.28vmax);
   animation: sway-near 11s ease-in-out infinite;
 }
-
 .leaves-far {
-  /* Softer, fainter and slower — distance reads as blur plus lag. */
   filter: blur(0.8vmax);
   opacity: 0.65;
   animation: sway-far 17s ease-in-out infinite;
 }
-
-/* Defs only; nothing paints from this one. */
 .canopy-defs {
   position: absolute;
 }
-
-/* Wind. Rotation does the work; the small translate stops the motion looking
-   like a rigid hinge. Three stops rather than two so the gust and the recovery
-   are not mirror images of each other. */
+/* Three stops so gust and recovery aren't mirror images. */
 @keyframes sway-near {
   0%,
   100% {
@@ -125,130 +87,6 @@
   }
 }
 
-/* The cutting-mat grid, redrawn on canvas so it can bend around the pointer.
-   z-index -2 puts it below the canopy's -1, preserving the existing stack:
-   body background → grid → foliage shade (multiply) → content. */
-.grid-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-}
-
-/* ============================================================
-   CURSOR DOT — replaces the OS cursor with a solid circle. z-index sits
-   above the GitHub island (highest other value on the page, 50) so nothing
-   can paint over it.
-
-   Split across two elements on purpose — position and scale are two
-   different kinds of motion and each needs its own animation mechanism:
-   .cursor-wrap (position, driven every frame by JS in cursor-dot.tsx — a
-   CSS transition can't do this, since the target itself moves every frame)
-   and .cursor-dot (scale, a real CSS transition on the spring/overshoot
-   pair, since it only changes on hover in/out and a transition is exactly
-   the right tool there).
-   ============================================================ */
-.cursor-wrap {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--motion-hover) var(--motion-ease-default);
-}
-.cursor-dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 12px;
-  height: 12px;
-  border-radius: var(--primitive-radius-full);
-  /* Inverts via backdrop-filter, not a mix-blend-mode + fill-colour hack.
-     That distinction matters here specifically because a *black* fill under
-     mix-blend-mode: difference is a mathematical no-op — difference(0, C) =
-     |0-C| = C, the identity function, so the circle would render as exactly
-     whatever's behind it, i.e. perfectly invisible everywhere, not just over
-     one problem surface. backdrop-filter: invert(1) samples and inverts the
-     real pixels behind the shape instead of blending a chosen fill against
-     them, so there's no fill colour to pick badly in the first place — no
-     degenerate case exists for ANY colour, "black" included. It also means
-     "black" and "inverted" stop being in tension: over this page's mostly
-     light paper background, inverting reads as dark/near-black already, so
-     both readings of the request are satisfied by the same mechanism. */
-  /* No manual -webkit-backdrop-filter alongside this: writing both let the
-     build's CSS pipeline (Lightning CSS) coalesce them into a single
-     prefixed-only declaration and silently drop the standard property.
-     Autoprefixing is the pipeline's job — one declaration, and it emits
-     whatever prefixes its target browsers need. */
-  background: transparent;
-  backdrop-filter: invert(1);
-  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
-  /* --motion-playful/--motion-ease-playful — the design system's own name
-     for this pair is literally "cursor-follow settle" (docs/design-
-     system.md's motion table), which is exactly this transition. */
-  transition: transform var(--motion-playful) var(--motion-ease-playful);
-}
-.cursor-dot--active {
-  --cursor-scale: 0.5;
-}
-/* Over a [data-cursor-label] element the dot pops out and a pill pops in
-   centred on the pointer, carrying the element's label. Solid ink rather
-   than the dot's inversion: a pill of inverted pixels behind text would be
-   unreadable over cover art. */
-.cursor-label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.5rem 0.85rem;
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-ink);
-  color: var(--color-surface);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-ink) 22%, transparent);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  white-space: nowrap;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.4);
-  transition:
-    transform var(--motion-playful) var(--motion-ease-playful),
-    opacity var(--motion-hover) var(--motion-ease-default);
-}
-.cursor-label svg {
-  display: block;
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.cursor-wrap--label .cursor-label {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-.cursor-wrap--label .cursor-dot {
-  --cursor-scale: 0;
-}
-
-/* Native cursor off wherever this is mounted (set by CursorDot on <html>),
-   with one carve-out: the clock's editable city field, where a caret
-   position is real information a circle cannot give back. `!important` on
-   both sides because the hide rule must beat every UA default (`pointer` on
-   links and buttons, `text` on inputs), and the carve-out must then beat the
-   hide rule in turn — matching importance, so it comes down to specificity,
-   and the class selector already wins over the bare `*`. */
-[data-cursor-hidden] * {
-  cursor: none !important;
-}
-[data-cursor-hidden] .clock-input {
-  cursor: text !important;
-}
-
 /* --- entrance stagger --- */
 [data-enter] {
   animation: enter var(--motion-enter) var(--motion-ease-default) backwards;
@@ -261,8 +99,8 @@
   }
 }
 
+/* --- top row: KV mark, GitHub island, clock --- */
 .eyebrow {
-  /* Containing block for the GitHub island, which centres itself on this row. */
   position: relative;
   margin: 0;
   font-size: var(--typography-caption);
@@ -272,7 +110,7 @@
   color: var(--color-ink-muted);
 }
 
-/* KV mark: each letter swaps to an alt glyph on its own hover/focus only. */
+/* Each KV letter swaps to an alt glyph on its own hover/focus. */
 .kv {
   margin: 0;
   text-transform: none;
@@ -292,12 +130,10 @@
   opacity: 0;
   color: var(--color-accent);
 }
-.kv-letter:hover .kv-base,
-.kv-letter:focus-visible .kv-base {
+.kv-letter:is(:hover, :focus-visible) .kv-base {
   opacity: 0;
 }
-.kv-letter:hover .kv-alt,
-.kv-letter:focus-visible .kv-alt {
+.kv-letter:is(:hover, :focus-visible) .kv-alt {
   opacity: 1;
 }
 
@@ -322,10 +158,6 @@
   min-width: 3ch;
   max-width: 16ch;
 }
-.clock-input::placeholder {
-  color: inherit;
-  opacity: 1;
-}
 .clock-input:focus-visible {
   outline: none;
   border-color: var(--color-accent);
@@ -346,7 +178,7 @@
   display: grid;
   place-items: center;
 }
-/* ambient: slow dashed ring, alive on load without any interaction */
+/* Ambient: a slow dashed ring. */
 .halo::before {
   content: "";
   position: absolute;
@@ -368,24 +200,22 @@
   aspect-ratio: 1;
   border-radius: var(--primitive-radius-full);
   border: 1px solid var(--color-border);
-  background: linear-gradient(
-    150deg,
-    var(--color-accent-soft),
-    var(--color-surface-sunken) 55%,
-    var(--color-border)
-  );
+  background: linear-gradient(150deg, var(--color-accent-soft), var(--color-surface-sunken) 55%, var(--color-border));
   display: grid;
   place-items: center;
   filter: grayscale(0.35);
-  /* --mx/--my come from CursorParallax; 0 until it mounts */
+  /* --mx/--my from CursorParallax. */
   transform: translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 10px));
   transition:
     box-shadow var(--motion-hover) var(--motion-ease-default),
     filter var(--motion-hover) var(--motion-ease-default);
 }
-/* Brush-to-reveal layer over the portrait (app/brush-reveal.tsx). Sits above
-   the photo but inside it, so .photo's own grayscale filter and cursor
-   parallax carry the revealed art along with the rest of the image. */
+.photo:hover,
+.photo:focus-visible {
+  filter: grayscale(0);
+  box-shadow: var(--shadow-glow-accent);
+}
+/* Inside .photo, so its filter and parallax carry the revealed art too. */
 .brush-canvas {
   position: absolute;
   inset: 0;
@@ -393,9 +223,7 @@
   width: 100%;
   height: 100%;
 }
-/* Decode-only source for the canvas. Not `display: none` — that can stop the
-   image loading at all, and the canvas has nothing to read. Zero-sized and
-   clipped instead, so it still decodes. */
+/* Decode-only source: 1px, not display:none, which can stop it loading. */
 .brush-source {
   position: absolute;
   width: 1px;
@@ -403,20 +231,7 @@
   opacity: 0;
   pointer-events: none;
 }
-
-.photo:hover,
-.photo:focus-visible {
-  filter: grayscale(0);
-  box-shadow: var(--shadow-glow-accent);
-}
-.photo svg {
-  width: 55%;
-  height: 55%;
-  color: var(--color-ink-faint);
-}
-
-/* Click-to-toggle portrait/spiderman (app/portrait-toggle.tsx). Both images
-   stacked; data-revealed crossfades between them. */
+/* Portrait/spiderman, stacked and crossfaded by data-revealed. */
 .photo-img {
   position: absolute;
   inset: 0;
@@ -441,14 +256,12 @@
   font-weight: var(--primitive-fontWeight-bold);
   letter-spacing: var(--primitive-tracking-tight);
   line-height: 0.9;
-  /* Paintable: PaintName feeds background-image a stack of accent dabs at the
-     cursor, clipped to the glyphs, over a base ink layer. */
+  /* PaintName's dabs, clipped to the glyphs. */
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
 }
-/* background-image is dropped in forced-colors, which would leave the
-   clipped text invisible — hand the color back. */
+/* Forced colours drop background-image; give the text its colour back. */
 @media (forced-colors: active) {
   .name {
     color: CanvasText;
@@ -471,23 +284,19 @@
   color: var(--color-accent);
 }
 
-/* tagline words made interactive: reset to inline text, accent + playful
-   press on hover/focus, no static accent unless already .flourish. */
+/* Tagline words that pop on click (spark-word.tsx). */
 .spark {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
   font-size: inherit;
   line-height: inherit;
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
-  display: inline-block;
   transition:
     color var(--motion-hover) var(--motion-ease-default),
     transform var(--motion-playful) var(--motion-ease-playful);
-}
-.spark:not(.flourish) {
-  color: inherit;
 }
 .spark:hover,
 .spark:focus-visible {
@@ -524,7 +333,6 @@
   width: min(100%, 44rem);
   margin-top: clamp(0.25rem, 1.5vh, var(--spacing-stack-sm));
 }
-
 .gate {
   position: relative;
   display: grid;
@@ -538,15 +346,12 @@
   box-shadow: var(--gateway-card-shadow);
   overflow: hidden;
   isolation: isolate;
-  /* Exit clock — quicker than the enter below, so pulling the cursor away
-     feels crisp instead of trailing a slow bounce behind it. */
+  /* Exit is quicker than enter, so pulling away feels crisp. */
   transition:
     transform var(--motion-hover) var(--motion-ease-default),
     box-shadow var(--motion-hover) var(--motion-ease-default),
     border-color var(--motion-hover) var(--motion-ease-default);
 }
-/* Accent tint fades in. It used to slide up 101%, which raced the card's own
-   upward lift on a second clock — two upward vectors at different speeds. */
 .gate::after {
   content: "";
   position: absolute;
@@ -561,12 +366,9 @@
   transform: translateY(var(--gateway-card-lift-hover));
   box-shadow: var(--gateway-card-shadow-hover);
   border-color: var(--gateway-card-border-hover);
-  /* Enter clock — one duration across every property so lift, glow, border
-     and tint land together. Spring stays on the lift alone; overshooting a
-     colour or a shadow reads as a flicker, not as bounce. */
+  /* One duration so everything lands together; the spring only on the lift. */
   transition-duration: var(--motion-enter);
-  transition-timing-function: var(--motion-ease-playful),
-    var(--motion-ease-default), var(--motion-ease-default);
+  transition-timing-function: var(--motion-ease-playful), var(--motion-ease-default), var(--motion-ease-default);
 }
 .gate:hover::after,
 .gate:focus-visible::after {
@@ -576,13 +378,6 @@
 .gate:active {
   transform: translateY(-1px);
   transition-duration: var(--motion-press);
-}
-
-.gate-head {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 .gate h2 {
   margin: 0;
@@ -612,30 +407,10 @@
   transition-duration: var(--motion-enter);
 }
 
-.chip {
-  background: var(--chip-bg);
-  color: var(--chip-fg);
-  border-radius: var(--chip-radius);
-  padding: var(--chip-padding-y) var(--chip-padding-x);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-  transition:
-    background var(--motion-hover) var(--motion-ease-default),
-    color var(--motion-hover) var(--motion-ease-default);
-}
-.gate:hover .chip,
-.gate:focus-visible .chip {
-  background: var(--color-accent);
-  color: var(--color-accent-foreground);
-  transition-duration: var(--motion-enter);
-}
-
-/* --- the door: bottom-left way out to /side-quests --- */
-.door {
+/* --- corner links: the door (side quests) and the trail (journey) --- */
+.door,
+.trail {
   position: absolute;
-  left: var(--spacing-gutter);
   bottom: clamp(1rem, 3.5vh, var(--spacing-stack-lg));
   z-index: 5;
   display: flex;
@@ -648,7 +423,24 @@
   color: var(--color-ink-muted);
   transition: color var(--motion-hover) var(--motion-ease-default);
 }
-/* The doorway: a hairline arch. Light spills out of it when the door opens. */
+.door {
+  left: var(--spacing-gutter);
+}
+.trail {
+  right: var(--spacing-gutter);
+}
+.door:is(:hover, :focus-visible),
+.trail:is(:hover, :focus-visible) {
+  color: var(--color-ink);
+}
+/* Phones: icons only (each link's aria-label still names it). */
+@media (max-width: 640px) {
+  .door-label {
+    display: none;
+  }
+}
+
+/* A hairline arch whose leaf swings open on its left hinge, light spilling out. */
 .door-frame {
   position: relative;
   width: 20px;
@@ -662,7 +454,6 @@
     background var(--motion-playful) var(--motion-ease-default),
     box-shadow var(--motion-playful) var(--motion-ease-default);
 }
-/* The leaf swings on its left hinge, like a real door. */
 .door-leaf {
   position: absolute;
   inset: 2px 2px 0;
@@ -681,42 +472,20 @@
   border-radius: var(--primitive-radius-full);
   background: var(--color-surface);
 }
-.door:hover,
-.door:focus-visible {
-  color: var(--color-ink);
-}
-.door:hover .door-frame,
-.door:focus-visible .door-frame {
+.door:is(:hover, :focus-visible) .door-frame {
   background: var(--color-accent);
   box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 55%, transparent);
 }
-.door:hover .door-leaf,
-.door:focus-visible .door-leaf {
+.door:is(:hover, :focus-visible) .door-leaf {
   transform: rotateY(-70deg);
 }
-/* --- the trail: bottom-right way out to /journey, the door's mirror --- */
-.trail {
-  position: absolute;
-  right: var(--spacing-gutter);
-  bottom: clamp(1rem, 3.5vh, var(--spacing-stack-lg));
-  z-index: 5;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.6rem;
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
+
+/* A dashed path ending in a pin; on hover the dashes march and the pin turns green. */
 .trail-icon {
   width: 30px;
   height: 30px;
   overflow: visible;
 }
-/* A dashed path ending in a pin. On hover the dashes march toward the pin
-   and the pin turns green: the way on. */
 .trail-line {
   fill: none;
   stroke: currentColor;
@@ -730,16 +499,10 @@
     fill var(--motion-hover) var(--motion-ease-default),
     translate var(--motion-playful) var(--motion-ease-playful);
 }
-.trail:hover,
-.trail:focus-visible {
-  color: var(--color-ink);
-}
-.trail:hover .trail-line,
-.trail:focus-visible .trail-line {
+.trail:is(:hover, :focus-visible) .trail-line {
   animation: trail-march 0.9s linear infinite;
 }
-.trail:hover .trail-pin,
-.trail:focus-visible .trail-pin {
+.trail:is(:hover, :focus-visible) .trail-pin {
   fill: var(--color-accent);
   translate: 0 -2px;
 }
@@ -749,32 +512,23 @@
   }
 }
 
-/* Phones: the footer runs the full width, so the door and the trail keep
-   only their icons (each link's aria-label still names it). */
-@media (max-width: 640px) {
-  .door-label {
-    display: none;
-  }
-}
-
 /* --- footer --- */
 .foot {
   display: grid;
   justify-items: center;
   gap: clamp(0.5rem, 1.5vh, var(--spacing-stack-sm));
 }
-
 .socials {
   display: flex;
-  gap: var(--spacing-stack-xs);
   flex-wrap: wrap;
   justify-content: center;
+  gap: var(--spacing-stack-xs);
 }
 .social {
-  width: var(--social-icon-size);
-  height: var(--social-icon-size);
   display: grid;
   place-items: center;
+  width: var(--social-icon-size);
+  height: var(--social-icon-size);
   border: 1px solid var(--social-icon-border);
   border-radius: var(--social-icon-radius);
   background: var(--social-icon-bg);
@@ -801,76 +555,28 @@
   transition-duration: var(--motion-press);
 }
 
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-stack-xs);
-  font-size: var(--typography-caption);
-  letter-spacing: var(--primitive-tracking-wide);
-  text-transform: uppercase;
-  color: var(--color-ink-muted);
-}
-.status::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-accent);
-  animation: pulse var(--primitive-duration-ambient)
-    var(--primitive-easing-linear) infinite;
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 50%, transparent);
-  }
-  50% {
-    opacity: 0.55;
-    box-shadow: 0 0 0 6px transparent;
-  }
-}
-
 /* ============================================================
-   GITHUB ISLAND — Dynamic-Island-style status card, centred on the eyebrow
-   row between the KV mark and the clock. Inverted (ink surface / paper text),
-   reusing the same language as the `chip` token group.
-
-   Absolute, never in flow: collapsed it would be taller than the caption-sized
-   row it sits on and would stretch it, and expanded it would shove the KV mark
-   and the clock apart. Out of flow, neither can happen, and the page keeps its
-   single-viewport no-scroll guarantee.
+   GITHUB ISLAND — Dynamic-Island-style card centred on the top row
    ============================================================ */
 .island {
+  /* Out of flow, so it neither stretches the row nor pushes KV and the clock apart. */
   position: absolute;
-  /* Anchored by its top edge, offset by half the collapsed height, so the
-     collapsed pill sits centred on the row and expanding only grows downward.
-     Centring the expanded box instead would push its top edge up past the
-     page's padding, where `.home`'s overflow:hidden would clip it. */
+  /* Top-anchored so expanding only grows down (centring would clip at the top). */
   top: calc(50% - 1.125rem);
   left: 50%;
   z-index: 50;
   translate: -50% 0;
   overflow: hidden;
-  /* .eyebrow uppercases and letterspaces everything inside it, which is right
-     for a caption row and wrong for status text. Children that do want the
-     tracking ask for it themselves. */
   text-transform: none;
   letter-spacing: normal;
   background: var(--chip-bg);
   color: var(--chip-fg);
   box-shadow: var(--shadow-lift);
-  /* Collapsed box. Both dimensions are explicit because the morph animates
-     them — `auto` height would make the expand un-transitionable. */
+  /* Explicit sizes so the morph can animate them. */
   --island-h: 2.25rem;
   width: 11.5rem;
   height: var(--island-h);
-  /* Half the collapsed height: a true pill, but deliberately NOT
-     `--primitive-radius-full`. Radius is clamped to min(value, height/2), and
-     interpolating from 9999px stays above that ceiling for ~99% of the morph —
-     the corners would track half-height the whole way up (a pill that keeps
-     growing) and then snap to the target on the last frame. A concrete
-     18px → 20px never reaches the clamp, so the curve stays put. */
+  /* Half-height, not radius-full: interpolating from 9999px snaps at the end. */
   border-radius: calc(var(--island-h) / 2);
   transition:
     width var(--motion-playful) var(--motion-ease-playful),
@@ -879,14 +585,17 @@
 }
 .island[data-open] {
   width: min(21rem, calc(100vw - 2rem));
-  /* Base panel plus one list row per active project (--projects is set
-     inline from NOW_BUILDING). Explicit so the morph can still animate it. */
+  /* Base panel plus a row per project (--projects set inline). */
   height: calc(7rem + var(--projects, 1) * 1.25rem);
   border-radius: var(--primitive-radius-xl);
 }
+@media (max-width: 780px) {
+  .island {
+    width: 8.5rem;
+  }
+}
 
-/* Both layers occupy the same box and cross-fade; `inert` (set in the
-   component) is what actually removes the hidden one from tab order. */
+/* Both layers share the box and crossfade; `inert` takes the hidden one out of tab order. */
 .island-pill,
 .island-panel {
   position: absolute;
@@ -902,9 +611,9 @@
   pointer-events: none;
 }
 
-/* --- collapsed pill --- */
 .island-pill {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
   padding: 0 0.75rem;
@@ -913,9 +622,6 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
-}
-.island-pill {
-  justify-content: space-between;
 }
 .island-count {
   display: inline-flex;
@@ -930,26 +636,22 @@
   width: 14px;
   height: 14px;
 }
-/* Breathes once activity has loaded, so the mark reads as live. Opacity only:
-   the footer's `pulse` ring would spill past the pill's clipped edge. */
+/* Breathes once loaded; opacity only, a ring would spill past the clip. */
 .island[data-live] .island-pill .island-gh-icon {
-  animation: pulse-soft var(--primitive-duration-ambient)
-    var(--primitive-easing-linear) infinite;
+  animation: pulse-soft var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
 }
 @keyframes pulse-soft {
   50% {
     opacity: 0.55;
   }
 }
-
 .island-gh-icon {
+  flex: none;
   width: 15px;
   height: 15px;
-  flex: none;
   color: var(--color-accent);
 }
 
-/* --- expanded panel --- */
 .island-panel {
   display: flex;
   flex-direction: column;
@@ -972,15 +674,16 @@
   text-align: left;
   font-size: var(--typography-caption);
 }
-.island-gh-muted {
+.island-gh-muted,
+.island-gh-text {
   color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
 }
 .island-close {
   display: grid;
   place-items: center;
+  flex: none;
   width: 1.75rem;
   height: 1.75rem;
-  flex: none;
   padding: 0;
   background: none;
   border: none;
@@ -1001,7 +704,6 @@
   transition-duration: var(--motion-press);
 }
 .island-close svg {
-  /* The chevron points up: it dismisses back into the notch. */
   width: 16px;
   height: 16px;
 }
@@ -1027,9 +729,9 @@
 }
 .island-now li::before {
   content: "";
+  flex: none;
   width: 5px;
   height: 5px;
-  flex: none;
   border-radius: var(--primitive-radius-full);
   background: var(--color-accent);
 }
@@ -1047,7 +749,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
-  color: color-mix(in srgb, var(--chip-fg) 60%, transparent);
 }
 .island-gh-time {
   flex: none;
@@ -1055,9 +756,7 @@
   color: color-mix(in srgb, var(--chip-fg) 55%, transparent);
 }
 
-/* --- activity dots: DOT_DAYS of "did anything land that day", oldest to
-   newest. Not a real contribution calendar — the events feed only covers
-   recent history — just a pulse of "active lately". */
+/* Activity dots: "anything that day", oldest to newest. */
 .island-gh-days {
   display: flex;
   justify-content: space-between;
@@ -1069,7 +768,8 @@
   border-radius: var(--primitive-radius-full);
   border: 1px solid color-mix(in srgb, var(--chip-fg) 30%, transparent);
   background: transparent;
-  transition: background var(--motion-hover) var(--motion-ease-default),
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
     border-color var(--motion-hover) var(--motion-ease-default);
 }
 .island-gh-day[data-active] {
@@ -1077,73 +777,19 @@
   border-color: var(--color-accent);
 }
 
-@media (max-width: 780px) {
-  /* The eyebrow row's KV mark and clock sit either side of the island, so
-     the collapsed pill has to give up width before it collides with them. */
-  .island {
-    width: 8.5rem;
-  }
-}
-
-/* --- placeholder destination pages --- */
-.soon-page {
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: var(--spacing-stack-sm);
-  height: 100dvh;
-  padding: var(--spacing-gutter);
-  text-align: center;
-}
-.soon-page h1 {
-  margin: 0;
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-}
-.soon-page p {
-  margin: 0;
-  max-width: 42ch;
-  color: var(--color-ink-muted);
-  line-height: 1.6;
-}
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: var(--spacing-stack-xs);
-  padding: 0.6rem 1.1rem;
-  font-size: var(--typography-label);
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-full);
-  transition:
-    background var(--motion-hover) var(--motion-ease-default),
-    border-color var(--motion-hover) var(--motion-ease-default),
-    color var(--motion-hover) var(--motion-ease-default);
-}
-.back:hover,
-.back:focus-visible {
-  background: var(--color-accent-soft);
-  border-color: var(--color-accent);
-  color: var(--color-accent-active);
-}
-
 /* ============================================================
-   RESPONSIVE — one column, still no scroll
+   PHONES — one column, still no scroll
    ============================================================ */
 @media (max-width: 780px) {
   .gates {
     grid-template-columns: 1fr;
-    /* 8px floor keeps adjacent tap targets from crowding each other. */
     gap: 0.5rem;
   }
   .gate {
     padding: 0.7rem 0.85rem;
-    /* room for the arrow, which is centred on this breakpoint */
-    padding-right: 2.25rem;
+    padding-right: 2.25rem; /* room for the centred arrow */
   }
-  /* Clamped rather than hidden — the description is the only thing telling a
-     phone visitor what each portfolio actually contains. */
+  /* Clamped, not hidden: it's all that tells a phone what each portfolio holds. */
   .gate p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -1162,19 +808,7 @@
   }
 }
 
-/* ============================================================
-   REDUCED MOTION — no transforms, no ambient loops.
-   Colour and opacity feedback stays, so nothing becomes dead.
-   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition-duration: var(--motion-hover) !important;
-    transition-property: background-color, border-color, color, opacity,
-      box-shadow !important;
-  }
   .photo,
   .gate,
   .social,

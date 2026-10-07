@@ -1,7 +1,4 @@
-/* Story pages (/software/work/[slug]) and the dev-only MDX editor
-   (/software/preview). Element styling for MDX output lives here rather than
-   in a typography plugin; the component map in story-components.tsx only
-   hands out class names. */
+/* Story and devlog pages, and the dev-only MDX editor. MDX elements are styled here, not by a typography plugin. */
 
 /* --- header --- */
 .story-head {
@@ -80,9 +77,6 @@
   color: var(--color-ink);
   font-weight: var(--primitive-fontWeight-medium);
   border-left-color: var(--color-accent);
-}
-.story-back {
-  margin-top: clamp(3rem, 10vh, 5rem);
 }
 
 @media (max-width: 900px) {
@@ -192,8 +186,7 @@
   aspect-ratio: 16 / 9;
   padding: 1.5rem;
   text-align: center;
-  /* The site's placeholder; the caption keeps ink-muted, since here the
-     words say what the missing screenshot should show. */
+  /* Placeholder paper; the caption stays ink-muted to stay readable. */
   background: var(--placeholder-bg);
   font-size: var(--typography-caption);
   color: var(--color-ink-muted);
@@ -264,8 +257,7 @@
 }
 
 /* ============================================================
-   EDITOR — dev-only. Source left, live render right; both panes scroll
-   internally so the page never does.
+   EDITOR — dev-only: source left, live render right, panes scroll internally
    ============================================================ */
 .ed {
   display: grid;

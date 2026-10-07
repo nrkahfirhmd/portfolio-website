@@ -1,15 +1,11 @@
 import { STAGES } from "@/content/site";
 
-// Library data lives in content/site.ts; this file is the shape and lookups.
-export { STAGES, STORY_SLUGS, STUDIO } from "@/content/site";
-
+/** One library entry on /games. */
 export type Stage = {
-  /** What the entry is. Defaults to "game"; anything else gets a chip
-   * saying so in the library. */
+  /** Defaults to "game"; anything else gets a kind chip on its tile. */
   kind?: "game" | "art" | "video" | "music";
-  /** "1-1", "1-2", … — printed on the node and the stage card. */
   id: string;
-  /** URL segment for the stage's devlog, /games/stage/<slug>. */
+  /** URL segment of its devlog: /games/stage/<slug>. */
   slug: string;
   name: string;
   blurb: string;
@@ -21,42 +17,35 @@ export type Stage = {
   jam?: string;
   status: string;
   year?: string;
-  /** Cover art, shown in front on the tile; for art pieces the piece itself,
-   * for video the poster, for music the album art. Remote hosts must be
-   * allowed in next.config.ts. */
+  /** Front art (the piece, poster, or album art); remote hosts must be allowed in next.config.ts. */
   cover?: string;
-  /** Background behind the cover, blurred. Until there is one, the cover
-   * itself is blurred in. */
+  /** Blurred backdrop; falls back to the cover. */
   bg?: string;
-  /** A video file (e.g. in public/); on a wide tile, plays on its screen. */
+  /** Video in public/; plays on a wide tile's screen. */
   video?: string;
-  /** Lay the tile two cells wide, the front shown on a screen. */
+  /** Two cells wide, the front shown on a screen. */
   wide?: boolean;
-  /** Wide tiles: a video (plays on hover) or image on the screen instead of
-   * the cover. */
+  /** Wide tiles: video or image on the screen instead of the cover. */
   screen?: string;
-  /** Square tiles: a logo in front instead of the cover. With neither, the
-   * name stands in as a wordmark. */
+  /** Square tiles: logo in front instead of the cover. */
   logo?: string;
-  /** An audio file (e.g. in public/music/), played from its tile. */
+  /** Audio in public/, played from the tile. */
   audio?: string;
-  /** Primary action — a playable build. */
+  /** A playable build. */
   play?: string;
   /** GitHub repo under PERSON.github. */
   repo?: string;
   locked?: boolean;
 };
 
-/** Library order: the newest stage with cover art takes the big slot, then the
- * rest newest-first, and the locked teaser always sits at the end. */
+/** Library order: newest first, the newest with cover art leading, locked teasers last. */
 export function shelve(stages: Stage[]) {
   const open = stages.filter((s) => !s.locked).reverse();
   const featured = open.find((s) => s.cover) ?? open[0];
   return [featured, ...open.filter((s) => s !== featured), ...stages.filter((s) => s.locked)].filter(Boolean);
 }
 
-/** Throws on an unknown slug — in the MDX preview that lands as an error
- * message rather than a crash. */
+/** Throws on an unknown slug; the MDX preview shows that as an error, not a crash. */
 export function stageBySlug(slug: string): Stage {
   const found = STAGES.find((s) => s.slug === slug);
   if (!found) throw new Error(`Unknown stage slug: "${slug}"`);

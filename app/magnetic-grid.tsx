@@ -1,40 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
-import {
-  getFinePointerServerSnapshot,
-  getFinePointerSnapshot,
-  subscribeFinePointer,
-} from "./fine-pointer";
+import { useEffect, useRef } from "react";
+import { useFinePointer } from "./fine-pointer";
 
-/** Must match the cutting mat in globals.css — this canvas redraws that same
- * grid, so a mismatch here shows up as the mat visibly changing on mount. */
+/** Must match the cutting mat's spacing in globals.css. */
 const SPACING = 24;
-/** How far the field reaches, px. */
+/** Reach of the field, px. */
 const RADIUS = 190;
-/** Peak displacement at the centre of the field, px. */
+/** Peak displacement at the field's centre, px. */
 const PULL = 17;
-/** Polyline step for lines passing through the field. Small enough that the
- * bend reads as a curve rather than a chain of visible facets. */
+/** Polyline step for bent lines: small enough to read as a curve. */
 const SAMPLE = 8;
-/** Per-frame easing toward the pointer, matching the cursor dot's feel. */
+/** Per-frame easing toward the pointer, like the cursor dot. */
 const FOLLOW = 0.18;
-/** Below this, treat a value as arrived and stop scheduling frames. */
+/** Below this, a value counts as arrived and frames stop. */
 const EPSILON = 0.01;
 
-/**
- * Warps one point toward the pointer, falling off to nothing at RADIUS.
- * Squared falloff so the very centre moves a lot and the rim barely moves —
- * a linear falloff makes the edge of the field a visible hard ring.
- */
-function warp(
-  x: number,
-  y: number,
-  cx: number,
-  cy: number,
-  power: number,
-  out: { x: number; y: number },
-) {
+/** Pulls one point toward the pointer, with squared falloff so the field's rim never shows as a ring. */
+function warp(x: number, y: number, cx: number, cy: number, power: number, out: { x: number; y: number }) {
   const dx = cx - x;
   const dy = cy - y;
   const d2 = dx * dx + dy * dy;
@@ -43,9 +26,7 @@ function warp(
     out.y = y;
     return out;
   }
-  // `|| 1` guards the exact-centre case, where d is 0 and the unit vector
-  // would be NaN.
-  const d = Math.sqrt(d2) || 1;
+  const d = Math.sqrt(d2) || 1; // `|| 1`: the exact centre would divide by zero.
   const falloff = 1 - d / RADIUS;
   const amount = PULL * falloff * falloff * power;
   out.x = x + (dx / d) * amount;
@@ -54,29 +35,13 @@ function warp(
 }
 
 /**
- * The cutting-mat grid, redrawn on a canvas so it can bend around the pointer
- * like a field line around a magnet.
- *
- * The mat is normally a pair of `repeating-linear-gradient`s on `body`, which
- * cannot be distorted locally — a CSS background can be moved or scaled as a
- * whole, but not dented in one spot. So while this is mounted it sets
- * `data-grid-canvas` on <html>, globals.css drops the CSS copy, and this
- * canvas becomes the single source of the grid. Unmounting hands it straight
- * back, which is also the fallback for touch devices and reduced-motion:
- * those never mount this at all and simply keep the CSS mat.
- *
- * Drawing is cheap because straightness is the common case: a line further
- * than RADIUS from the pointer cannot bend anywhere along its length, so it
- * is stroked as a single segment. Only the ~16 lines per axis actually
- * crossing the field get sampled into polylines.
+ * The cutting-mat grid on a canvas, bent around the pointer. A CSS background
+ * can't be dented locally, so while mounted this sets data-grid-canvas and
+ * globals.css drops the CSS mat; touch and reduced-motion keep the CSS one.
  */
 export function MagneticGrid() {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const enabled = useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    getFinePointerServerSnapshot,
-  );
+  const enabled = useFinePointer();
 
   useEffect(() => {
     if (!enabled) return;
@@ -92,20 +57,16 @@ export function MagneticGrid() {
     const ctx = el?.getContext("2d");
     if (!el || !ctx) return;
 
-    // Read the mat's own line colour rather than restating it: --mat-fine is
-    // a color-mix() off the live accent, and a probe element is the reliable
-    // way to get it resolved to a plain rgba() the canvas can use.
+    // Resolve the mat's color-mix() line colour to plain rgba via a probe element.
     const probe = document.createElement("div");
-    probe.style.cssText =
-      "position:absolute;width:0;height:0;visibility:hidden;color:var(--mat-fine)";
+    probe.style.cssText = "position:absolute;width:0;height:0;visibility:hidden;color:var(--mat-fine)";
     document.body.appendChild(probe);
     const line = getComputedStyle(probe).color;
     probe.remove();
 
     let w = 0;
     let h = 0;
-    // Pointer parked off-screen initially so the first paint is a plain,
-    // undistorted grid — identical to the CSS mat it just replaced.
+    // Pointer parked off-screen so the first paint is the plain mat.
     const s = { x: -9999, y: -9999, tx: -9999, ty: -9999, p: 0, tp: 0 };
     const pt = { x: 0, y: 0 };
     let raf = 0;
@@ -116,10 +77,9 @@ export function MagneticGrid() {
       ctx!.lineWidth = 1;
       const { x: cx, y: cy, p } = s;
 
+      // A line farther than RADIUS from the pointer can't bend: one segment.
       for (let x = 0; x <= w; x += SPACING) {
         ctx!.beginPath();
-        // No point on this line is within reach, so it cannot bend: one
-        // segment instead of h/SAMPLE of them.
         if (Math.abs(x - cx) > RADIUS || p <= 0) {
           ctx!.moveTo(x + 0.5, 0);
           ctx!.lineTo(x + 0.5, h);
@@ -164,9 +124,7 @@ export function MagneticGrid() {
     }
 
     function resize() {
-      // Capped: a 3x display would triple the pixel count for no visible gain
-      // on 1px hairlines.
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const dpr = Math.min(devicePixelRatio || 1, 2); // 3x buys nothing on 1px lines.
       w = innerWidth;
       h = innerHeight;
       el!.width = Math.round(w * dpr);
@@ -178,9 +136,7 @@ export function MagneticGrid() {
     }
 
     const move = (e: PointerEvent) => {
-      // Snap position on the first move so the field appears where the
-      // pointer already is, then let `power` fade it in from nothing —
-      // easing position instead would drag a dent across the whole grid.
+      // First move: snap the field to the pointer and fade its power in.
       if (s.tp === 0) {
         s.x = e.clientX;
         s.y = e.clientY;
@@ -190,10 +146,7 @@ export function MagneticGrid() {
       s.tp = 1;
       if (!raf) raf = requestAnimationFrame(tick);
     };
-    // Without this the grid would keep a permanent dent wherever the pointer
-    // happened to exit, since no further pointermove events arrive to relax
-    // it. Easing power to 0 relaxes in place rather than dragging the dent
-    // off-screen.
+    // Relax in place on exit, or the dent stays wherever the pointer left.
     const leave = () => {
       s.tp = 0;
       if (!raf) raf = requestAnimationFrame(tick);

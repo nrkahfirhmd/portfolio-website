@@ -52,24 +52,17 @@ export const HOME = {
   nowBuilding: ["Project Akar Fehu", "Final Challenge ADA", "Omawe"],
 };
 
-/** The two portfolio cards. `live: false` shows a "soon" chip and a
- * placeholder page with the blurb. */
+/** The index's portfolio cards. */
 export const GATEWAYS: Gateway[] = [
   {
     slug: "software",
     name: "Software Engineering",
     desc: "Software that earns its place in your day, and feels like it was made for you.",
-    blurb:
-      "Applied models, agent systems, and infrastructure work — the unglamorous engineering that turns a demo into something people can rely on at 3am.",
-    live: true,
   },
   {
     slug: "games",
     name: "Game Development",
     desc: "Great games stayed with me. I'm making ones that stay with you.",
-    blurb:
-      "Systems-driven games, the tools built to make them, and physics toys that exist mostly because they were fun to write.",
-    live: true,
   },
 ];
 
@@ -93,19 +86,12 @@ export const CURRENT: { role: string; company: string; companyUrl: string } | nu
   companyUrl: "https://developeracademy.apps.binus.ac.id/bali/",
 };
 
-// Projects, newest first. Only `slug` and `name` are required; add the rest
-// as you write it up. A `live` link to the App Store is labelled "App Store".
-// `system` is a diagram shown until a project has a `cover` image.
-// `platform: "mobile"` makes a tall tile (two cells down) for phone screenshots;
-// `platform: "web"` makes a wide one (two cells across) for browser ones.
-// Media, in public/: `cover` is the blurred backdrop, `screen` the video or
-// image on the device. Without a platform, `logo` makes a square tile with
-// the logo over the backdrop.
+// Projects, newest first; field docs on the Project type (app/software/projects.ts).
 export const PROJECTS: Project[] = [
   {
     slug: "omawe",
     name: "Omawe",
-    cover: { src: "/project-media/SE/omawe_bg.jpg", width: 675, height: 1200 },
+    cover: "/project-media/SE/omawe_bg.jpg",
     screen: "/project-media/SE/omawe_recording.mp4",
     platform: "mobile",
     tagline: "Group trips, without the \"where are you?\" texts",
@@ -119,7 +105,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "katamata",
     name: "KataMata",
-    cover: { src: "/project-media/SE/katamata_bg.jpg", width: 400, height: 800 },
+    cover: "/project-media/SE/katamata_bg.jpg",
     screen: "/project-media/SE/katamata_recording.mp4",
     platform: "mobile",
     tagline: "Word collecting for expats learning the language of where they live",
@@ -132,7 +118,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "himatif-apps-v2",
     name: "Himatif Apps v2",
-    cover: { src: "/project-media/SE/himatif_bg.jpg", width: 563, height: 364 },
+    cover: "/project-media/SE/himatif_bg.jpg",
     screen: "/project-media/SE/himatif_recording.mp4",
     platform: "web",
     tagline: "A superapp for Universitas Padjadjaran's Informatics Engineering student association",
@@ -146,7 +132,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "prabu-2025",
     name: "Prabu 2025",
-    cover: { src: "/project-media/SE/prabu_bg.jpg", width: 1200, height: 675 },
+    cover: "/project-media/SE/prabu_bg.jpg",
     screen: "/project-media/SE/prabu_capture.png",
     platform: "web",
     tagline: "The website for the 2025 university orientation, used by 5,000+ new students",
@@ -159,7 +145,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "14th-grand-summit",
     name: "14th Grand Summit",
-    cover: { src: "/project-media/SE/gs14_bg.jpg", width: 735, height: 420 },
+    cover: "/project-media/SE/gs14_bg.jpg",
     screen: "/project-media/SE/gs14_recording.mp4",
     platform: "web",
     tagline: "Registration and participant dashboard for Grand Summit, StudentsxCEOs Bandung's annual student business case competition",
@@ -172,7 +158,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "coretax-scraper",
     name: "Coretax Scraper",
-    cover: { src: "/project-media/SE/coretax_bg.jpg", width: 1080, height: 1080 },
+    cover: "/project-media/SE/coretax_bg.jpg",
     logo: "/project-media/SE/coretax_logo.png",
     tagline: "A Chrome extension that automates pulling tax data out of Coretax",
     body: "The tax team used to export Coretax data by hand, one table page at a time. This extension does the extraction for them, cutting manual processing time by 97.5%: from 10 minutes to under 15 seconds per task.",
@@ -185,7 +171,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "nabawi-habits",
     name: "Nabawi Habits",
-    cover: { src: "/project-media/SE/nabawi_bg.jpg", width: 735, height: 414 },
+    cover: "/project-media/SE/nabawi_bg.jpg",
     screen: "/project-media/SE/nabawi_recording.mp4",
     platform: "web",
     tagline: "A landing page on living the Prophet Muhammad's way: heart, body, and mind",
@@ -199,7 +185,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "nyisa",
     name: "Nyisa",
-    cover: { src: "/project-media/SE/nyisa_bg.jpg", width: 736, height: 414 },
+    cover: "/project-media/SE/nyisa_bg.jpg",
     screen: "/project-media/SE/nyisa_capture.png",
     platform: "web",
     tagline: "Restaurants' leftover food, sold before it goes to waste",
@@ -212,7 +198,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "agriclime",
     name: "AgriClime",
-    cover: { src: "/project-media/SE/agriclime_bg.jpg", width: 736, height: 1308 },
+    cover: "/project-media/SE/agriclime_bg.jpg",
     logo: "/project-media/SE/agriclime_logo.png",
     tagline: "Weather forecasts and alerts that help farmers plan around the climate",
     body: "An Android app that helps farmers plan around the weather. A forecasting model predicts the next hours from the last day of hourly readings for their location, and a classifier labels the conditions ahead, served to the app through a Flask API.",
@@ -224,7 +210,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "sobat-warung",
     name: "Sobat Warung",
-    cover: { src: "/project-media/SE/sobat_bg.jpg", width: 702, height: 395 },
+    cover: "/project-media/SE/sobat_bg.jpg",
     logo: "/project-media/SE/sobat_logo.png",
     tagline: "A WhatsApp assistant that helps small shop owners run their warung",
     body: "A WhatsApp chatbot for warung owners. They register their shop and log daily sales just by chatting, and in return get a forecast of what will sell and which products to bundle, drawn from sales history, holidays, and fuel prices.",
@@ -236,7 +222,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "deqrypt",
     name: "DeQRypt",
-    cover: { src: "/project-media/SE/deqrypt_bg.jpg", width: 736, height: 476 },
+    cover: "/project-media/SE/deqrypt_bg.jpg",
     screen: "/project-media/SE/deqrypt_capture.jpg",
     platform: "mobile",
     tagline: "Scan a QR, pay with DeFi, and let an AI agent put idle crypto to work",
@@ -250,7 +236,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "bitd-dashboard",
     name: "BITD Dashboard",
-    cover: { src: "/project-media/SE/bitd_bg.jpg", width: 736, height: 414 },
+    cover: "/project-media/SE/bitd_bg.jpg",
     screen: "/project-media/SE/bitd_capture.jpg",
     platform: "web",
     tagline: "The operations dashboard for a Jakarta internet provider, and the ISPs it hosts",
@@ -264,7 +250,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "mpi-k8s-performance",
     name: "Performance Analysis MPI on K8s",
-    cover: { src: "/project-media/SE/perfanalysis_bg.jpg", width: 736, height: 414 },
+    cover: "/project-media/SE/perfanalysis_bg.jpg",
     logo: "/project-media/SE/perf_analysis.png",
     tagline: "Does MPI pay a price for running on Kubernetes? Benchmarked against bare metal",
     body: "A study of what containerising HPC workloads costs. The same MPI jobs, a LAMMPS molecular-dynamics simulation (500,000 atoms) and the OSU latency benchmark, ran at 1 to 32 processes on bare metal and on Kubernetes, and an interactive dashboard compares runtime, scaling, and message latency side by side.",
@@ -276,7 +262,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "dekorin",
     name: "Dekorin",
-    cover: { src: "/project-media/SE/dekorin_bg.jpg", width: 736, height: 414 },
+    cover: "/project-media/SE/dekorin_bg.jpg",
     logo: "/project-media/SE/dekorin_logo.png",
     tagline: "A marketplace for booking home-decoration vendors",
     body: "An e-commerce platform for booking home-decoration services: furniture layout, lighting, and more. Customers browse vendors' offerings, ask questions, and send requests; vendors accept, reject, and complete orders from their own dashboard and list new services.",

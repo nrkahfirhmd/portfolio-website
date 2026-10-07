@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "../docs/design-tokens.css";
 
+/* Site-wide: base, the page shell every route shares, cursor, motion. Values come from docs/design-tokens.css. */
+
 *,
 *::before,
 *::after {
@@ -13,35 +15,19 @@ body {
   margin: 0;
 }
 
-/* Self-healing cutting mat: accent-tinted surface with an even 24px grid.
-   The line color is derived from the live accent via color-mix, so the mat
-   follows theme and accent like the shadows do. */
+/* The cutting mat: accent-tinted paper with a 24px grid (magnetic-grid.tsx redraws it). */
 body {
   --mat-fine: color-mix(in srgb, var(--color-accent) 10%, transparent);
 
   background-color: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface));
   background-image:
-    repeating-linear-gradient(
-      to right,
-      var(--mat-fine) 0 1px,
-      transparent 1px 24px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      var(--mat-fine) 0 1px,
-      transparent 1px 24px
-    );
+    repeating-linear-gradient(to right, var(--mat-fine) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(to bottom, var(--mat-fine) 0 1px, transparent 1px 24px);
   color: var(--color-ink);
   font-family: var(--font-mono), var(--primitive-fontFamily-mono);
   font-size: var(--typography-body);
 }
-
-/* The magnetic grid canvas (app/magnetic-grid.tsx) redraws this exact mat so
-   it can bend it around the pointer, something a CSS background cannot do —
-   it can be moved or scaled as a whole, never dented in one spot. While that
-   canvas is mounted it owns the grid outright and the CSS copy has to go, or
-   the two would double up. Removing the attribute hands it straight back,
-   which is what touch devices and reduced-motion get. */
+/* While the canvas grid is mounted it owns the mat. */
 [data-grid-canvas] body {
   background-image: none;
 }
@@ -68,12 +54,217 @@ a {
 }
 
 /* ============================================================
-   MOTION — page transitions, entrances, and scroll reveals, shared by every
-   page. Reduced motion turns all of it off (bottom of this block).
+   PAGE SHELL — page-shell.tsx: column, "kv/…" bar, intro, back link
    ============================================================ */
+.page {
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.page) {
+    scroll-behavior: smooth;
+  }
+}
 
-/* Page slides (page-transition.tsx): forward pushes the old page left and
-   brings the new one in from the right; back does the mirror. */
+.page-bar {
+  display: flex;
+  align-items: center;
+  padding-block: var(--spacing-stack);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+}
+.page-home {
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.page-home span {
+  color: var(--color-ink-faint);
+}
+.page-home:hover {
+  color: var(--color-accent);
+}
+
+/* A 40rem block centred on the page, text left-aligned inside. */
+.page-intro {
+  max-width: 40rem;
+  margin-inline: auto;
+  padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
+}
+.page-title {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+  text-wrap: balance;
+}
+.page-sub {
+  margin: 0.4rem 0 0;
+  font-size: var(--typography-label);
+  color: var(--color-ink-muted);
+}
+.page-lede {
+  margin: 1rem 0 0;
+  font-size: var(--typography-tagline);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* Inline accent links: role lines, project and devlog actions. */
+:is(.page-sub, .show-links, .stage-actions) a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+:is(.page-sub, .show-links, .stage-actions) a:hover {
+  color: var(--color-accent-hover);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  font-size: var(--typography-label);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-full);
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default),
+    color var(--motion-hover) var(--motion-ease-default);
+}
+.back:hover,
+.back:focus-visible {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-active);
+}
+.page-back {
+  margin-top: clamp(3rem, 10vh, 6rem);
+}
+
+/* "Open to work": a breathing green dot. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-stack-xs);
+  font-size: var(--typography-caption);
+  letter-spacing: var(--primitive-tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  animation: pulse var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 50%, transparent);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+
+/* ============================================================
+   POINTER — the canvas grid (magnetic-grid.tsx) and cursor dot (cursor-dot.tsx)
+   ============================================================ */
+/* Stack: mat → grid (-2) → canopy shade (-1) → content. */
+.grid-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.cursor-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-hover) var(--motion-ease-default);
+}
+.cursor-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--primitive-radius-full);
+  /* Inverts the real pixels behind it, so no fill colour can vanish (black under mix-blend difference would).
+     No manual -webkit- prefix: Lightning CSS would keep only the prefixed one. */
+  background: transparent;
+  backdrop-filter: invert(1);
+  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
+  transition: transform var(--motion-playful) var(--motion-ease-playful);
+}
+.cursor-dot--active {
+  --cursor-scale: 0.5;
+}
+/* Over [data-cursor-label]: a solid pill with the label (inverted pixels would be unreadable over art). */
+.cursor-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--color-ink) 22%, transparent);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4);
+  transition:
+    transform var(--motion-playful) var(--motion-ease-playful),
+    opacity var(--motion-hover) var(--motion-ease-default);
+}
+.cursor-label svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cursor-wrap--label .cursor-label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.cursor-wrap--label .cursor-dot {
+  --cursor-scale: 0;
+}
+/* Native cursor off while the dot is mounted, except in the clock's text field. */
+[data-cursor-hidden] * {
+  cursor: none !important;
+}
+[data-cursor-hidden] .clock-input {
+  cursor: text !important;
+}
+
+/* ============================================================
+   MOTION — page slides, entrances, scroll reveals
+   ============================================================ */
+/* Page slides (page-transition.tsx): forward pushes left, back pushes right. */
 @keyframes vt-fade {
   from {
     opacity: 0;
@@ -109,8 +300,7 @@ a {
   --slide: -48px;
 }
 
-/* A tile's name flying into the article title. The blur hides the text
-   being scaled between two sizes mid-flight. */
+/* A tile's name flying into its article title; the blur hides the mid-flight scaling. */
 ::view-transition-group(.morph) {
   animation-duration: 460ms;
   animation-timing-function: var(--motion-ease-default);
@@ -124,8 +314,7 @@ a {
   }
 }
 
-/* Staggered entrance for intro blocks and article headers: each direct
-   child rises in a beat after the one before. */
+/* Staggered entrance: each direct child rises a beat after the last. */
 @keyframes rise {
   from {
     opacity: 0;
@@ -143,10 +332,7 @@ a {
 .rise > :nth-child(6) { --n: 5; }
 .rise > :nth-child(n + 7) { --n: 6; }
 
-/* Scroll reveal: elements marked .reveal (and every block in an article
-   body) rise in as they enter the viewport, driven by scroll position, not
-   JS. Opacity and translate only: the masonry measures tile heights, and a
-   scale would skew them. Browsers without scroll timelines just show them. */
+/* Scroll reveal, CSS-only. Opacity and translate only: the masonry measures heights, so no scale. */
 @supports (animation-timeline: view()) {
   .reveal,
   .prose > * {
@@ -156,15 +342,18 @@ a {
   }
 }
 
+/* Reduced motion: no transforms or loops anywhere; colour and opacity feedback stays. */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: var(--motion-hover) !important;
+    transition-property: background-color, border-color, color, opacity, box-shadow !important;
+  }
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {
-    animation: none !important;
-  }
-  .rise > *,
-  .reveal,
-  .prose > * {
     animation: none !important;
   }
 }

@@ -1,14 +1,26 @@
-import { baseComponents } from "../story/components";
-import { ProjectLinks } from "./parts";
-import { projectBySlug } from "./projects";
+import { PERSON } from "@/content/site";
 import { SharedTitle } from "../page-transition";
+import { projectBySlug } from "./projects";
 
-/**
- * The story's title block: date and tags, name, one-liner, description,
- * role and stack, and links, each only once it's filled in. `slug` is looked up
- * in the project registry, which **throws** on an unknown value — in the preview
- * that lands as an error message, not a crash.
- */
+function Arrow() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  );
+}
+
+/** A software story's title block; each line shows once its field is filled in. */
 export function ArticleHeader({ slug }: { slug: string }) {
   const project = projectBySlug(slug);
   const meta = [project.period, ...(project.tags ?? [])].filter(Boolean);
@@ -22,10 +34,18 @@ export function ArticleHeader({ slug }: { slug: string }) {
       {project.tagline && <p className="story-msg">{project.tagline}</p>}
       {project.body && <p className="story-body">{project.body}</p>}
       {specifics.length > 0 && <p className="story-meta">{specifics.join(" · ")}</p>}
-      <ProjectLinks project={project} />
+      <p className="show-links">
+        {project.repo && (
+          <a href={`https://github.com/${PERSON.github}/${project.repo}`}>
+            Source <Arrow />
+          </a>
+        )}
+        {project.live && (
+          <a href={project.live}>
+            {project.live.includes("apps.apple.com") ? "App Store" : "Live"} <Arrow />
+          </a>
+        )}
+      </p>
     </header>
   );
 }
-
-/** Everything a software story can use: the shared blocks plus its header. */
-export const storyComponents = { ...baseComponents, ArticleHeader };

@@ -1,60 +1,4 @@
-/* /journey — the career as a winding path, then education as a list and
-   competitions as a grid, each newest first. Same world
-   as the rest of the site: cutting-mat paper, mono, ink hairlines. The path
-   is ink; green only pulses on the stops that are still going, like the
-   index's "Open to work" dot. Every value resolves from
-   docs/design-tokens.css. No raw hex here. */
-
-.jr {
-  /* The site's page column, shared with every other page. */
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
-  text-align: left;
-}
-
-/* --- top bar, same as the portfolios' --- */
-.jr-bar {
-  display: flex;
-  align-items: center;
-  padding-block: var(--spacing-stack);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-}
-.jr-home {
-  color: var(--color-ink);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.jr-home span {
-  color: var(--color-ink-faint);
-}
-.jr-home:hover {
-  color: var(--color-accent);
-}
-
-/* --- intro, same as /software's and /side-quests' --- */
-.jr-intro {
-  /* Same shape as /software's intro: a compact block centred on the page,
-     text left-aligned inside. */
-  max-width: 40rem;
-  margin-inline: auto;
-  padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
-}
-.jr-heading {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1;
-}
-.jr-tagline {
-  margin: 1rem 0 0;
-  font-size: var(--typography-tagline);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
+/* /journey: the career path, the education list, the competition cards, and the story panel (on side-quests.css). */
 
 /* --- one section per kind: career, education, competitions --- */
 .jr-section + .jr-section {
@@ -68,10 +12,7 @@
 }
 
 /* ============================================================
-   THE PATH — each stop is a row: card | trail band | card. The stop draws
-   its own stretch of trail (page.tsx), out from the band's centre to its
-   node and back, so the rows join into one winding line with nothing
-   measured in JS. The card sits on the same side as its node.
+   THE PATH — card | trail band | card; each row draws its own stretch of trail (page.tsx)
    ============================================================ */
 .jr-path {
   --band: 12rem;
@@ -91,8 +32,7 @@
   grid-column: 2;
   grid-row: 1;
   align-self: stretch;
-  /* The row's padding is part of the trail's stretch, or the rows would
-     leave gaps between them. */
+  /* Stretch over the row's padding too, or rows leave gaps. */
   margin-block: calc(-1 * clamp(1rem, 3vh, 1.75rem));
   width: 100%;
   height: calc(100% + 2 * clamp(1rem, 3vh, 1.75rem));
@@ -110,9 +50,7 @@
   stroke-width: 1.5;
   stroke-dasharray: 4 6;
 }
-/* The trail walked: solid ink, revealed top to bottom as the stop scrolls
-   into view. A clip rather than a dash offset: with the stroke kept from
-   scaling, dashes are measured on screen, not along the path. */
+/* Walked: solid ink revealed by scroll; a clip, since non-scaling strokes dash in screen space. */
 .jr-trail-walked {
   stroke: var(--color-ink);
   stroke-width: 1.5;
@@ -132,8 +70,7 @@
     clip-path: inset(0 0 0 0);
   }
 }
-/* Each path fades in above its newest stop (it keeps going) and out below
-   its oldest. */
+/* Fade in above the newest stop (it keeps going) and out below the oldest. */
 .jr-stop:first-child .jr-trail {
   mask-image: linear-gradient(to bottom, transparent, black 35%);
 }
@@ -208,8 +145,7 @@
   color: var(--color-ink-muted);
 }
 /* ============================================================
-   EDUCATION — a transcript: period on the left, programme and institution
-   on the right, hairline rows.
+   EDUCATION — a transcript: period beside programme
    ============================================================ */
 .jr-edu {
   margin: 0;
@@ -255,7 +191,7 @@
 }
 
 /* ============================================================
-   COMPETITIONS — a grid of cards, the result as the headline.
+   COMPETITIONS — cards with the result as the headline
    ============================================================ */
 .jr-comps {
   display: grid;
@@ -301,9 +237,7 @@
 }
 
 /* ============================================================
-   STORY PANEL — every stop opens one (story-panel.tsx). The trigger is a
-   button stretched over the stop; the panel is a modal <dialog> dressed as
-   side-quests' article card.
+   STORY PANEL — a button stretched over each stop opens a modal <dialog> (story-panel.tsx)
    ============================================================ */
 .jr-card,
 .jr-edu-row,
@@ -341,11 +275,7 @@
   background: color-mix(in srgb, var(--color-accent) 5%, transparent);
 }
 
-/* The panel itself is side-quests' article card (.sq-dialog and friends,
-   from side-quests.css); this is only what a native modal <dialog> needs on
-   top: centred with side-quests' outer margin, hidden while closed (.sq-dialog
-   sets display: flex, which would otherwise show it), and a fade-and-rise in
-   to match its entrance. */
+/* The card itself is .sq-dialog; here only what a native modal needs (.sq-dialog's flex would show it closed). */
 .jr-panel {
   --edge: clamp(1rem, 4vw, 2.5rem);
   inset: 0;
@@ -397,8 +327,7 @@
 html:has(.jr-panel[open]) {
   overflow: hidden;
 }
-/* The modal sits in the top layer, above the custom cursor dot, so inside
-   it the native cursor comes back rather than leaving no cursor at all. */
+/* The modal covers the cursor dot (top layer), so the native cursor returns inside it. */
 [data-cursor-hidden] .jr-panel,
 [data-cursor-hidden] .jr-panel * {
   cursor: auto !important;
@@ -420,10 +349,6 @@ html:has(.jr-panel[open]) {
   .jr-comp:has(.jr-open:is(:hover, :focus-visible)) {
     translate: none;
   }
-}
-
-.jr-back {
-  margin-top: calc(var(--spacing-gutter-lg) * 1.5);
 }
 
 /* Phones: the trail runs down the left edge, every card to its right. */

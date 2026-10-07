@@ -1,7 +1,4 @@
-/* /software — "Selected work", a masonry of project tiles (project-lists.tsx).
-   Same world as the rest of the site: cutting-mat paper, ink hairlines, mono,
-   and green only on what you can touch.
-   Every value resolves from docs/design-tokens.css. No raw hex here. */
+/* The project and library tiles (project-lists.tsx), shared by /software and /games. */
 
 .sw-work {
   scroll-margin-top: 1rem;
@@ -22,7 +19,7 @@
   line-height: 1.1;
 }
 
-/* The autoplay switch at the far right of the heading row. */
+/* The autoplay switch at the far right of a grid's heading row. */
 .autoplay-toggle {
   display: inline-flex;
   align-items: center;
@@ -75,109 +72,51 @@
 }
 
 /* ============================================================
-   SYSTEM DIAGRAM — the cover until a project has an image
-   ============================================================ */
-/* --- system diagram --- */
-.sys-frame {
-  display: grid;
-  place-items: center;
-  padding: clamp(1rem, 3vw, 1.75rem);
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-lg);
-  /* A stand-in cover, so the same paper as every other placeholder. */
-  background: var(--placeholder-bg);
-  transition: border-color var(--motion-hover) var(--motion-ease-default);
-}
-.sys {
-  display: block;
-  width: min(100%, var(--sys-w));
-  height: auto;
-  overflow: visible;
-  font-family: inherit;
-}
-.sys-node rect {
-  fill: var(--color-surface);
-  stroke: var(--color-ink);
-  stroke-width: 1;
-  transition: stroke var(--motion-hover) var(--motion-ease-default);
-}
-.sys-label {
-  font-size: 12px;
-  font-weight: var(--primitive-fontWeight-medium);
-  fill: var(--color-ink);
-}
-.sys-sub {
-  font-size: 10px;
-  fill: var(--color-ink-muted);
-}
-.sys-wire,
-.sys-flow {
-  fill: none;
-  stroke-linecap: round;
-}
-.sys-wire {
-  stroke: var(--color-ink-faint);
-  stroke-width: 1.25;
-}
-/* Data running along the wires: a short accent dash travelling each edge,
-   staggered by edge order so the flow reads as a sequence, not a blink. Off
-   until the diagram's owner is hovered, focused, or opened. */
-.sys-flow {
-  stroke: var(--color-accent);
-  stroke-width: 2;
-  stroke-dasharray: 0.12 0.88;
-  stroke-dashoffset: 1;
-  opacity: 0;
-  transition: opacity var(--motion-hover) var(--motion-ease-default);
-}
-.tile:is(:hover, :focus-visible) .sys-flow {
-  opacity: 1;
-  animation: flow 1.4s linear infinite;
-  animation-delay: calc(var(--e, 0) * 180ms);
-}
-@keyframes flow {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-/* ============================================================
-   MASONRY — Pinterest-style columns; tiles keep their natural height
+   MASONRY — ~16rem columns (four across the page column)
    ============================================================ */
 .bento {
-  /* As many ~16rem columns as fit: four across the full 76rem page column,
-     fewer as it narrows. masonry.tsx switches the rows to 1px and
-     spans each tile by its height, so tiles pack left to right; without it
-     this is a plain grid with aligned rows. */
   --bento-gap: clamp(0.75rem, 1.6vw, 1rem);
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
   gap: var(--bento-gap);
   align-items: start;
 }
+/* masonry.tsx: 1px rows, each tile spanning its height; dense back-fills holes. */
 .bento[data-masonry] {
   grid-auto-rows: 1px;
   row-gap: 0;
-  /* Back-fill: a later tile drops into any hole a wide one left behind,
-     at the cost of strict reading order. */
   grid-auto-flow: dense;
 }
 .bento[data-masonry] > .tile {
   grid-row-end: span var(--span);
 }
-/* Tile shapes, shared by /software and the /games library: "wide" lies two
-   cells across and one down (a web project, a game), "tall" one across and
-   two down (a mobile project). No shape is a square. Heights come
-   from the tile's own width (cqi) plus the gap, not an aspect ratio, so a
-   tall tile lines up exactly with two square or wide tiles stacked beside it
-   (an aspect ratio leaves out the gap between them). The 1px and 2px are the
-   tile's border. */
+
+.tile {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-hairline);
+  transition:
+    translate var(--motion-playful) var(--motion-ease-playful),
+    box-shadow var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.tile:is(:hover, :focus-visible, :has(:focus-visible)) {
+  translate: 0 -3px;
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-glow-accent);
+}
+
+/* Shapes: square by default; "wide" two across, "tall" two down. Heights come from the tile's width (cqi) plus
+   the gap, not an aspect ratio, so a tall tile lines up with two stacked beside it; 1px/2px are the borders. */
+.tile:not([data-shape]) > .showcase {
+  aspect-ratio: 1;
+}
 .tile[data-shape] {
   container-type: inline-size;
-}
-.tile[data-shape] > .showcase {
-  aspect-ratio: auto;
-  object-fit: cover;
 }
 .tile[data-shape="wide"] {
   grid-column: span 2;
@@ -188,15 +127,22 @@
 .tile[data-shape="tall"] > .showcase {
   height: calc(200cqi + 2px + var(--bento-gap));
 }
-/* The showcase: blurred backdrop, device screen centred in front. The
-   backdrop is scaled up so the blur doesn't fade out at the tile's edge;
-   without a cover, the site's placeholder (dotted paper) stands in. */
+@media (max-width: 640px) {
+  .tile[data-shape="wide"] {
+    grid-column: auto;
+  }
+}
+
+/* ============================================================
+   SHOWCASE — blurred backdrop, and in front a device screen or a logo
+   ============================================================ */
 .showcase {
   position: relative;
   display: block;
   overflow: hidden;
   background: var(--placeholder-bg);
 }
+/* Scaled up so the blur doesn't fade out at the edge. */
 .showcase-bg {
   object-fit: cover;
   filter: blur(16px) saturate(1.15);
@@ -219,9 +165,7 @@
     translate var(--motion-playful) var(--motion-ease-playful),
     box-shadow var(--motion-hover) var(--motion-ease-default);
 }
-/* Corner radii as a share of the screen's own width / height, so they keep
-   Apple's proportions at any size: an iPhone's deep corners, a Mac window's
-   gentle ones. */
+/* Radii as a share of the screen's size: an iPhone's deep corners, a Mac window's gentle ones. */
 .tile[data-shape="tall"] .showcase-screen {
   aspect-ratio: 9 / 19.5;
   border-radius: 14% / 6.5%;
@@ -248,12 +192,7 @@
   color: var(--placeholder-fg);
   background: var(--placeholder-bg);
 }
-/* A square showcase: the logo, kept to its own shape, centred over the
-   backdrop with a soft shadow that follows its outline. */
-.tile:not([data-shape]) > :is(.showcase, .tile-cover, video) {
-  aspect-ratio: 1;
-  object-fit: cover;
-}
+
 .showcase-logo {
   position: absolute;
   inset: 24%;
@@ -262,9 +201,7 @@
     translate var(--motion-playful) var(--motion-ease-playful),
     filter var(--motion-hover) var(--motion-ease-default);
 }
-/* Shrink-wrapped to the logo's own shape, centred, so the rounded corners
-   land on the image rather than on the empty letterbox around it. The
-   !important beats next/image's inline fill sizing. */
+/* Shrink-wrapped to the logo so the rounded corners land on it; !important beats next/image's inline fill sizing. */
 .showcase-logo img {
   inset: 0 !important;
   width: auto !important;
@@ -287,17 +224,17 @@
   color: var(--color-surface);
   filter: drop-shadow(0 2px 10px color-mix(in srgb, var(--color-ink) 45%, transparent));
 }
-/* No cover to sit on: ink on the light wash instead of white. */
+/* No backdrop: faint ink on the placeholder instead of white. */
 .showcase:not(:has(.showcase-bg)) .showcase-wordmark {
   color: var(--color-ink-muted);
   filter: none;
 }
+
+/* Hover: the front lifts toward you and the backdrop drifts closer. */
 .tile:is(:hover, :focus-visible, :has(:focus-visible)) .showcase-logo {
   translate: 0 -6px;
   filter: drop-shadow(0 18px 28px color-mix(in srgb, var(--color-ink) 28%, transparent));
 }
-
-/* On hover the screen lifts toward you and the backdrop drifts closer. */
 .tile:is(:hover, :focus-visible, :has(:focus-visible)) .showcase-screen {
   translate: -50% calc(-50% - 6px);
   box-shadow:
@@ -309,73 +246,7 @@
   scale: 1.22;
 }
 
-/* One column on phones: there is no second cell to span into. */
-@media (max-width: 640px) {
-  .tile[data-shape="wide"] {
-    grid-column: auto;
-  }
-}
-.tile {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-hairline);
-  transition:
-    translate var(--motion-playful) var(--motion-ease-playful),
-    box-shadow var(--motion-hover) var(--motion-ease-default),
-    border-color var(--motion-hover) var(--motion-ease-default);
-}
-.tile:is(:hover, :focus-visible, :has(:focus-visible)) {
-  translate: 0 -3px;
-  border-color: var(--color-accent);
-  box-shadow: var(--shadow-glow-accent);
-}
-.tile-cover {
-  display: block;
-  width: 100%;
-  height: auto;
-  /* Square until the file loads, then its own ratio. A cover with no known
-     size would otherwise sit at 0px tall, never scroll into view, and so
-     never lazy-load. */
-  aspect-ratio: auto 1 / 1;
-}
-/* The cover leans in a little on hover, inside the tile's clipped edge. */
-.tile-cover,
-.tile > video {
-  transition: scale 700ms var(--motion-ease-default);
-}
-/* Direct children only: a recording inside a showcase screen stays put. */
-.tile:is(:hover, :focus-visible, :has(:focus-visible)) > :is(.tile-cover, video) {
-  scale: 1.045;
-}
-/* No cover or diagram yet: a dotted square with the name or number. */
-.tile-empty {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  padding: 1rem;
-  text-align: center;
-  text-wrap: balance;
-  font-weight: var(--primitive-fontWeight-bold);
-  font-variant-numeric: tabular-nums;
-  color: var(--placeholder-fg);
-  background: var(--placeholder-bg);
-}
-.tile-empty svg {
-  width: 32px;
-  height: 32px;
-}
-.tile .sys-frame {
-  border: 0;
-  border-radius: 0;
-}
-
-/* Name and date, hidden until the tile is hovered or focused. A scrim over
-   the bottom of the image keeps them legible on any cover. */
+/* Name and date on a scrim, shown on hover or focus (always on touch). */
 .tile-caption {
   position: absolute;
   inset: auto 0 0;
@@ -394,7 +265,6 @@
   opacity: 1;
   translate: 0 0;
 }
-/* No hover on touch: the caption would never show, so keep it up. */
 @media (hover: none) {
   .tile-caption {
     opacity: 1;
@@ -415,11 +285,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* The global rule strips animation; keep the wires lit so hover still
-     answers, just without the travelling dash. */
-  .tile:is(:hover, :focus-visible) .sys-flow {
-    stroke-dasharray: none;
-  }
   .tile,
   .tile-caption {
     translate: none !important;

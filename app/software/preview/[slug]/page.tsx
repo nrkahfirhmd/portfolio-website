@@ -1,18 +1,13 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { notFound } from "next/navigation";
-import { PROJECTS } from "../../projects";
+import { PROJECTS } from "@/content/site";
 import { Editor } from "../../../story/editor";
 import { ArticleHeader } from "../../story-components";
 import "../../software.css";
 import "../../../story/story.css";
 
-// Swap `work` -> `preview` in any story URL to edit that file's MDX live:
-// /software/work/omawe  ->  /software/preview/omawe
-//
-// Dev-only. The 404 below is the security boundary — runtime MDX evaluation
-// runs arbitrary code, and `readFile` on a request-controlled path has no
-// place in production.
+// Live MDX editor for one file: /software/work/omawe -> /software/preview/omawe. Dev-only: the 404 is the security boundary (evaluating MDX runs code).
 export default async function PreviewStoryPage({
   params,
 }: PageProps<"/software/preview/[slug]">) {
@@ -20,9 +15,7 @@ export default async function PreviewStoryPage({
 
   const { slug } = await params;
 
-  // Whitelist against known repos before touching the filesystem — this is
-  // what stops `slug` being a path-traversal payload. A repo with no story
-  // file yet also 404s, below; create content/software/<repo>.mdx first.
+  // Whitelist the slug before touching the filesystem: no path traversal.
   if (!PROJECTS.some((p) => p.slug === slug)) notFound();
 
   const relPath = join("content", "software", `${slug}.mdx`);

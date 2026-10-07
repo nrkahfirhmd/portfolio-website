@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { STORY_SLUGS, STUDIO } from "@/content/site";
+import { SharedTitle } from "../page-transition";
 import { Masonry } from "../software/masonry";
 import { Showcase } from "../software/project-lists";
 import { CartAudio } from "./cart-media";
-import { shelve, STORY_SLUGS, STUDIO, type Stage } from "./games";
-import { SharedTitle } from "../page-transition";
+import { shelve, type Stage } from "./games";
 
 const KIND_LABEL = { art: "Art", video: "Video", music: "Music" } as const;
 
@@ -13,12 +14,7 @@ function href(s: Stage) {
   return s.play ?? STUDIO.url;
 }
 
-/**
- * The library: games, art, video, and music in the same masonry as
- * /software (its tile styles come from project-lists.css). A tile is its
- * media; hover or focus shows name and year, and the whole tile opens the
- * entry. Play / Listen sit in the caption, above the link overlay.
- */
+/** The /games library: /software's masonry and tiles, plus Play / Listen in the caption. */
 export function Library({ stages }: { stages: Stage[] }) {
   return (
     <Masonry className="bento">
@@ -34,10 +30,6 @@ export function Library({ stages }: { stages: Stage[] }) {
             data-shape={s.wide ? "wide" : undefined}
             data-locked={s.locked || undefined}
           >
-            {/* Every entry is a showcase: the cover in front (on a screen
-                when wide), over `bg` blurred, or the cover itself blurred
-                until there's a bg. A screen, video, or logo takes the
-                cover's place in front. */}
             <Showcase
               name={name}
               shape={s.wide ? "wide" : "square"}
@@ -45,8 +37,7 @@ export function Library({ stages }: { stages: Stage[] }) {
               screen={s.screen ?? s.video ?? s.cover}
               logo={s.logo ?? s.cover}
             />
-            {/* The whole tile is the link: an overlay rather than a wrapper,
-                since Play / Listen can't nest inside an <a>. */}
+            {/* An overlay, not a wrapper: Play / Listen can't nest inside an <a>. */}
             {devlog ? (
               <Link
                 className="tile-link"

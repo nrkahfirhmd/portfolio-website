@@ -1,18 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import {
-  getFinePointerServerSnapshot,
-  getFinePointerSnapshot,
-  subscribeFinePointer,
-} from "../fine-pointer";
+import { useFinePointer } from "../fine-pointer";
 
-/**
- * Video autoplay, shared by every tile and the toggles on /software and
- * /games. Saved
- * per visitor; until they choose, it follows reduced-motion (on unless the
- * visitor asked for less motion).
- */
+/** Tile video autoplay, one setting for every grid; saved per visitor, defaulting to on unless they prefer reduced motion. */
 const AUTOPLAY_KEY = "autoplay-video";
 const autoplayListeners = new Set<() => void>();
 
@@ -44,7 +35,7 @@ function setAutoplay(on: boolean) {
 
 const useAutoplay = () => useSyncExternalStore(subscribeAutoplay, getAutoplay, () => false);
 
-/** The switch beside a tile grid's heading that turns its videos on and off. */
+/** The switch beside a grid's heading. */
 export function AutoplayToggle() {
   const on = useAutoplay();
   return (
@@ -57,26 +48,15 @@ export function AutoplayToggle() {
   );
 }
 
-/**
- * A video tile's media: a muted loop. With autoplay on it just plays; with
- * it off it plays while the cart is hovered or focused, like a preview on a
- * store shelf, and where there's no hover to drive it (touch, reduced
- * motion) it shows native controls instead.
- */
-export function CartVideo({ src, poster }: { src: string; poster?: string }) {
+/** A tile's muted loop: plays while on screen with autoplay on; otherwise on hover/focus, or native controls without hover. */
+export function CartVideo({ src }: { src: string }) {
   const video = useRef<HTMLVideoElement>(null);
-  const hover = useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    getFinePointerServerSnapshot,
-  );
+  const hover = useFinePointer();
   const autoplay = useAutoplay();
 
   useEffect(() => {
     const v = video.current;
     if (!v) return;
-    // Autoplay only while the tile is on screen, so a long shelf doesn't
-    // decode every video at once.
     if (autoplay) {
       const io = new IntersectionObserver(([entry]) => {
         if (entry.isIntersecting) void v.play().catch(() => {});
@@ -108,7 +88,6 @@ export function CartVideo({ src, poster }: { src: string; poster?: string }) {
     <video
       ref={video}
       src={src}
-      poster={poster}
       muted
       loop
       playsInline
@@ -118,10 +97,10 @@ export function CartVideo({ src, poster }: { src: string; poster?: string }) {
   );
 }
 
-/** Only one track plays at a time across the shelf. */
+/** Only one track plays at a time. */
 let playing: HTMLAudioElement | null = null;
 
-/** A music tile's Listen button: play/pause for its track, nothing more. */
+/** A music tile's Listen button. */
 export function CartAudio({ src, name }: { src: string; name: string }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [on, setOn] = useState(false);

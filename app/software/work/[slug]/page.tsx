@@ -1,75 +1,51 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CursorDot } from "../../../cursor-dot";
-import { MagneticGrid } from "../../../magnetic-grid";
-import { BackArrow } from "../../parts";
-import { PERSON } from "@/content/site";
-import { PROJECTS, STORY_REPOS } from "../../projects";
-import { ArticleHeader, storyComponents } from "../../story-components";
+import { PERSON, PROJECTS, STORY_REPOS } from "@/content/site";
+import { BackLink, PageShell } from "../../../page-shell";
 import { StoryNav } from "../../../story/story-nav";
-import "../../../home.css";
+import { ArticleHeader } from "../../story-components";
 import "../../software.css";
 import "../../../story/story.css";
-import { PageTransition } from "../../../page-transition";
 
-/** Every project gets a page, since every tile on /software links here. The
- * header carries the details; the long-form story only where one exists. */
+/** Every tile links here, so every project gets a page; the long-form story only where one exists. */
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
 }
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/software/work/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/software/work/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.slug === slug);
   if (!project) return {};
   return { title: `${PERSON.shortName} — ${project.name}`, description: project.body ?? project.tagline };
 }
 
-export default async function StoryPage({
-  params,
-}: PageProps<"/software/work/[slug]">) {
+export default async function StoryPage({ params }: PageProps<"/software/work/[slug]">) {
   const { slug } = await params;
   if (!PROJECTS.some((p) => p.slug === slug)) notFound();
 
-  const Story = STORY_REPOS.has(slug)
-    ? (await import(`@/content/software/${slug}.mdx`)).default
-    : null;
+  // MDX picks up its components from mdx-components.tsx.
+  const Story = STORY_REPOS.has(slug) ? (await import(`@/content/software/${slug}.mdx`)).default : null;
 
   return (
-    <PageTransition>
-      <main className="sw">
-        <CursorDot />
-        <MagneticGrid />
+    <PageShell section="software" up="/software">
+      <ArticleHeader slug={slug} />
 
-        <header className="sw-bar">
-          <Link href="/software" className="sw-home" transitionTypes={["nav-back"]}>
-            kv<span aria-hidden="true">/</span>software
-          </Link>
-        </header>
+      {Story ? (
+        <div className="story-grid">
+          <StoryNav />
+          <article className="prose">
+            <Story />
+          </article>
+        </div>
+      ) : (
+        <p className="story-soon">The full write-up is on its way.</p>
+      )}
 
-        <ArticleHeader slug={slug} />
-
-        {Story ? (
-          <div className="story-grid">
-            <StoryNav />
-            <article className="prose">
-              <Story components={storyComponents} />
-            </article>
-          </div>
-        ) : (
-          <p className="story-soon">The full write-up is on its way.</p>
-        )}
-
-        <Link className="back story-back" href="/software#work" transitionTypes={["nav-back"]}>
-          <BackArrow />
-          Back to the work
-        </Link>
-      </main>
-    </PageTransition>
+      <BackLink href="/software#work" className="page-back">
+        Back to the work
+      </BackLink>
+    </PageShell>
   );
 }

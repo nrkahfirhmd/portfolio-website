@@ -1,91 +1,5 @@
-/* /software — one-page portfolio: intro, selected work, contact.
-   Same world as the gateway: cutting-mat paper, mono, one green accent that
-   only ever marks something you can touch. Every value resolves from
-   docs/design-tokens.css. No raw hex here. */
+/* /software and its story pages; the shell and intro are in globals.css. */
 
-.sw {
-  /* Lets <details> animate to/from `auto` height where supported; elsewhere
-     it just opens instantly. */
-  interpolate-size: allow-keywords;
-  /* The site's page column, shared with /games and /side-quests. */
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
-  text-align: left;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root:has(.sw) {
-    scroll-behavior: smooth;
-  }
-}
-
-/* --- top bar --- */
-.sw-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-block: var(--spacing-stack);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-}
-.sw-home {
-  color: var(--color-ink);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.sw-home span {
-  color: var(--color-ink-faint);
-}
-.sw-home:hover {
-  color: var(--color-accent);
-}
-
-/* --- intro --- */
-/* A compact block centred on the page, its text left-aligned inside. */
-.sw-intro {
-  max-width: 40rem;
-  margin-inline: auto;
-  padding-block: clamp(3rem, 10vh, 6rem) clamp(3.5rem, 9vh, 5.5rem);
-}
-.sw-intro-text {
-  display: grid;
-  justify-items: start;
-}
-.sw-name {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1;
-  text-wrap: balance;
-}
-.sw-lede {
-  /* No cap of its own: .sw-intro's width is the line length, so the text
-     fills the block and the block sits truly centred. */
-  margin: 1rem 0 0;
-  font-size: var(--typography-tagline);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-.sw-now {
-  margin: 0.4rem 0 0;
-  font-size: var(--typography-label);
-  color: var(--color-ink-muted);
-}
-.sw-now a,
-.show-links a {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.sw-now a:hover,
-.show-links a:hover {
-  color: var(--color-accent-hover);
-}
 .sw-status {
   margin-top: 1.1rem;
   transition: color var(--motion-hover) var(--motion-ease-default);
@@ -94,6 +8,7 @@
   color: var(--color-ink);
 }
 
+/* Source / Live / App Store links under a story's title. */
 .show-links {
   display: flex;
   gap: var(--spacing-stack);
@@ -106,7 +21,7 @@
   gap: 0.35rem;
 }
 
-/* --- footer: contact remotes + way home --- */
+/* --- footer: contact links as git remotes, and the way home --- */
 .sw-contact {
   display: flex;
   flex-wrap: wrap;
@@ -117,16 +32,13 @@
   padding-top: var(--spacing-stack);
   border-top: 1px solid var(--color-border);
 }
-.sw-contact .back {
-  margin: 0;
-}
 .remotes {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 .remote {
   display: inline-flex;
@@ -153,12 +65,9 @@
 }
 .remote:hover svg {
   color: var(--color-accent);
-}
-.remote:hover svg {
   transform: scale(0.88);
 }
 
-/* --- small screens --- */
 @media (prefers-reduced-motion: reduce) {
   .remote svg {
     transform: none !important;

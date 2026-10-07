@@ -3,14 +3,13 @@ import { BaliClock } from "./bali-clock";
 import { Canopy } from "./canopy";
 import { CursorDot } from "./cursor-dot";
 import { CursorParallax } from "./cursor-parallax";
-import { GATEWAYS } from "./gateways";
 import { GithubActivity } from "./github-activity";
 import { MagneticGrid } from "./magnetic-grid";
 import { PaintName } from "./paint-name";
 import { PortraitToggle } from "./portrait-toggle";
 import { SOCIALS } from "./socials";
 import { SparkWord } from "./spark-word";
-import { HOME, PERSON } from "@/content/site";
+import { GATEWAYS, HOME, PERSON } from "@/content/site";
 import "./home.css";
 import { PageTransition } from "./page-transition";
 
@@ -22,9 +21,6 @@ export default function Home() {
         <CursorDot />
         <MagneticGrid />
 
-        {/* Shade from an offscreen tree, thrown in from the bottom right. Tint
-            and angle come from the daypart the clock writes to <html>; the two
-            layers sway out of step so the wind never looks mechanical. */}
         <Canopy />
 
         <div className="eyebrow flex justify-between items-center w-full" data-enter style={{ "--i": 0 } as React.CSSProperties}>
@@ -38,9 +34,6 @@ export default function Home() {
               <span className="kv-alt" aria-hidden="true">Ɣ</span>
             </span>
           </p>
-          {/* Absolutely centred on this row, so it lines up with the KV mark and
-              the clock without taking part in their justify-between split — and
-              so expanding it can't push either one around. */}
           <GithubActivity username={PERSON.github} nowBuilding={HOME.nowBuilding} />
           <BaliClock />
         </div>
@@ -83,17 +76,14 @@ export default function Home() {
                 >
                   <path d="M7 17 17 7M9 7h8v8" />
                 </svg>
-                <span className="gate-head">
-                  <h2>{g.name}</h2>
-                  {!g.live && <span className="chip">soon</span>}
-                </span>
+                <h2>{g.name}</h2>
                 <p>{g.desc}</p>
               </Link>
             ))}
           </nav>
         </div>
 
-        {/* The door out to the side quests, in the bottom-left corner. */}
+        {/* Bottom-left: the door to the side quests. */}
         <Link
           href="/side-quests"
           className="door"
@@ -108,7 +98,7 @@ export default function Home() {
           <span className="door-label">Side quests</span>
         </Link>
 
-        {/* Its mirror in the bottom-right corner: the path to /journey. */}
+        {/* Bottom-right: the trail to the journey. */}
         <Link
           href="/journey"
           className="trail"

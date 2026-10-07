@@ -1,90 +1,15 @@
-/* /games — the game dev portfolio, told as a game's own screens: intro,
-   library (the /software masonry), credits. Same world as the rest of the site
-   (cutting-mat paper, mono, one green accent that only marks what you can
-   touch). Every value resolves from docs/design-tokens.css. No raw hex here. */
+/* /games and its devlogs: the library (on /software's tiles, project-lists.css) and the credits. */
 
-.gd {
-  /* The site's page column, shared with /software and /side-quests. */
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
-  text-align: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root:has(.gd) {
-    scroll-behavior: smooth;
-  }
-}
-
-/* --- top bar --- */
-.gd-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-block: var(--spacing-stack);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-}
-.gd-home span {
-  color: var(--color-ink-faint);
-}
-.gd-home {
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.gd-home:hover {
-  color: var(--color-accent);
-}
-
-/* --- intro: same shape as /software's --- */
-.gd-intro {
-  max-width: 40rem;
-  margin-inline: auto;
-  padding-block: clamp(3rem, 10vh, 6rem) clamp(1rem, 4vh, 2rem);
-  text-align: left;
-}
-.gd-name {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1;
-  text-wrap: balance;
-}
-.gd-role {
-  margin: 0.4rem 0 0;
-  font-size: var(--typography-label);
-  color: var(--color-ink-muted);
-}
-.gd-lede {
-  margin: 1rem 0 0;
-  font-size: var(--typography-tagline);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-.gd-role a,
-.stage-link {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.gd-role a:hover,
-.stage-link:hover {
-  color: var(--color-accent-hover);
-}
-
-/* --- section headings --- */
 .gd-h2 {
   margin: 0 0 var(--spacing-stack-lg);
   font-size: var(--typography-tagline);
   font-weight: var(--primitive-fontWeight-bold);
   letter-spacing: var(--primitive-tracking-tight);
 }
-/* Heading left, autoplay switch far right — same row as /software's. */
+.gd-library {
+  padding-top: clamp(2rem, 8vh, 5rem);
+  scroll-margin-top: 1rem;
+}
 .gd-library-head {
   display: flex;
   flex-wrap: wrap;
@@ -96,16 +21,9 @@
 .gd-library-head .gd-h2 {
   margin: 0;
 }
-.gd-library {
-  padding-top: clamp(2rem, 8vh, 5rem);
-  text-align: left;
-  scroll-margin-top: 1rem;
-}
 
 /* ============================================================
-   LIBRARY — the /software masonry (tile styles in project-lists.css),
-   plus what games need on top: a stretched link, Play / Listen, kind chip,
-   video, and a placeholder for entries with no art yet.
+   LIBRARY — on top of the shared tiles: stretched link, kind chip, Play / Listen
    ============================================================ */
 .tile-link {
   position: absolute;
@@ -117,24 +35,6 @@
 /* Clicks fall through the caption to the link, except on its buttons. */
 .tile:has(.tile-link) .tile-caption {
   pointer-events: none;
-}
-.tile-actions {
-  pointer-events: auto;
-}
-.tile[data-locked] .tile-empty {
-  background:
-    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--color-ink) 7%, transparent) 0 1px, transparent 1px 9px),
-    var(--color-surface-sunken);
-}
-.tile > video {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* Native controls (touch, reduced motion) must sit above the stretched link. */
-.tile > video[controls] {
-  position: relative;
-  z-index: 1;
 }
 .tile-kind {
   justify-self: start;
@@ -153,6 +53,7 @@
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  pointer-events: auto;
 }
 .tile-btn {
   display: inline-flex;
@@ -188,11 +89,31 @@
   outline-offset: 3px;
 }
 
-/* Label ....... value rows: the credits roll. */
+/* A devlog's Play / Source / Follow links. */
+.stage-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-stack);
+  margin: 0;
+  font-size: var(--typography-label);
+}
+
+/* ============================================================
+   CREDITS — label ....... value rows
+   ============================================================ */
+.gd-contact {
+  display: grid;
+  justify-items: center;
+  margin-top: clamp(5rem, 14vh, 8rem);
+  scroll-margin-top: 1rem;
+  text-align: center;
+}
 .roll {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.7rem;
+  width: min(100%, 32rem);
   margin: 0;
+  font-size: var(--typography-label);
 }
 .roll > div {
   display: flex;
@@ -206,31 +127,6 @@
   margin: 0 0.6rem;
   border-bottom: 1px dotted color-mix(in srgb, var(--color-ink) 30%, transparent);
 }
-.roll dd {
-  order: 2;
-  margin: 0;
-  text-align: right;
-}
-.stage-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-stack);
-  margin: 0;
-  font-size: var(--typography-label);
-}
-
-/* --- contact: the credits roll --- */
-.gd-contact {
-  display: grid;
-  justify-items: center;
-  margin-top: clamp(5rem, 14vh, 8rem);
-  scroll-margin-top: 1rem;
-}
-.roll {
-  width: min(100%, 32rem);
-  gap: 0.7rem;
-  font-size: var(--typography-label);
-}
 .roll dt {
   font-size: var(--typography-caption);
   font-weight: var(--primitive-fontWeight-medium);
@@ -239,8 +135,11 @@
   color: var(--color-ink-muted);
 }
 .roll dd {
+  order: 2;
   min-width: 0;
+  margin: 0;
   overflow-wrap: anywhere;
+  text-align: right;
 }
 .roll a {
   transition: color var(--motion-hover) var(--motion-ease-default);
@@ -254,12 +153,4 @@
 }
 .gd-contact .back {
   margin-top: var(--spacing-stack-lg);
-}
-
-/* ============================================================
-   DEVLOG — /games/stage/[slug]. Header and reading column come from
-   story.css, shared with software stories.
-   ============================================================ */
-.gd-story {
-  text-align: left;
 }

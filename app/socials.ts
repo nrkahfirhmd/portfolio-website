@@ -1,7 +1,6 @@
 import { SOCIALS as LINKS } from "@/content/site";
 
-/** 24x24 stroke paths, drawn at strokeWidth 1.6. Add one here to offer a new
- * `icon` in content/site.ts. */
+/** 24x24 stroke paths (strokeWidth 1.6); add one to offer a new `icon` in content/site.ts. */
 export const ICONS = {
   github: "M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0 0 19.9 5a4.9 4.9 0 0 0-.1-3.6s-1.1-.4-3.7 1.4a12.7 12.7 0 0 0-6.6 0C6.9 1 5.8 1.4 5.8 1.4A4.9 4.9 0 0 0 5.7 5a5.2 5.2 0 0 0-1.4 3.7c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 0 0-.9 2.6V22",
   linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM6 9H2v12h4zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
@@ -11,5 +10,9 @@ export const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
-/** Contact links (edited in content/site.ts) with their icon paths. */
-export const SOCIALS = LINKS.map((s) => ({ ...s, d: ICONS[s.icon] }));
+/** Contact links (edited in content/site.ts) with their icon path and a bare display URL. */
+export const SOCIALS = LINKS.map((s) => ({
+  ...s,
+  d: ICONS[s.icon],
+  display: s.href.replace(/^mailto:|^https?:\/\/(www\.)?/, "").replace(/\/$/, ""),
+}));

@@ -1,57 +1,4 @@
-/* /side-quests — the stories beyond work, ported from portfolio-website's
-   Experience bento onto this site's world: cutting-mat paper, mono, ink
-   hairlines, and green only on what you can touch. Every value resolves from
-   docs/design-tokens.css. No raw hex here. */
-
-.sq {
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
-  text-align: left;
-}
-
-/* --- top bar, same as the portfolios' --- */
-.sq-bar {
-  display: flex;
-  align-items: center;
-  padding-block: var(--spacing-stack);
-  font-size: var(--typography-caption);
-  font-weight: var(--primitive-fontWeight-medium);
-  letter-spacing: var(--primitive-tracking-wider);
-  text-transform: uppercase;
-}
-.sq-home {
-  color: var(--color-ink);
-  transition: color var(--motion-hover) var(--motion-ease-default);
-}
-.sq-home span {
-  color: var(--color-ink-faint);
-}
-.sq-home:hover {
-  color: var(--color-accent);
-}
-
-/* --- intro --- */
-.sq-intro {
-  /* Same shape as /software's intro: a compact block centred on the page,
-     text left-aligned inside. */
-  max-width: 40rem;
-  margin-inline: auto;
-  padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
-}
-.sq-heading {
-  margin: 0;
-  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1;
-}
-.sq-tagline {
-  margin: 1rem 0 0;
-  font-size: var(--typography-tagline);
-  line-height: 1.55;
-  text-wrap: pretty;
-}
+/* /side-quests: the bento (bento.tsx); its article card is reused by /journey's story panel. */
 
 /* --- filters: accent pill when on --- */
 .sq-filters {
@@ -119,8 +66,7 @@
   height: 100%;
 }
 
-/* Shared surface: every cell is the index's gateway card — hairline at
-   rest, same radius and fill — so a card here reads as the same object. */
+/* Every cell wears the index's gateway-card surface. */
 .sq-card,
 .sq-album,
 .sq-play,
@@ -140,8 +86,7 @@
   flex-direction: column;
   justify-content: flex-end;
   cursor: pointer;
-  /* Same two clocks as .gate: a quick exit, and on enter a spring on the
-     lift alone so the border lands with it without flickering. */
+  /* Like .gate: quick exit, and on enter the spring on the lift only. */
   transition:
     translate var(--motion-hover) var(--motion-ease-default),
     border-color var(--motion-hover) var(--motion-ease-default);
@@ -168,8 +113,7 @@
 .sq-card:hover .sq-cover {
   scale: 1.05;
 }
-/* No photo yet: the site's placeholder. No word on it; the card already
-   names itself. */
+/* No photo yet: the site's placeholder (the card names itself). */
 .sq-art {
   display: block;
   background: var(--placeholder-bg);
@@ -198,8 +142,7 @@
   letter-spacing: var(--primitive-tracking-wide);
   color: var(--color-ink-muted);
 }
-/* Chip shape and caption caps, in the soft green the site uses for tints.
-   Fills with the accent when the card is hovered. */
+/* Chip-shaped badge in accent-soft; fills with the accent on hover. */
 .sq-badge {
   padding: var(--chip-padding-y) var(--chip-padding-x);
   border-radius: var(--chip-radius);
@@ -570,8 +513,7 @@
   font-weight: var(--primitive-fontWeight-medium);
   color: var(--color-ink);
 }
-/* The takeaway, quoted the way story pages quote (story.css .st-quote): a
-   hairline rule and the flourish serif, not a coloured bar on a tint. */
+/* The takeaway, quoted like story pages' .st-quote. */
 .sq-dialog-body blockquote {
   margin: 0;
   padding-left: 1rem;
@@ -599,10 +541,6 @@
   font-weight: var(--primitive-fontWeight-medium);
   letter-spacing: var(--primitive-tracking-wider);
   text-transform: uppercase;
-}
-
-.sq-back {
-  margin-top: calc(var(--spacing-gutter-lg) * 1.5);
 }
 
 @media (prefers-reduced-motion: reduce) {
