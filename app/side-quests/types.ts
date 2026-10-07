@@ -13,7 +13,7 @@ export type SideQuest = {
   skills: string[];
   /** A takeaway or a number worth bragging about. */
   highlight?: string;
-  /** Cover in public/. Without one the card gets generated art. */
+  /** Cover in public/; without one, the dotted placeholder. */
   image?: string;
   /** Grid cell: "lg" 4x2, "tall" 2x2, "wide" 6x1, "sm" 2x1 (the default). */
   size?: "lg" | "tall" | "wide" | "sm";

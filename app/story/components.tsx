@@ -1,20 +1,9 @@
 import Image from "next/image";
 import { Children, type ComponentPropsWithoutRef, type ReactNode } from "react";
 
-// The story building blocks every section shares. Two kinds of entries:
-//  - lowercase keys override the HTML that markdown compiles to (`##` -> h2, …)
-//  - Capitalized keys are the bare tags a story can use with no import
-//    (<Figure />, <Points><Point/></Points>, <Stats />, <Callout>).
-// Each section adds its own header component on top (see
-// app/software/story-components.tsx, app/games/stage-header.tsx); the root
-// mdx-components.tsx merges them all. Styles live in story.css.
-//
-// Same set as the sibling portfolios minus <Kicker>: it's an eyebrow label
-// above a heading, which this site doesn't do. A story pasted over from a
-// sibling that uses one will say so in the preview's error strip.
+// Story blocks shared by every section: lowercase keys restyle markdown's HTML, Capitalized ones are tags a story can use without importing.
 
-/** An image, or a captioned placeholder — `src` is optional so a story can
- * leave a slot for a screenshot that doesn't exist yet. */
+/** An image, or a captioned placeholder until the screenshot exists. */
 export function Figure({
   src,
   alt = "",
@@ -36,8 +25,7 @@ export function Figure({
   );
 }
 
-/** Column grid; column count follows the number of <Point> children, capped
- * at 4. Collapses to one column on phones. */
+/** One column per <Point> child (max 4); one column on phones. */
 export function Points({ children }: { children: ReactNode }) {
   const cols = Math.min(Math.max(Children.count(children), 1), 4);
   return (
@@ -56,8 +44,7 @@ export function Point({ title, children }: { title?: string; children: ReactNode
   );
 }
 
-/** Label/value grid with hairline dividers. Only for numbers you can stand
- * behind — no invented metrics. */
+/** Label/value grid; only for numbers you can stand behind. */
 export function Stats({ items }: { items: { label: string; value: string }[] }) {
   return (
     <dl

@@ -11,14 +11,8 @@ const KIND_LABEL: Record<JourneyStop["kind"], string> = {
 };
 
 /**
- * Opens a stop's story in the same article card as /side-quests: cover on
- * top (the photo, or the site's dotted placeholder), then badge and date,
- * title, place, the result as the lead line, and the story. It reuses
- * side-quests.css' classes so the two can't drift.
- *
- * A native <dialog>: showModal() gives focus trapping, Escape to close, and
- * the backdrop for free. The trigger is an overlay button stretched over
- * its card, since the card's heading can't nest inside a <button>.
+ * A stop's story as side-quests' article card (its classes, so they can't drift), in a native modal <dialog>.
+ * The trigger is a button stretched over the card, since a heading can't nest inside a <button>.
  */
 export function StoryPanel({ stop }: { stop: JourneyStop }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -38,8 +32,7 @@ export function StoryPanel({ stop }: { stop: JourneyStop }) {
         ref={dialog}
         className="sq-dialog jr-panel"
         aria-label={stop.title}
-        // A click on the dialog itself, not its content, is a click on the
-        // backdrop.
+        // A click on the dialog itself (not its content) is the backdrop.
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         <div className="sq-dialog-cover">

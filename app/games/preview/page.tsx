@@ -22,10 +22,7 @@ preview uses the same components and styles as /games/stage/[slug].
 <Callout>One line worth pulling out of the flow.</Callout>
 `;
 
-// Dev-only freeform scratchpad. Per-devlog editing lives at
-// /games/preview/[slug]. The route file still ships in a production build,
-// so the guarantee that arbitrary MDX is never evaluated on the live site is
-// this request-time 404 — not the bundler.
+// Dev-only freeform MDX scratchpad; the route still ships, so this 404 keeps MDX evaluation off production.
 export default function PreviewPage() {
   if (process.env.NODE_ENV === "production") notFound();
   return <Editor initialSource={STARTER} storageKey="mdx-preview-draft:games" />;

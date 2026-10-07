@@ -1,10 +1,6 @@
 "use client";
 
-// Ported from portfolio-website's MagicBento: the "Off the Clock" chapter of
-// its Experience page, restyled onto this site's tokens (side-quests.css).
-// Story cards open into an article that morphs out of the card; between them
-// sit the playful cells: a swipeable album, a sticker pile, polaroids, and a
-// flip card. Content comes from content/site.ts.
+// Side-quests grid (ported from portfolio-website's MagicBento): story cards that open into an article, plus playful cells.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 const FALLBACK = { city: "Bali", timeZone: "Asia/Makassar" };
 
 function makeFormatter(timeZone: string) {
-  // ponytail: throws on an invalid IANA zone — that's our validation.
+  // Throws on an invalid IANA zone: that's the validation.
   return new Intl.DateTimeFormat("en-GB", {
     timeZone,
     hour: "2-digit",
@@ -14,10 +14,7 @@ function makeFormatter(timeZone: string) {
   });
 }
 
-/** Which of the four window lights is falling across the page. Derived from
- * the clock's own hour rather than the visitor's machine, so the light always
- * agrees with the time actually on screen — retarget the clock to Reykjavik
- * at 2am and the page goes dark with it. */
+/** The canopy's light, from the clock's hour (not the visitor's), so it always matches the time shown. */
 function daypart(hour: number) {
   if (hour < 5) return "night";
   if (hour < 11) return "morning";
@@ -26,8 +23,7 @@ function daypart(hour: number) {
   return "night";
 }
 
-/** Matches typed text against the IANA timezone city segment
- * (e.g. "tokyo" -> "Asia/Tokyo"). Native Intl.supportedValuesOf, no lookup table. */
+/** Typed city to IANA zone ("tokyo" -> "Asia/Tokyo") via Intl.supportedValuesOf. */
 function findZone(query: string) {
   const q = query.trim().toLowerCase();
   if (!q) return null;
@@ -39,9 +35,7 @@ function findZone(query: string) {
   return { city: zone.split("/").pop()!.replace(/_/g, " "), timeZone: zone };
 }
 
-/** Live city clock, editable by typing a city name. Falls back to Bali when
- * the typed city has no matching IANA timezone. Renders nothing until
- * mounted to avoid a server/client hydration mismatch on the time text. */
+/** Live clock for a typed city, falling back to Bali; shows --:-- until mounted to avoid a hydration mismatch. */
 export function BaliClock() {
   const [target, setTarget] = useState(FALLBACK);
   const [value, setValue] = useState(FALLBACK.city);
@@ -51,8 +45,6 @@ export function BaliClock() {
 
   useEffect(() => {
     const tick = () => {
-      // "HH:MM" in the target zone — the hour is already in there, so the
-      // daypart costs a slice rather than a second Intl formatter.
       const text = fmt.format(new Date());
       setTime(text);
       document.documentElement.dataset.daypart = daypart(Number(text.slice(0, 2)));

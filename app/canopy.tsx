@@ -1,20 +1,7 @@
 /**
- * The tree whose shade falls across the page.
- *
- * Drawn rather than generated: what makes a shadow read as *foliage* is the
- * branch structure joining the leaf masses, and a stack of radial-gradients
- * can only make blobs.
- *
- * Deliberately bold — few, large leaf clusters on thick limbs. A denser
- * version with many small leaves was tried and rejected: at this scale the
- * shape of each cluster stays legible, which is what makes it read as a tree
- * rather than as texture. Keep the leaves big.
- *
- * Colour is inherited, never set here — `.leaves` supplies fill and stroke
- * from `--daylight-tint`, so the whole tree recolours with the daypart. The
- * only presentation attributes are `fill="none"` on the limbs (so open curves
- * stroke instead of filling their enclosed area) and `stroke="none"` on the
- * leaves, neither of which pins a colour.
+ * The tree whose shade falls across the index: drawn, not generated, since
+ * branches are what make shade read as foliage. Keep the clusters few and big.
+ * Colour comes from .leaves (--daylight-tint), never from here.
  */
 
 /** Limb paths, thickest at the trunk and tapering out to the twigs. */
@@ -28,11 +15,7 @@ const LIMBS: [d: string, width: number][] = [
   ["M86 58 C 82 66 74 72 62 76", 1],
 ];
 
-/**
- * Where the foliage sits: [x, y, scale, rotation]. Clusters sit at the forks
- * and tips — where a real tree carries its mass — biggest near the trunk and
- * tapering out. Hand-scattered; anything regular stops reading as a plant.
- */
+/** Leaf clusters [x, y, scale, rotation] at the forks and tips, hand-scattered (regular stops reading as a plant). */
 const CLUSTERS: [x: number, y: number, s: number, r: number][] = [
   [152, 106, 1.6, 12],
   [128, 92, 1.35, -24],
@@ -54,8 +37,7 @@ export function Canopy() {
     <div className="canopy" aria-hidden="true">
       <svg className="canopy-defs" width="0" height="0" aria-hidden="true">
         <defs>
-          {/* One cluster of nine leaves, centred on the origin. Irregular by
-              hand — evenly spaced leaves read as a pattern, not a plant. */}
+          {/* One cluster of nine leaves, centred on the origin. */}
           <g id="canopy-leaf" stroke="none">
             <ellipse rx="4.6" ry="2.2" transform="rotate(15)" />
             <ellipse cx="7.2" cy="-2.6" rx="4" ry="1.9" transform="rotate(-28 7.2 -2.6)" />
@@ -86,8 +68,7 @@ export function Canopy() {
         </defs>
       </svg>
 
-      {/* Second, smaller tree further off — the same drawing reused at another
-          scale, which is cheaper than a second one and reads as depth. */}
+      {/* The same tree again, smaller and farther: depth for free. */}
       <svg
         className="leaves leaves-far"
         viewBox="0 0 160 110"

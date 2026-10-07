@@ -5,36 +5,15 @@ import { useEffect, useRef } from "react";
 
 /** Dab radius in CSS px. */
 const BRUSH = 22;
-/** Fraction of mask alpha erased per frame — the stroke heals behind you.
- * `destination-out` is multiplicative, not subtractive, so this is a decay
- * rate: alpha *= (1 - HEAL) each frame. */
+/** Mask alpha erased per frame. destination-out is multiplicative: alpha *= (1 - HEAL). */
 const HEAL = 0.05;
-/** Frames of pure healing, with no new dabs, before the loop stops and hard
- * clears. Measured: at HEAL the mask is down to ~4% opacity by frame 60. */
+/** Healing frames without new dabs before the loop stops and hard-clears (~4% opacity by frame 60). */
 const IDLE_FRAMES = 90;
 
 /**
- * Brush-to-reveal on the portrait: dragging over the photo paints away the
- * top layer to show the image underneath, then it heals closed again.
- *
- * Two canvases rather than one, because "show image A only where brushed" is
- * a masking problem and a single canvas can't both accumulate soft brush
- * strokes and hold the artwork:
- * - an offscreen mask canvas accumulates the strokes as soft radial dabs,
- *   and is the only thing that persists between frames;
- * - the visible canvas is rebuilt each frame — draw the art, then
- *   `destination-in` the mask, which keeps art pixels only where the mask
- *   has alpha. Soft mask edges become soft brush edges for free.
- *
- * The reveal heals instead of persisting. That's deliberate: this is a
- * decorative easter egg on a recruiter-facing page, and a permanent smear
- * across the portrait after one careless swipe is a worse default than a
- * reveal that closes itself. It also matches the self-healing cutting mat
- * the rest of the page is built on.
- *
- * The art loads through next/image rather than `new Image('/spiderman.png')`
- * so it gets the framework's optimisation — 5.6MB raw becomes ~96KB — using
- * the public API rather than a hardcoded /_next/image URL.
+ * Brush over the portrait to reveal the other image, which heals closed again.
+ * An offscreen mask canvas accumulates soft dabs; the visible canvas redraws
+ * the art each frame and keeps it only where the mask has alpha (destination-in).
  */
 export function BrushReveal({ src }: { src: string }) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -49,8 +28,7 @@ export function BrushReveal({ src }: { src: string }) {
     const mctx = mask.getContext("2d");
     if (!mctx) return;
 
-    /** The art pre-scaled to the canvas's device size. Downscaling a 2048px
-     * source on every frame is real work; doing it once per resize is not. */
+    /** The art pre-scaled once per resize, not on every frame. */
     let scaled: HTMLCanvasElement | null = null;
     let raf = 0;
     let idle = 0;
@@ -74,12 +52,7 @@ export function BrushReveal({ src }: { src: string }) {
       const dpr = Math.min(devicePixelRatio || 1, 2);
       const w = Math.round(rect.width * dpr);
       const h = Math.round(rect.height * dpr);
-      // Every canvas this sizes has to be in the comparison, not just the
-      // visible one. `view` is a shared DOM element that something else may
-      // already have sized correctly (a remount, HMR, React's dev double
-      // effect); checking it alone let this early-return while the private
-      // mask was still at its 300x150 default, which paints the mask
-      // stretched and misaligned over the photo.
+      // Compare the private mask too: `view` may already be sized (remount, HMR) while the mask is still 300x150.
       if (
         w === view!.width &&
         h === view!.height &&
@@ -107,9 +80,7 @@ export function BrushReveal({ src }: { src: string }) {
       mctx!.fillRect(x - BRUSH, y - BRUSH, BRUSH * 2, BRUSH * 2);
     }
 
-    /** Dabs along the whole segment since the last point. A pointermove can
-     * jump tens of px between events, and stamping only at the endpoints
-     * leaves a dotted line instead of a stroke. */
+    /** Dabs along the whole segment since the last point, so fast moves stroke instead of dotting. */
     function stroke(x: number, y: number) {
       const from = last ?? { x, y };
       const dx = x - from.x;
@@ -124,10 +95,7 @@ export function BrushReveal({ src }: { src: string }) {
     function paint() {
       const rect = view!.getBoundingClientRect();
       ctx!.clearRect(0, 0, rect.width, rect.height);
-      // Retry here rather than trusting the `load` event to have fired at the
-      // right moment: if the image was already cached the event never fires
-      // again, and if it lands mid-resize the prescale can be thrown away.
-      // Checking at the point of use makes the ordering irrelevant.
+      // Retry at the point of use: a cached image never fires `load` again.
       if (!scaled) prescale();
       if (!scaled) return;
       ctx!.drawImage(scaled, 0, 0, rect.width, rect.height);
@@ -139,7 +107,6 @@ export function BrushReveal({ src }: { src: string }) {
     function loop() {
       raf = 0;
       const rect = view!.getBoundingClientRect();
-      // Heal: scale the whole mask's alpha down a little every frame.
       mctx!.globalCompositeOperation = "destination-out";
       mctx!.fillStyle = `rgba(0,0,0,${HEAL})`;
       mctx!.fillRect(0, 0, rect.width, rect.height);
@@ -150,12 +117,7 @@ export function BrushReveal({ src }: { src: string }) {
         raf = requestAnimationFrame(loop);
         return;
       }
-      // Multiplicative decay never actually reaches zero, and at 8 bits it
-      // doesn't even get close: once alpha * (1 - HEAL) rounds back to the
-      // same integer the fade stalls outright (measured: it sticks at ~9/255
-      // and stays there forever). Left alone that's a permanent ghost of the
-      // reveal. The fade is imperceptible well before this point, so finish
-      // the job honestly with a hard clear.
+      // 8-bit alpha stalls around 9/255 instead of reaching zero, so finish with a hard clear.
       mctx!.clearRect(0, 0, rect.width, rect.height);
       paint();
     }
@@ -171,8 +133,7 @@ export function BrushReveal({ src }: { src: string }) {
       stroke(e.clientX - rect.left, e.clientY - rect.top);
       wake();
     };
-    // Dropping the last point on exit stops the next entry from drawing a
-    // straight line across the photo from wherever the pointer left.
+    // Forget the last point on exit, or the next entry draws a line from where it left.
     const leave = () => {
       last = null;
     };
@@ -198,9 +159,7 @@ export function BrushReveal({ src }: { src: string }) {
 
   return (
     <>
-      {/* Source pixels only — never shown directly, read into the canvas.
-          Kept in the DOM (rather than `new Image()`) so next/image serves an
-          optimised, correctly-sized variant. */}
+      {/* Source pixels for the canvas, via next/image for an optimised variant. */}
       <Image
         ref={art}
         className="brush-source"
@@ -209,11 +168,7 @@ export function BrushReveal({ src }: { src: string }) {
         aria-hidden="true"
         width={384}
         height={384}
-        // Eager, because this is a 1px transparent element: lazy loading is
-        // driven by viewport heuristics that a zero-area, invisible image
-        // cannot be relied on to satisfy, and it was in fact never loading.
-        // The optimised variant is ~96KB, which is the price of the reveal
-        // working the first time someone tries it.
+        // Eager: a 1px invisible image never satisfies lazy loading.
         loading="eager"
       />
       <canvas ref={canvas} className="brush-canvas" aria-hidden="true" />

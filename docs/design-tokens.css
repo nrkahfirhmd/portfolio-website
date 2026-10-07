@@ -21,10 +21,7 @@
   --primitive-color-red-500: #e5484d;
   --primitive-color-red-600: #cc3a3f;
 
-  /* Daylight — the colour of light at four points in the day, carried by the
-     foliage shadow. Deliberately outside the accent system: this is ambient
-     light, not an interactive signal, so it must never read as "this responds
-     to you". Only the canopy layer may use these. */
+  /* Daylight tints for the canopy only: ambient light, never an interactive signal. */
   --primitive-color-daylight-morning: #9dc4e8;
   --primitive-color-daylight-noon: #ffd97a;
   --primitive-color-daylight-afternoon: #ff9d5c;
@@ -90,9 +87,7 @@
 }
 
 /* ============================================================
-   ACCENT RAMPS — swap the whole accent identity with [data-accent].
-   Every ramp is mid-saturation and grounded; none read as neon.
-   Each 600 clears 4.5:1 on white, each 400 clears 4.5:1 on ink-950.
+   ACCENT RAMPS — [data-accent]; every 600 clears 4.5:1 on white, every 400 on ink-950
    ============================================================ */
 :root,
 :root[data-accent="green"] {
@@ -152,8 +147,7 @@
 }
 
 /* ============================================================
-   SEMANTIC — one definition per token via light-dark().
-   Light value first, dark value second. [data-theme] pins one side.
+   SEMANTIC — light-dark(light, dark); [data-theme] pins one side
    ============================================================ */
 :root {
   color-scheme: light dark;
@@ -161,8 +155,7 @@
   --color-surface: light-dark(var(--primitive-color-white), var(--primitive-color-ink-950));
   --color-surface-sunken: light-dark(var(--primitive-color-ink-50), var(--primitive-color-ink-900));
   --color-ink: light-dark(var(--primitive-color-ink-950), var(--primitive-color-ink-50));
-  /* ink-600, not ink-500: ink-500 on white is 4.47:1 and misses AA for the
-     secondary text it carries. ink-600 clears it at ~7:1. */
+  /* ink-600: ink-500 on white (4.47:1) misses AA. */
   --color-ink-muted: light-dark(var(--primitive-color-ink-600), var(--primitive-color-ink-400));
   --color-ink-faint: light-dark(var(--primitive-color-ink-300), var(--primitive-color-ink-600));
   --color-border: light-dark(var(--primitive-color-ink-200), var(--primitive-color-ink-800));
@@ -200,8 +193,7 @@
   --motion-ease-default: var(--primitive-easing-out);
   --motion-ease-playful: var(--primitive-easing-spring);
 
-  /* Shadows derive from the live accent + ink, so they follow theme and
-     accent swaps with no per-theme redefinition. */
+  /* Derived from the live accent and ink, so they follow theme and accent. */
   --shadow-none: none;
   --shadow-hairline: 0 0 0 1px
     color-mix(in srgb, var(--color-border-strong) 8%, transparent);
@@ -213,17 +205,8 @@
 }
 
 /* ============================================================
-   DAYPART — the foliage shadow. `data-daypart` is written to <html> by the
-   clock, so the light tracks whichever city the clock is showing rather
-   than the machine's own timezone. Absent attribute = the noon defaults
-   below, which is what pages without a clock get.
-
-   Strength is per-daypart, not a constant: the same alpha that reads as a
-   soft noon dapple turns into a blue wash at night, when the surface it
-   falls on is unchanged (the page stays light-themed around the clock).
-
-   Angle rotates the whole canopy about its bottom-right anchor — the sun
-   tracking across the sky, which swings the shadow with it.
+   DAYPART — the canopy shade, set by the clock's [data-daypart] (noon without one);
+   strength varies so night stays a soft wash, angle swings with the sun
    ============================================================ */
 :root {
   --daylight-tint: var(--primitive-color-daylight-noon);
@@ -262,8 +245,7 @@
 }
 
 /* ============================================================
-   DENSITY — retunes the spacing scale only. Type and radius hold,
-   so the identity survives; only the breathing room moves.
+   DENSITY — retunes spacing only; type and radius hold
    ============================================================ */
 :root[data-density="compact"] {
   --spacing-gutter: var(--primitive-spacing-4);
@@ -284,8 +266,7 @@
 }
 
 /* ============================================================
-   COMPONENT — reference semantic tokens only, never raw hex,
-   so every component inherits theme / accent / density for free.
+   COMPONENT — semantic tokens only, never raw hex, so theme/accent/density just work
    ============================================================ */
 :root {
   --gateway-card-bg: var(--color-surface);
@@ -316,9 +297,7 @@
   --chip-padding-x: var(--primitive-spacing-3);
   --chip-padding-y: var(--primitive-spacing-1);
 
-  /* Every "no image yet" across the site: dotted paper, the name in faint
-     ink. Quiet on purpose — a placeholder is not an interactive signal, so
-     no accent. */
+  /* Every "no image yet": dotted paper, faint ink, no accent. */
   --placeholder-bg:
     radial-gradient(color-mix(in srgb, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px,
     var(--color-surface-sunken);

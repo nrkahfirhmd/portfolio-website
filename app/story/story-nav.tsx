@@ -10,11 +10,7 @@ const slugify = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-/**
- * The section rail beside a story, ported from the AI portfolio. Built from
- * the article's own `## headings` after mount, so an MDX file never declares
- * its table of contents — it just writes headings.
- */
+/** The section rail beside a story, built from the article's `##` headings. */
 export function StoryNav() {
   const [items, setItems] = useState<Item[]>([]);
   const [active, setActive] = useState<string | null>(null);
@@ -25,14 +21,11 @@ export function StoryNav() {
     );
     if (!headings.length) return;
 
-    // Assigned synchronously so an anchor works even before the first frame.
     for (const heading of headings) {
       if (!heading.id) heading.id = slugify(heading.textContent ?? "");
     }
 
-    // The active section is the last heading whose top has passed the line.
-    // At the very bottom the final heading may never cross it, so it wins
-    // outright once the reader can't scroll further.
+    // Active: the last heading past the line, or the final one at the very bottom.
     const sync = () => {
       let current = headings[0].id;
       for (const heading of headings) {
@@ -46,7 +39,6 @@ export function StoryNav() {
     };
 
     addEventListener("scroll", sync, { passive: true });
-    // The first pass reads layout, so it waits for a frame.
     const frame = requestAnimationFrame(sync);
     return () => {
       cancelAnimationFrame(frame);

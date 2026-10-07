@@ -2,13 +2,7 @@
 
 import { type ReactNode, useEffect, useRef } from "react";
 
-/**
- * Left-to-right masonry. The grid runs on 1px rows and each tile spans as
- * many as its own height, so auto-placement drops every tile into the
- * shortest gap, dense, so later tiles back-fill holes without ever changing
- * size. Until this runs (or without JS) the grid is an ordinary one with
- * aligned rows, so nothing is ever hidden.
- */
+/** Masonry on 1px grid rows: each tile spans its own height. Without JS it's a plain grid. */
 export function Masonry({ className, children }: { className: string; children: ReactNode }) {
   const grid = useRef<HTMLDivElement>(null);
 
@@ -24,7 +18,6 @@ export function Masonry({ className, children }: { className: string; children: 
     };
     el.dataset.masonry = "";
     fit();
-    // Tiles change height when the column width changes or fonts land.
     const ro = new ResizeObserver(fit);
     for (const t of tiles) ro.observe(t);
     return () => {

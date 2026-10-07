@@ -22,10 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // Theme is pinned, not user-switchable: data-theme="light" sets
-    // color-scheme: only light, so the page stays light even under a system
-    // dark preference. Density is the comfortable step of the spacing scale.
-    // Accent is omitted because green is the default ramp.
+    // Light theme pinned (even under a dark OS), comfortable density; green is the default accent.
     <html
       lang="en"
       data-theme="light"

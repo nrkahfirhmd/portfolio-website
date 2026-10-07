@@ -11,13 +11,8 @@ import {
 } from "react";
 import * as runtime from "react/jsx-runtime";
 import { useMDXComponents } from "@/mdx-components";
-// Ported from the sibling portfolios (see their docs/mdx-preview.md) and
-// shared by every section here: /software/preview and /games/preview. The
-// component map is the root mdx-components.tsx — the same one the real story
-// pages render through — so preview and production can't drift.
 
-// A syntax error mid-keystroke must not blank the pane, and a section header
-// throws on an unknown slug — both need to land as a message, not a crash.
+/** Turns render errors (bad syntax mid-keystroke, unknown header slug) into a message, not a blank pane. */
 class RenderBoundary extends Component<
   { children: ReactNode; onError: (message: string) => void },
   { failed: boolean }
@@ -51,8 +46,7 @@ type EditorProps = {
   storageKey: string;
   /** Shown in the top bar; the file the draft should be pasted back into. */
   filePath?: string;
-  /** The story's typed header, rendered above the output the way the real
-   * page does, since story files don't include it themselves. */
+  /** The story's header, rendered above the output as the real page does. */
   header?: ReactNode;
 };
 
@@ -63,14 +57,11 @@ export function Editor({ initialSource, storageKey, filePath, header }: EditorPr
   const deferred = useDeferredValue(source);
   const mdxComponents = useMDXComponents();
 
-  // Keep the last good tree mounted so an error shows the previous render
-  // rather than an empty column.
+  // On error, keep showing the last good render.
   const lastGood = useRef<ReactNode>(null);
 
   useEffect(() => {
-    // Read after mount, not in a useState initializer: the initializer also
-    // runs during hydration and would render the draft over server-rendered
-    // initialSource, a hydration mismatch. One extra render is the price.
+    // Read after mount: in a useState initializer it would mismatch hydration.
     try {
       const stored = localStorage.getItem(storageKey);
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -116,8 +107,6 @@ export function Editor({ initialSource, storageKey, filePath, header }: EditorPr
   }, [deferred, mdxComponents]);
 
   return (
-    // Panes take the whole viewport and scroll internally, so the page
-    // itself does not scroll.
     <main className="ed">
       <div className="ed-source">
         {filePath ? (
