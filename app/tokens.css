@@ -1,5 +1,4 @@
-/* Design Tokens */
-/* Generated from design-tokens.json — keep the two in sync when editing. */
+/* Design tokens: primitives → semantic (theme-aware) → component. Components use semantic tokens, never raw hex. */
 
 /* ============================================================
    PRIMITIVES — fixed ramps. Never theme-dependent.

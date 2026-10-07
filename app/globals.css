@@ -1,7 +1,7 @@
 @import "tailwindcss";
-@import "../docs/design-tokens.css";
+@import "./tokens.css";
 
-/* Site-wide: base, the page shell every route shares, cursor, motion. Values come from docs/design-tokens.css. */
+/* Site-wide: base, the page shell every route shares, cursor, motion. Values come from tokens.css. */
 
 *,
 *::before,
