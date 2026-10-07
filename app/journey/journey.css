@@ -1,0 +1,452 @@
+/* /journey — the career as a winding path, then education as a list and
+   competitions as a grid, each newest first. Same world
+   as the rest of the site: cutting-mat paper, mono, ink hairlines. The path
+   is ink; green only pulses on the stops that are still going, like the
+   index's "Open to work" dot. Every value resolves from
+   docs/design-tokens.css. No raw hex here. */
+
+.jr {
+  /* The site's page column, shared with every other page. */
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
+  text-align: left;
+}
+
+/* --- top bar, same as the portfolios' --- */
+.jr-bar {
+  display: flex;
+  align-items: center;
+  padding-block: var(--spacing-stack);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+}
+.jr-home {
+  color: var(--color-ink);
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.jr-home span {
+  color: var(--color-ink-faint);
+}
+.jr-home:hover {
+  color: var(--color-accent);
+}
+
+/* --- intro, same as /software's and /side-quests' --- */
+.jr-intro {
+  /* Same shape as /software's intro: a compact block centred on the page,
+     text left-aligned inside. */
+  max-width: 40rem;
+  margin-inline: auto;
+  padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
+}
+.jr-heading {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.25rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1;
+}
+.jr-tagline {
+  margin: 1rem 0 0;
+  font-size: var(--typography-tagline);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* --- one section per kind: career, education, competitions --- */
+.jr-section + .jr-section {
+  margin-top: clamp(3rem, 10vh, 6rem);
+}
+.jr-h2 {
+  margin: 0 0 var(--spacing-stack-sm);
+  font-size: var(--typography-tagline);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+}
+
+/* ============================================================
+   THE PATH — each stop is a row: card | trail band | card. The stop draws
+   its own stretch of trail (page.tsx), out from the band's centre to its
+   node and back, so the rows join into one winding line with nothing
+   measured in JS. The card sits on the same side as its node.
+   ============================================================ */
+.jr-path {
+  --band: 12rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jr-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--band) minmax(0, 1fr);
+  align-items: center;
+  padding-block: clamp(1rem, 3vh, 1.75rem);
+}
+
+.jr-trail {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: stretch;
+  /* The row's padding is part of the trail's stretch, or the rows would
+     leave gaps between them. */
+  margin-block: calc(-1 * clamp(1rem, 3vh, 1.75rem));
+  width: 100%;
+  height: calc(100% + 2 * clamp(1rem, 3vh, 1.75rem));
+  overflow: visible;
+}
+.jr-trail path {
+  fill: none;
+  stroke-linecap: round;
+  /* Stretched to the row, but the line keeps its width. */
+  vector-effect: non-scaling-stroke;
+}
+/* The trail ahead: faint and dashed. */
+.jr-trail-base {
+  stroke: var(--color-ink-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 6;
+}
+/* The trail walked: solid ink, revealed top to bottom as the stop scrolls
+   into view. A clip rather than a dash offset: with the stroke kept from
+   scaling, dashes are measured on screen, not along the path. */
+.jr-trail-walked {
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+}
+@supports (animation-timeline: view()) {
+  .jr-trail-walked {
+    animation: jr-walk linear both;
+    animation-timeline: view();
+    animation-range: entry 40% cover 55%;
+  }
+}
+@keyframes jr-walk {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+/* Each path fades in above its newest stop (it keeps going) and out below
+   its oldest. */
+.jr-stop:first-child .jr-trail {
+  mask-image: linear-gradient(to bottom, transparent, black 35%);
+}
+.jr-stop:last-child .jr-trail {
+  mask-image: linear-gradient(to bottom, black 55%, transparent);
+}
+
+.jr-node {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+  /* On the bend's apex: 20% across the band, or 80%. */
+  margin-left: calc(20% - 7px);
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--color-ink);
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-surface);
+}
+.jr-stop[data-side="right"] .jr-node {
+  margin-left: calc(80% - 7px);
+}
+/* Still going: the green, breathing dot from "Open to work". */
+.jr-stop[data-now] .jr-node {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  animation: pulse var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
+}
+
+/* --- the stop's card --- */
+.jr-card {
+  grid-row: 1;
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 30rem);
+  padding: var(--spacing-stack-sm);
+  border: 1px solid var(--gateway-card-border);
+  border-radius: var(--gateway-card-radius);
+  background: var(--gateway-card-bg);
+  box-shadow: var(--gateway-card-shadow);
+}
+.jr-stop[data-side="left"] .jr-card {
+  grid-column: 1;
+  justify-self: end;
+}
+.jr-stop[data-side="right"] .jr-card {
+  grid-column: 3;
+  justify-self: start;
+}
+.jr-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-stack-xs);
+  margin: 0;
+  font-size: var(--typography-caption);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--primitive-tracking-wide);
+  color: var(--color-ink-muted);
+}
+.jr-title {
+  margin: 0.25rem 0 0;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.jr-place {
+  margin: 0;
+  font-size: var(--typography-label);
+  color: var(--color-ink-muted);
+}
+/* ============================================================
+   EDUCATION — a transcript: period on the left, programme and institution
+   on the right, hairline rows.
+   ============================================================ */
+.jr-edu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+.jr-edu-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
+  gap: var(--spacing-stack-sm);
+  padding-block: var(--spacing-stack-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+.jr-edu-when {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: start;
+  padding-top: 0.3rem;
+  font-size: var(--typography-caption);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--primitive-tracking-wide);
+  color: var(--color-ink-muted);
+}
+/* Still going: the same breathing dot as the career path's. */
+.jr-edu-row[data-now] .jr-edu-when::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  animation: pulse var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
+}
+.jr-edu-body {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 40rem;
+}
+.jr-edu-body .jr-title {
+  margin: 0;
+}
+
+/* ============================================================
+   COMPETITIONS — a grid of cards, the result as the headline.
+   ============================================================ */
+.jr-comps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: var(--spacing-stack-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jr-comp {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+  padding: var(--spacing-stack-sm);
+  border: 1px solid var(--gateway-card-border);
+  border-radius: var(--gateway-card-radius);
+  background: var(--gateway-card-bg);
+  box-shadow: var(--gateway-card-shadow);
+}
+.jr-result {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.6vw, 1.75rem);
+  font-weight: var(--primitive-fontWeight-bold);
+  letter-spacing: var(--primitive-tracking-tight);
+  line-height: 1.1;
+}
+/* No placement filled in yet: a quiet stand-in, not a claim. */
+.jr-result[data-pending] {
+  font-size: var(--typography-label);
+  font-weight: var(--primitive-fontWeight-medium);
+  color: var(--color-ink-faint);
+}
+.jr-comp .jr-title {
+  margin: 0.25rem 0 0;
+  font-size: var(--typography-body);
+}
+
+@media (max-width: 48rem) {
+  .jr-edu-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+  }
+}
+
+/* ============================================================
+   STORY PANEL — every stop opens one (story-panel.tsx). The trigger is a
+   button stretched over the stop; the panel is a modal <dialog> dressed as
+   side-quests' article card.
+   ============================================================ */
+.jr-card,
+.jr-edu-row,
+.jr-comp {
+  position: relative;
+}
+.jr-open {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  cursor: pointer;
+}
+/* Cards lift and take the accent border, like the gateway cards. */
+.jr-card,
+.jr-comp {
+  transition:
+    translate var(--motion-hover) var(--motion-ease-default),
+    border-color var(--motion-hover) var(--motion-ease-default);
+}
+.jr-card:has(.jr-open:is(:hover, :focus-visible)),
+.jr-comp:has(.jr-open:is(:hover, :focus-visible)) {
+  translate: 0 var(--gateway-card-lift-hover);
+  border-color: var(--gateway-card-border-hover);
+  transition-duration: var(--motion-enter);
+  transition-timing-function: var(--motion-ease-playful), var(--motion-ease-default);
+}
+/* Education rows tint instead: they're rows, not cards. */
+.jr-edu-row {
+  transition: background var(--motion-hover) var(--motion-ease-default);
+}
+.jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) {
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+}
+
+/* The panel itself is side-quests' article card (.sq-dialog and friends,
+   from side-quests.css); this is only what a native modal <dialog> needs on
+   top: centred with side-quests' outer margin, hidden while closed (.sq-dialog
+   sets display: flex, which would otherwise show it), and a fade-and-rise in
+   to match its entrance. */
+.jr-panel {
+  --edge: clamp(1rem, 4vw, 2.5rem);
+  inset: 0;
+  width: calc(100% - 2 * var(--edge));
+  max-height: calc(100dvh - 2 * var(--edge));
+  margin: auto;
+  padding: 0;
+  color: inherit;
+  opacity: 0;
+  translate: 0 12px;
+  transition:
+    opacity var(--motion-playful) var(--motion-ease-default),
+    translate var(--motion-playful) var(--motion-ease-default),
+    display var(--motion-playful) allow-discrete,
+    overlay var(--motion-playful) allow-discrete;
+}
+.jr-panel:not([open]) {
+  display: none;
+}
+.jr-panel[open] {
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .jr-panel[open] {
+    opacity: 0;
+    translate: 0 12px;
+  }
+}
+/* Same veil as side-quests' .sq-backdrop. */
+.jr-panel::backdrop {
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition:
+    opacity 0.2s var(--motion-ease-default),
+    display 0.2s allow-discrete,
+    overlay 0.2s allow-discrete;
+}
+.jr-panel[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .jr-panel[open]::backdrop {
+    opacity: 0;
+  }
+}
+/* The page behind stays put while a story is open. */
+html:has(.jr-panel[open]) {
+  overflow: hidden;
+}
+/* The modal sits in the top layer, above the custom cursor dot, so inside
+   it the native cursor comes back rather than leaving no cursor at all. */
+[data-cursor-hidden] .jr-panel,
+[data-cursor-hidden] .jr-panel * {
+  cursor: auto !important;
+}
+[data-cursor-hidden] .jr-panel button {
+  cursor: pointer !important;
+}
+.jr-pending {
+  font-style: italic;
+  color: var(--color-ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jr-panel,
+  .jr-panel::backdrop {
+    transition: none;
+  }
+  .jr-card:has(.jr-open:is(:hover, :focus-visible)),
+  .jr-comp:has(.jr-open:is(:hover, :focus-visible)) {
+    translate: none;
+  }
+}
+
+.jr-back {
+  margin-top: calc(var(--spacing-gutter-lg) * 1.5);
+}
+
+/* Phones: the trail runs down the left edge, every card to its right. */
+@media (max-width: 48rem) {
+  .jr-path {
+    --band: 3.5rem;
+  }
+  .jr-stop {
+    grid-template-columns: var(--band) minmax(0, 1fr);
+  }
+  .jr-trail,
+  .jr-node {
+    grid-column: 1;
+  }
+  .jr-stop[data-side] .jr-card {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No drawing in: the walked trail is simply there. */
+  .jr-trail-walked {
+    animation: none;
+  }
+}

@@ -8,6 +8,7 @@
 
 import type { Stage } from "@/app/games/games";
 import type { Gateway } from "@/app/gateways";
+import type { JourneyStop } from "@/app/journey/types";
 import type { Project } from "@/app/software/projects";
 import type { SideQuest, SideQuestPhoto } from "@/app/side-quests/types";
 import type { IconName } from "@/app/socials";
@@ -513,4 +514,110 @@ export const SIDE_QUEST_STICKERS = [
   { src: "/side-quests/controller.svg", alt: "Game controller sticker" },
   { src: "/side-quests/billiard.svg", alt: "Billiard ball sticker" },
   { src: "/side-quests/shoe.svg", alt: "Running shoe sticker" },
+];
+
+// ============================================================
+// JOURNEY — /journey, the path at the bottom right of the index
+// ============================================================
+
+export const JOURNEY = {
+  title: "Kahfi R — Journey",
+  description: "The path so far: the roles, the learning, and the competitions along the way.",
+  heading: "Journey",
+  tagline: "Every stop on the way here, newest first. The path keeps going.",
+};
+
+// The stops, in any order: the page groups them by `kind` and sorts each
+// group by start date, newest first. "work" stops become the winding career
+// path, "education" a list, and "competition" a grid of cards with the
+// `result` as the headline.
+// Every stop opens a story panel: `story` (paragraphs, one string each) and
+// `image` (a photo in public/journey/) fill it; until then it says the
+// story is still being written. A `when` ending in "now" marks the stop
+// as current.
+// TODO(kv): a story and photo for each stop.
+export const JOURNEY_STOPS: JourneyStop[] = [
+  // TODO(kv): placeholder. Start month, degree, and graduation date; 2022 is
+  // from the praktikum-tiunpad-angkatan-2022 org.
+  {
+    when: "2022 – now",
+    title: "Informatics undergraduate",
+    place: "Universitas Padjadjaran",
+    kind: "education",
+  },
+  // TODO(kv): placeholder. Month and result; from the aic-14 repo.
+  {
+    when: "2022",
+    title: "AI Innovation Challenge",
+    place: "COMPFEST 14",
+    kind: "competition",
+  },
+  {
+    when: "Jan 2024",
+    title: "Landing page competition",
+    place: "Festida, Universitas Darussalam Gontor",
+    result: "5th overall",
+    kind: "competition",
+  },
+  // TODO(kv): placeholder. Result; from the isc-diesco repo (Dekorin).
+  {
+    when: "Aug 2024",
+    title: "Information System Competition",
+    place: "Diesco 2024",
+    kind: "competition",
+  },
+  {
+    when: "Feb – Dec 2024",
+    title: "Practicum Assistant",
+    place: "Computer Science, Universitas Padjadjaran",
+    kind: "work",
+  },
+  {
+    when: "Nov – Dec 2024",
+    title: "Bangkit Academy",
+    place: "Machine Learning cohort",
+    kind: "education",
+  },
+  {
+    when: "Feb – Dec 2025",
+    title: "Himatif Apps v2",
+    place: "Freelance, Project Manager",
+    kind: "work",
+  },
+  {
+    when: "Jun – Aug 2025",
+    title: "Prabu 2025",
+    place: "Freelance, Lead Frontend Engineer",
+    kind: "work",
+  },
+  {
+    when: "Aug – Dec 2025",
+    title: "Automation Engineer & Data Analyst",
+    place: "PT Tunas Ridean (Tunas Group)",
+    kind: "work",
+  },
+  {
+    when: "Nov 2025 – Jan 2026",
+    title: "System Engineer",
+    place: "Guriang HPC Facility, Universitas Padjadjaran",
+    kind: "work",
+  },
+  {
+    when: "Mar 2026 – now",
+    title: "Junior iOS Developer",
+    place: "Apple Developer Academy @ BINUS, Bali",
+    kind: "work",
+  },
+  {
+    when: "May 2026 – now",
+    title: "BITD",
+    place: "Freelance, Backend Engineer & Infra",
+    kind: "work",
+  },
+  {
+    when: "Aug 2026 – now",
+    title: "Game Developer",
+    place: "Batang Kayu Studio",
+    kind: "work",
+  },
 ];

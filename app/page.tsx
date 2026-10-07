@@ -108,6 +108,22 @@ export default function Home() {
           <span className="door-label">Side quests</span>
         </Link>
 
+        {/* Its mirror in the bottom-right corner: the path to /journey. */}
+        <Link
+          href="/journey"
+          className="trail"
+          aria-label="Journey"
+          transitionTypes={["nav-forward"]}
+          data-enter
+          style={{ "--i": 8 } as React.CSSProperties}
+        >
+          <span className="door-label">Journey</span>
+          <svg className="trail-icon" viewBox="0 0 30 30" aria-hidden="true">
+            <path className="trail-line" d="M3 27c6 0 5-9 11-9s5-9 11-9" />
+            <path className="trail-pin" d="M25 9.5c-2.2-2.4-3.3-4.1-3.3-5.2a3.3 3.3 0 0 1 6.6 0c0 1.1-1.1 2.8-3.3 5.2z" />
+          </svg>
+        </Link>
+
         <footer className="foot" data-enter style={{ "--i": 7 } as React.CSSProperties}>
           <nav className="socials" aria-label="Contact and social">
             {SOCIALS.map((s) => (

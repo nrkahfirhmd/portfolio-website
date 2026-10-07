@@ -694,8 +694,63 @@
 .door:focus-visible .door-leaf {
   transform: rotateY(-70deg);
 }
-/* Phones: the footer runs the full width, so the door keeps only its icon
-   (the link's aria-label still names it). */
+/* --- the trail: bottom-right way out to /journey, the door's mirror --- */
+.trail {
+  position: absolute;
+  right: var(--spacing-gutter);
+  bottom: clamp(1rem, 3.5vh, var(--spacing-stack-lg));
+  z-index: 5;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  letter-spacing: var(--primitive-tracking-wider);
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  transition: color var(--motion-hover) var(--motion-ease-default);
+}
+.trail-icon {
+  width: 30px;
+  height: 30px;
+  overflow: visible;
+}
+/* A dashed path ending in a pin. On hover the dashes march toward the pin
+   and the pin turns green: the way on. */
+.trail-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 2.5 3.5;
+}
+.trail-pin {
+  fill: currentColor;
+  transition:
+    fill var(--motion-hover) var(--motion-ease-default),
+    translate var(--motion-playful) var(--motion-ease-playful);
+}
+.trail:hover,
+.trail:focus-visible {
+  color: var(--color-ink);
+}
+.trail:hover .trail-line,
+.trail:focus-visible .trail-line {
+  animation: trail-march 0.9s linear infinite;
+}
+.trail:hover .trail-pin,
+.trail:focus-visible .trail-pin {
+  fill: var(--color-accent);
+  translate: 0 -2px;
+}
+@keyframes trail-march {
+  to {
+    stroke-dashoffset: -6;
+  }
+}
+
+/* Phones: the footer runs the full width, so the door and the trail keep
+   only their icons (each link's aria-label still names it). */
 @media (max-width: 640px) {
   .door-label {
     display: none;
@@ -1129,6 +1184,9 @@
   }
   .gate::after {
     display: none;
+  }
+  .trail-pin {
+    translate: none !important;
   }
   .island-pill[inert],
   .island-panel[inert] {
