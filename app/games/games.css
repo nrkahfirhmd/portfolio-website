@@ -4,15 +4,11 @@
    touch). Every value resolves from docs/design-tokens.css. No raw hex here. */
 
 .gd {
-  max-width: 60rem;
+  /* The site's page column, shared with /software and /side-quests. */
+  max-width: 76rem;
   margin: 0 auto;
   padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
   text-align: center;
-}
-
-/* The portfolio spans the viewport; devlog pages keep the 60rem column. */
-.gd-full {
-  max-width: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {

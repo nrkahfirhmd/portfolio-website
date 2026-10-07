@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function GamesPage() {
   return (
     <PageTransition>
-      <main className="gd gd-full">
+      <main className="gd">
         <CursorDot />
         <MagneticGrid />
 

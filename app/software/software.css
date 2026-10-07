@@ -7,16 +7,11 @@
   /* Lets <details> animate to/from `auto` height where supported; elsewhere
      it just opens instantly. */
   interpolate-size: allow-keywords;
-  max-width: 54rem;
+  /* The site's page column, shared with /games and /side-quests. */
+  max-width: 76rem;
   margin: 0 auto;
   padding: 0 var(--spacing-gutter) var(--spacing-gutter-lg);
   text-align: left;
-}
-
-/* The portfolio index spans the viewport; story pages keep the 54rem column
-   their two-column layout is sized against. Text blocks cap themselves in ch. */
-.sw-full {
-  max-width: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {

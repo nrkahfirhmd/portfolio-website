@@ -146,12 +146,13 @@
    MASONRY — Pinterest-style columns; tiles keep their natural height
    ============================================================ */
 .bento {
-  /* As many ~18rem columns as fit. masonry.tsx switches the rows to 1px and
+  /* As many ~16rem columns as fit: four across the full 76rem page column,
+     fewer as it narrows. masonry.tsx switches the rows to 1px and
      spans each tile by its height, so tiles pack left to right; without it
      this is a plain grid with aligned rows. */
   --bento-gap: clamp(0.75rem, 1.6vw, 1rem);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
   gap: var(--bento-gap);
   align-items: start;
 }

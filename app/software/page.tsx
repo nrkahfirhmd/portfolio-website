@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export default function SoftwarePage() {
   return (
     <PageTransition>
-      <main className="sw sw-full">
+      <main className="sw">
         <CursorDot />
         <MagneticGrid />
 

@@ -8,10 +8,15 @@
   text-align: center;
   height: 100dvh;
   overflow: hidden;
-  /* Density moves the ceiling; the fixed floor keeps the single-viewport
-     guarantee on small screens. */
-  padding: clamp(1rem, 3.5vh, var(--spacing-stack-lg))
-    clamp(1rem, 4vw, var(--spacing-gutter-lg));
+  /* The site's page column (76rem, gutter padding), shared with every other
+     page, so the corners line up as you move between them. Containing block
+     for the door. */
+  position: relative;
+  max-width: 76rem;
+  margin: 0 auto;
+  /* Vertically, density moves the ceiling; the fixed floor keeps the
+     single-viewport guarantee on small screens. */
+  padding: clamp(1rem, 3.5vh, var(--spacing-stack-lg)) var(--spacing-gutter);
 }
 
 /* ============================================================
@@ -630,7 +635,7 @@
 /* --- the door: bottom-left way out to /side-quests --- */
 .door {
   position: absolute;
-  left: clamp(1rem, 4vw, var(--spacing-gutter-lg));
+  left: var(--spacing-gutter);
   bottom: clamp(1rem, 3.5vh, var(--spacing-stack-lg));
   z-index: 5;
   display: flex;
