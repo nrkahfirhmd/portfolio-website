@@ -570,12 +570,16 @@
   font-weight: var(--primitive-fontWeight-medium);
   color: var(--color-ink);
 }
+/* The takeaway, quoted the way story pages quote (story.css .st-quote): a
+   hairline rule and the flourish serif, not a coloured bar on a tint. */
 .sq-dialog-body blockquote {
   margin: 0;
-  padding: 1rem;
-  border-left: 3px solid var(--color-accent);
-  background: var(--color-accent-soft);
+  padding-left: 1rem;
+  border-left: 1px solid var(--color-accent);
+  font-family: var(--font-flourish), var(--primitive-fontFamily-flourish);
   font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.45;
   color: var(--color-ink);
 }
 .sq-skills {
