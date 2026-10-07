@@ -33,7 +33,10 @@
 
 /* --- intro --- */
 .sq-intro {
+  /* Same shape as /software's intro: a compact block centred on the page,
+     text left-aligned inside. */
   max-width: 40rem;
+  margin-inline: auto;
   padding-block: clamp(3rem, 10vh, 6rem) clamp(1.5rem, 5vh, 2.5rem);
 }
 .sq-heading {
