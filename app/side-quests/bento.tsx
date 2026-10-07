@@ -205,15 +205,11 @@ function StoryCard({
   );
 }
 
-/** Cover image, or generated art (the title's first word, hatched) without one. */
+/** Cover image, or the site's dotted placeholder without one. */
 function Cover({ entry }: { entry: SideQuest }) {
   if (entry.image)
     return <Image className="sq-cover" src={entry.image} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" />;
-  return (
-    <span className="sq-cover sq-art" data-kind={entry.kind} aria-hidden="true">
-      <span>{entry.title.split(" ")[0]}</span>
-    </span>
-  );
+  return <span className="sq-cover sq-art" aria-hidden="true" />;
 }
 
 /* --- playful cells ---------------------------------------------------- */

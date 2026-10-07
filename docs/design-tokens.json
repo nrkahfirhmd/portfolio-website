@@ -205,6 +205,11 @@
       "radius":    { "$value": "{primitive.radius.full}", "$type": "dimension" },
       "padding-x": { "$value": "{primitive.spacing.3}", "$type": "dimension" },
       "padding-y": { "$value": "{primitive.spacing.1}", "$type": "dimension" }
+    },
+    "placeholder": {
+      "$description": "Every \"no image yet\" across the site: dotted paper, the name in faint ink. No accent: a placeholder is not an interactive signal.",
+      "bg": { "$value": "radial-gradient(color-mix(in srgb, {semantic.color.ink} 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px, {semantic.color.surface-sunken}" },
+      "fg": { "$value": "{semantic.color.ink-faint}", "$type": "color" }
     }
   }
 }

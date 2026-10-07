@@ -84,9 +84,8 @@
   padding: clamp(1rem, 3vw, 1.75rem);
   border: 1px solid var(--color-border);
   border-radius: var(--primitive-radius-lg);
-  background:
-    radial-gradient(color-mix(in srgb, var(--color-ink) 12%, transparent) 1px, transparent 1.5px) 0 0 / 14px 14px,
-    var(--color-surface-sunken);
+  /* A stand-in cover, so the same paper as every other placeholder. */
+  background: var(--placeholder-bg);
   transition: border-color var(--motion-hover) var(--motion-ease-default);
 }
 .sys {
@@ -191,15 +190,12 @@
 }
 /* The showcase: blurred backdrop, device screen centred in front. The
    backdrop is scaled up so the blur doesn't fade out at the tile's edge;
-   without a cover, a soft wash of the accent stands in. */
+   without a cover, the site's placeholder (dotted paper) stands in. */
 .showcase {
   position: relative;
   display: block;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 60%),
-    radial-gradient(circle at 80% 90%, color-mix(in srgb, var(--color-ink) 14%, transparent), transparent 55%),
-    var(--color-surface-sunken);
+  background: var(--placeholder-bg);
 }
 .showcase-bg {
   object-fit: cover;
@@ -249,10 +245,8 @@
   text-align: center;
   text-wrap: balance;
   font-weight: var(--primitive-fontWeight-bold);
-  color: var(--color-ink-faint);
-  background:
-    radial-gradient(color-mix(in srgb, var(--color-ink) 12%, transparent) 1px, transparent 1.5px) 0 0 / 10px 10px,
-    var(--color-surface);
+  color: var(--placeholder-fg);
+  background: var(--placeholder-bg);
 }
 /* A square showcase: the logo, kept to its own shape, centred over the
    backdrop with a soft shadow that follows its outline. */
@@ -368,10 +362,8 @@
   text-wrap: balance;
   font-weight: var(--primitive-fontWeight-bold);
   font-variant-numeric: tabular-nums;
-  color: var(--color-ink-faint);
-  background:
-    radial-gradient(color-mix(in srgb, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px,
-    var(--color-surface-sunken);
+  color: var(--placeholder-fg);
+  background: var(--placeholder-bg);
 }
 .tile-empty svg {
   width: 32px;

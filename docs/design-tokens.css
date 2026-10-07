@@ -315,4 +315,12 @@
   --chip-radius: var(--primitive-radius-full);
   --chip-padding-x: var(--primitive-spacing-3);
   --chip-padding-y: var(--primitive-spacing-1);
+
+  /* Every "no image yet" across the site: dotted paper, the name in faint
+     ink. Quiet on purpose — a placeholder is not an interactive signal, so
+     no accent. */
+  --placeholder-bg:
+    radial-gradient(color-mix(in srgb, var(--color-ink) 14%, transparent) 1px, transparent 1.5px) 0 0 / 12px 12px,
+    var(--color-surface-sunken);
+  --placeholder-fg: var(--color-ink-faint);
 }

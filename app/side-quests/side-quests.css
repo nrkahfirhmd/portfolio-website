@@ -168,29 +168,11 @@
 .sq-card:hover .sq-cover {
   scale: 1.05;
 }
-/* Generated art: the title's first word over hatching, tinted by kind. Only
-   the site's own greens: the accent (or its darker hover step) fading to
-   accent-soft. */
+/* No photo yet: the site's placeholder. No word on it; the card already
+   names itself. */
 .sq-art {
   display: block;
-  overflow: hidden;
-  --art: var(--color-accent);
-  background:
-    repeating-linear-gradient(-45deg, transparent 0 14px, color-mix(in srgb, var(--color-surface) 16%, transparent) 14px 16px),
-    linear-gradient(135deg, var(--art), var(--color-accent-soft));
-}
-.sq-art[data-kind="career"],
-.sq-art[data-kind="community"] {
-  --art: var(--color-accent-hover);
-}
-.sq-art span {
-  position: absolute;
-  top: -0.15em;
-  right: -0.05em;
-  font-size: clamp(4rem, 9vw, 7rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  line-height: 1;
-  color: color-mix(in srgb, var(--color-surface) 40%, transparent);
+  background: var(--placeholder-bg);
 }
 /* Scrim keeps the copy readable over any cover. */
 .sq-scrim {

@@ -192,7 +192,9 @@
   aspect-ratio: 16 / 9;
   padding: 1.5rem;
   text-align: center;
-  background: var(--color-surface-sunken);
+  /* The site's placeholder; the caption keeps ink-muted, since here the
+     words say what the missing screenshot should show. */
+  background: var(--placeholder-bg);
   font-size: var(--typography-caption);
   color: var(--color-ink-muted);
 }
