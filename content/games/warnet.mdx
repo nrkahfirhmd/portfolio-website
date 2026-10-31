@@ -1,25 +1,94 @@
 export const metadata = { title: "WarNet" };
 
-{/* TODO(kv): placeholder devlog. Replace every section with the real story,
-    in your own voice, and swap the figure for a real screenshot (put it in
-    public/ and pass src="/…"). */}
+Anyone who grew up with Indonesian internet cafés knows the unwritten rule:
+don't download big files. It drags the whole warnet's bandwidth down, and if
+the operator notices, you're out. WarNet asks what would happen if you broke
+that rule on purpose, and did everything you could to get away with it.
 
-Placeholder devlog for WarNet. The real write-up goes here: what the game is,
-why it was made, and what building it taught.
+<Stats
+  items={[
+    { label: "GameSeed 2026", value: "Top 90 of 260" },
+    { label: "Team", value: "8 people" },
+    { label: "Jam length", value: "1 month" },
+  ]}
+/>
 
 ## The idea
 
-What the game is about, and the one thing it asks of the player.
+GameSeed gave us two themes: "So Absurd, It's Cool" and "Childhood Dreams".
+Back when warnets were everywhere, I always wondered what it would be like to
+actually start that huge download and then do whatever it took not to get
+caught. That was the childhood dream. Turning it into a stealth game, with
+the operator as the threat and your own PC as the hiding place, took care of
+the absurd.
 
-## How it was built
+## How a session plays
+
+You sit at one PC and can look in four directions: your screen, your left,
+your back, and your right. Open the browser and the download starts. From
+then on, the game is about hiding what you're doing until it finishes.
+
+<Figure
+  src="/project-media/GD/warnet_ss.png"
+  alt="WarNet's four views: a download on the PC screen, the operator at his desk, a friend offering a match, and a girl leaning by the router box"
+  caption="The four views: the download on your screen, the operator at his desk, Farhan with a challenge, and Dewi by the router."
+/>
 
 <Points>
-  <Point title="Design">The core loop and the decisions behind it.</Point>
-  <Point title="Tech">Engine, tools, and the tricky bits.</Point>
+  <Point title="You win">The download reaches 100% before your billing time runs out.</Point>
+  <Point title="You lose">The billing runs out first, or the operator catches you.</Point>
 </Points>
 
-<Figure caption="Screenshot goes here." />
+## The suspicion meter
 
-## What's next
+The operator doesn't patrol. They get suspicious, and the meter is how you
+see it.
 
-Where the project goes from here.
+<SuspicionMeter />
+
+## Three pillars
+
+My job as game designer was to break the idea down into a few systems the
+team could build. "Don't get caught while downloading" became three pillars,
+each one an obstacle or a way around it:
+
+<Points>
+  <Point title="Random events">Things happen around you, often with the people nearby, and you have to deal with them.</Point>
+  <Point title="Side tasks">Cover for the download: chatting, playing games, refreshing pages, looking busy.</Point>
+  <Point title="Abilities">Tools like hacking that buy you room when suspicion climbs.</Point>
+</Points>
+
+The most absurd moment comes when they all collide: three random events at
+once, the operator almost sure of you, and you in the middle of a hack.
+
+<Figure
+  src="/project-media/GD/warnet_gameplay.gif"
+  alt="WarNet gameplay: the player turns between views as a random event plays out mid-download"
+  caption="Mid-download, a random event pulls your attention away from the screen."
+/>
+
+## Design into code
+
+The hardest part wasn't any single system. It was getting the design out of
+my head and the document, and into the code, with a team of eight. It's hard
+to make sure everyone has read the design document, let alone understood it
+the same way. A lot of my month went into explaining the design to the team
+while we built it.
+
+> Small scope first. Get the core loop and mechanics working, then expand and polish.
+
+## What we cut
+
+Time ran out before the list did. We cut a lot of random events and side
+tasks, and I wish we'd had time to polish the game. That's what WarNet taught
+me: keep the scope small, make the core loop work first, and only then add
+more.
+
+## Team
+
+Game design by ichsanfrds and me. Programming by dyan, Ken, and Waffles.
+Illustration by PAl. UI and assets by aditfhm and KopiCan. Music by me.
+
+<Callout>
+  Play it in the browser on [itch.io](https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc).
+</Callout>

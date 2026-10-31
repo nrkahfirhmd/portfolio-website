@@ -1,12 +1,17 @@
 export const metadata = { title: "Body Count: Shibuya Crossing" };
 
-{/* TODO(kv): draft built only from the itch.io page. Add what you personally
-    did on this one, rewrite in your own voice, and swap the figure
-    placeholder for a real screenshot (put it in public/ and pass src="/…"). */}
-
 Body Count drops you on a rooftop over Shibuya's rush-hour crossing with a
 target list and a limited number of catches. Somewhere in the crowd below is
 the one person who matches every trait. Find them before the wave runs out.
+
+<Stats
+  items={[
+    { label: "Placement", value: "6th of 46 teams" },
+    { label: "Team", value: "4 people" },
+    { label: "Jam length", value: "5 days" },
+    { label: "Playtesters", value: "24" },
+  ]}
+/>
 
 ## Reading the theme
 
@@ -27,13 +32,57 @@ Catches are the constraint. Upgrades and special passersby are how you buy
 some of that room back, so a good run is as much about spending them well as
 about sharp eyes.
 
-<Figure caption="Screenshot of the crossing mid-wave goes here." />
+<Figure
+  src="/project-media/GD/body_count_ss.png"
+  alt="Three Body Count screens on iPhones: the title screen, a wave in progress on the crossing, and the upgrade picker"
+  caption="The title screen, a wave in progress, and the upgrade you pick between waves."
+/>
 
-## Keeping it cohesive
+## My part
 
-Everything points your attention back at the crowd. Clothing colours are the
-puzzle; the moving pedestrians are the pressure. Nothing on screen competes
-with the one question the game keeps asking: which one of these people is it?
+I made the music and programmed a big share of the game.
+
+<Points>
+  <Point title="Music">It had to feel Japanese and feel fun. I landed on funk jazz and lo-fi jazz, made in GarageBand.</Point>
+  <Point title="Waves and upgrades">How each wave grows, and the upgrades you pick between them.</Point>
+  <Point title="Game feel">The small touches on every interaction that make a catch feel satisfying.</Point>
+</Points>
+
+## A crowd that stays light
+
+A crossing full of people sounds expensive, especially on an iPhone. The
+trick is that the game never draws hundreds of people at once. Each
+pedestrian gets their own speed and their own moment to cross, new ones spawn
+only when the crowd needs them, and anyone who walks past the bottom edge is
+removed. The crossing always looks packed, but only the people on screen
+exist.
+
+<CrowdFlow />
+
+## Tuning the difficulty
+
+Each wave starts the crowd a little bigger than the last. I tuned the
+difficulty mostly around each wave's score target and the abilities the
+player had picked up by then.
+
+Playtesting turned up a different problem: a lot of players were frustrated
+by the target prompt, the list of traits to match. It was a sentence to read
+("Brown Shirt, White Hat, with White Bag") while the crowd kept moving. We
+redesigned it as four slots, hair, shirt, pants, and bag, that you can take
+in at a glance.
+
+<Figure
+  src="/project-media/GD/body_count_compare.png"
+  alt="Before and after: a written target sentence at the top of the screen, replaced by four trait slots for hair, shirt, pants, and bag"
+  caption="Before: the target as a sentence. After: one slot per trait."
+/>
+
+## What I'd change
+
+The idea is for everything to point your attention back at the crowd:
+clothing colours are the puzzle, the moving pedestrians are the pressure. We
+didn't get all the way there. If I made it again, I'd work on cohesion and
+the core loop first, because those are where it fell short.
 
 <Callout>
   Play it in the browser on [itch.io](https://batangkayu.itch.io/body-count-shibuya-crossing), or grab the iOS test build through TestFlight from the same page.
