@@ -3,6 +3,7 @@ import { BaliClock } from "./bali-clock";
 import { Canopy } from "./canopy";
 import { CursorDot } from "./cursor-dot";
 import { CursorParallax } from "./cursor-parallax";
+import { getGithubSnapshot } from "./github";
 import { GithubActivity } from "./github-activity";
 import { MagneticGrid } from "./magnetic-grid";
 import { PaintName } from "./paint-name";
@@ -13,7 +14,9 @@ import { GATEWAYS, HOME, PERSON } from "@/content/site";
 import "./home.css";
 import { PageTransition } from "./page-transition";
 
-export default function Home() {
+export default async function Home() {
+  const github = await getGithubSnapshot(PERSON.github);
+
   return (
     <PageTransition>
       <main className="home">
@@ -34,7 +37,7 @@ export default function Home() {
               <span className="kv-alt" aria-hidden="true">Ɣ</span>
             </span>
           </p>
-          <GithubActivity username={PERSON.github} nowBuilding={HOME.nowBuilding} />
+          <GithubActivity github={github} nowBuilding={HOME.nowBuilding} />
           <BaliClock />
         </div>
 
