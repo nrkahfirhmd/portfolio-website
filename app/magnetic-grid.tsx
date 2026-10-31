@@ -77,9 +77,9 @@ export function MagneticGrid() {
       ctx!.lineWidth = 1;
       const { x: cx, y: cy, p } = s;
 
-      // A line farther than RADIUS from the pointer can't bend: one segment.
+      // One path per direction: two stroke() calls, and crossings still overlap like the CSS mat's. A line farther than RADIUS can't bend: one segment.
+      ctx!.beginPath();
       for (let x = 0; x <= w; x += SPACING) {
-        ctx!.beginPath();
         if (Math.abs(x - cx) > RADIUS || p <= 0) {
           ctx!.moveTo(x + 0.5, 0);
           ctx!.lineTo(x + 0.5, h);
@@ -90,11 +90,11 @@ export function MagneticGrid() {
             else ctx!.lineTo(pt.x + 0.5, pt.y);
           }
         }
-        ctx!.stroke();
       }
+      ctx!.stroke();
 
+      ctx!.beginPath();
       for (let y = 0; y <= h; y += SPACING) {
-        ctx!.beginPath();
         if (Math.abs(y - cy) > RADIUS || p <= 0) {
           ctx!.moveTo(0, y + 0.5);
           ctx!.lineTo(w, y + 0.5);
@@ -105,8 +105,8 @@ export function MagneticGrid() {
             else ctx!.lineTo(pt.x, pt.y + 0.5);
           }
         }
-        ctx!.stroke();
       }
+      ctx!.stroke();
     }
 
     function tick() {

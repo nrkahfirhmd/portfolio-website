@@ -128,8 +128,8 @@ export function BrushReveal({ src }: { src: string }) {
     }
 
     const move = (e: PointerEvent) => {
+      // Sizing is the ResizeObserver's job; one layout read per move is enough.
       const rect = view!.getBoundingClientRect();
-      size();
       stroke(e.clientX - rect.left, e.clientY - rect.top);
       wake();
     };

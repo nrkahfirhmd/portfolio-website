@@ -2,7 +2,6 @@ import Link from "next/link";
 import { BaliClock } from "./bali-clock";
 import { Canopy } from "./canopy";
 import { CursorDot } from "./cursor-dot";
-import { CursorParallax } from "./cursor-parallax";
 import { getGithubSnapshot } from "./github";
 import { GithubActivity } from "./github-activity";
 import { MagneticGrid } from "./magnetic-grid";
@@ -20,7 +19,6 @@ export default async function Home() {
   return (
     <PageTransition>
       <main className="home">
-        <CursorParallax />
         <CursorDot />
         <MagneticGrid />
 

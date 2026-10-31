@@ -43,6 +43,8 @@
   /* The sun angle lives on `rotate` so the sway can own `transform`. */
   rotate: var(--daylight-angle);
   transform-origin: bottom right;
+  /* Own layer: the blurred tree rasterises once and the sway only moves it. */
+  will-change: transform;
   fill: var(--daylight-tint);
   stroke: var(--daylight-tint);
   transition:
@@ -204,7 +206,7 @@
   display: grid;
   place-items: center;
   filter: grayscale(0.35);
-  /* --mx/--my from CursorParallax. */
+  /* --mx/--my from PortraitToggle. */
   transform: translate(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 10px));
   transition:
     box-shadow var(--motion-hover) var(--motion-ease-default),
