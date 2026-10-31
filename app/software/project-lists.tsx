@@ -25,9 +25,8 @@ export function Showcase({
   const video = screen && /\.(mp4|webm|mov)$/i.test(screen);
   return (
     <span className="showcase" aria-hidden="true">
-      {backdrop && (
-        <Image className="showcase-bg" src={backdrop} alt="" fill sizes="(max-width: 640px) 100vw, 40rem" />
-      )}
+      {/* Blurred 16px anyway, so a small variant (128px, 256px on 2x) looks the same at a fraction of the bytes. */}
+      {backdrop && <Image className="showcase-bg" src={backdrop} alt="" fill sizes="128px" />}
       {shape === "square" ? (
         logo ? (
           <span className="showcase-logo">
