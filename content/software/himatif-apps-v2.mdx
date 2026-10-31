@@ -1,13 +1,28 @@
 export const metadata = { title: "Himatif Apps v2" };
 
-{/* TODO(kv): draft built from your answers. Rewrite in your own voice, add
-    what the old version ran on and why it needed rebuilding, what you did as
-    project manager, and swap the figure placeholder for a real screenshot
-    (put it in public/ and pass src="/…"). */}
-
 Himatif is the student association (*himpunan*) for Informatics Engineering
 at Universitas Padjadjaran. Its superapp is where the association's records
-live. Version 2 is a freelance rebuild of that app on a current stack.
+live, and 300+ people use it. Version 2 is a freelance rebuild of that app
+on a current stack.
+
+<Stats
+  items={[
+    { label: "Users", value: "300+" },
+    { label: "Team", value: "3 people" },
+    { label: "Built in", value: "Feb – Dec 2025" },
+  ]}
+/>
+
+## Why rebuild it
+
+The first version ran on Laravel, on an old version of the framework, and it
+had become slow. Rather than keep patching it, we rebuilt it on the current
+generation of tools.
+
+<Points>
+  <Point title="v1">Laravel, on an outdated version, and slow.</Point>
+  <Point title="v2">Next.js for the app, Express.js for the API.</Point>
+</Points>
 
 ## What it manages
 
@@ -17,16 +32,17 @@ live. Version 2 is a freelance rebuild of that app on a current stack.
   <Point title="Events">Its events, alongside the rest of its records.</Point>
 </Points>
 
-## How it's built
-
-The rebuild moves the app onto Next.js and Express.js.
-
-<Figure caption="Screenshot goes here: the Himatif Apps dashboard." />
+<Figure
+  src="/project-media/SE/himatif_dashboard.png"
+  alt="Himatif Apps admin analytics: total visitors, and weekly and monthly visitor charts, with the association's sections in the sidebar"
+  caption="The admin analytics: total visitors, and traffic by week and by month for each page."
+/>
 
 ## My role
 
-I was the project manager for the team that redeveloped it, from February
-to December 2025.
+I was the project manager on a team of three, from February to December
+2025, and owned everything on the product side, from planning the rebuild to
+shipping it.
 
 <Callout>
   See it live at [apps.himatif.org](https://apps.himatif.org).

@@ -1,0 +1,53 @@
+export const metadata = { title: "AgriClime" };
+
+{/* TODO(kv): written from your answers and the agriclime-ml repo. Swap the
+    figure placeholder for a real screenshot (put it in
+    public/project-media/SE/ and pass src="/project-media/SE/…"):
+    agriclime_forecast.png, the app's forecast screen. */}
+
+A farmer's week is planned around the weather: when to plant, water, spray,
+or harvest. AgriClime is an Android app that helps them plan ahead, built as
+our capstone project at Bangkit Academy: it forecasts the weather for the
+farmer's location and labels the conditions coming.
+
+<Stats
+  items={[
+    { label: "Program", value: "Bangkit capstone" },
+    { label: "Team", value: "7 people" },
+    { label: "Built in", value: "Nov – Dec 2024" },
+  ]}
+/>
+
+## How the forecast works
+
+Two models, one after the other. An LSTM looks at the last day of hourly
+readings for the location and forecasts what comes next, across every
+reading a weather app gives you. A TensorFlow neural network then labels the
+conditions ahead, so the app can say more than numbers.
+
+<Flow
+  steps={[
+    { title: "Hourly readings", body: "The last day of weather for the farmer's location." },
+    { title: "LSTM forecast", body: "Predicts the readings for the hours ahead." },
+    { title: "DNN classifier", body: "Labels the conditions those readings mean." },
+    { title: "Flask API", body: "Serves both to the Android app." },
+  ]}
+  caption="From the last day of readings to a forecast the farmer can plan around."
+/>
+
+The forecast can run as far ahead as you ask, but it gets less accurate the
+further out it goes, the usual trade-off with any weather model.
+
+## The data
+
+The models were trained on open data: the Global Weather Repository on
+Kaggle, a daily-updating dataset of weather around the world. Live readings
+for the app come from WeatherAPI.com.
+
+<Figure caption="Screenshot: AgriClime's forecast screen." />
+
+## My part
+
+On a team of seven covering machine learning, Android, and cloud, I owned
+the backend API and the machine learning flow: getting the models from the
+notebook to an API the app could call.

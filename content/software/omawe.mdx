@@ -1,14 +1,18 @@
 export const metadata = { title: "Omawe" };
 
-{/* TODO(kv): draft built from the repo README and your answers. Rewrite in
-    your own voice, add what you did as project manager, and swap the figure
-    placeholder for a real screenshot (put it in public/ and pass src="/…"). */}
-
 Getting a group to the same place is a loop of the same three moves: open
 Maps, text someone "where are you?", guess their ETA, repeat. It gets worse
 as the group grows, and the answers are rarely true ("five minutes away").
 Omawe replaces that loop with one shared, glanceable view of everyone's
 progress toward a single destination.
+
+<Stats
+  items={[
+    { label: "Status", value: "On the App Store" },
+    { label: "TestFlight testers", value: "20+" },
+    { label: "Team", value: "5 people" },
+  ]}
+/>
 
 ## What it does
 
@@ -18,23 +22,42 @@ progress toward a single destination.
   <Point title="Sharing that ends">Location sharing is opt-in per trip, clearly scoped, and stops on its own when the trip is over.</Point>
 </Points>
 
+<Flow
+  steps={[
+    { title: "Join the trip", body: "One shared destination for the whole group." },
+    { title: "On the way", body: "Moving, with an ETA everyone can see." },
+    { title: "Running late", body: "Shown before anyone has to ask." },
+    { title: "Arrived", body: "Sharing ends with the trip." },
+  ]}
+  caption="A member's status through one trip, as the group sees it on the Lock Screen."
+/>
+
 ## How it's built
 
 A SwiftUI app with an ActivityKit widget extension for the Live Activities,
-sharing its types with the app so both sides read the same trip state. Two
-details shape how it behaves on a real trip:
+sharing its types with the app so both sides read the same trip state. Behind
+it, a Go backend serves the usual API and pushes everyone's progress to the
+rest of the group in real time over WebSocket. Two details shape how it
+behaves on a real trip:
 
 - **Honest under bad signal.** When GPS or the network drops, Omawe shows
   "last seen X ago" instead of a status that looks live but isn't.
 - **Easy on the battery.** Background location and Live Activity updates are
   tuned so a full trip doesn't drain the phone.
 
-<Figure caption="Screenshot goes here: a trip in progress on the Lock Screen and in the Dynamic Island." />
+<Figure
+  src="/project-media/SE/omawe_preview.png"
+  alt="Two iPhones: Omawe's trip screen with a map, ETA, and distance, and the Lock Screen Live Activity with the ETA, a progress bar, and an I'll Be Late button"
+  caption="A trip in the app, and on the Lock Screen: ETA, distance, and an “I'll Be Late” button, no unlocking needed."
+/>
 
 ## My role
 
 I was the project manager on a team of five, building Omawe at the Apple
-Developer Academy from June 2026 through its release on the App Store.
+Developer Academy from June 2026 through its release on the App Store. That
+meant all of the product side: planning the work, making the scope calls,
+and taking the app through TestFlight, where 20+ testers used it before
+launch, and App Store review.
 
 ## What's next
 

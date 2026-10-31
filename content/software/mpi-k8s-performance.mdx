@@ -1,0 +1,77 @@
+export const metadata = { title: "Performance Analysis MPI on K8s" };
+
+{/* TODO(kv): written from your answers and the team's report (Kelompok 7,
+    HPC 2025). Swap the figure placeholder for a real screenshot (put it in
+    public/project-media/SE/ and pass src="/project-media/SE/…"):
+    mpi_dashboard.png, the comparison dashboard. */}
+
+High-performance computing has always run on bare metal, as close to the
+processor as possible. But Kubernetes is spreading into HPC for its
+portability and orchestration, so the question is no longer "can we run MPI
+on Kubernetes?" but "what does that flexibility cost?" We measured it.
+
+<Stats
+  items={[
+    { label: "Throughput at 32 cores", value: "+8.8%" },
+    { label: "Network overhead", value: "−2.4%" },
+    { label: "Cost", value: "−6.9%" },
+  ]}
+/>
+
+## The setup
+
+Same machine for both, to keep it fair: earth04, a node of Universitas
+Padjadjaran's Guriang HPC facility, with 64 cores and 128 GB of RAM.
+
+<Points>
+  <Point title="Bare metal">OpenMPI 4.0.3 installed straight on the OS, talking over TCP/IP with no virtualization layer.</Point>
+  <Point title="Kubernetes">Minikube 1.37 with the Docker driver, running the jobs through the Kubeflow MPI Operator.</Point>
+</Points>
+
+<Flow
+  steps={[
+    { title: "LAMMPS", body: "A Lennard-Jones melt: 500,000 atoms, 1,000 timesteps." },
+    { title: "1 to 32 cores", body: "Run on bare metal and on Kubernetes." },
+    { title: "OSU benchmarks", body: "Latency and bandwidth between processes." },
+    { title: "Dashboard", body: "Throughput, overhead, and resources side by side." },
+  ]}
+  caption="The same workloads, run in both environments and compared."
+/>
+
+## What we found
+
+We expected Kubernetes to cost performance. At the top of the range, it
+didn't: at 32 cores Kubernetes ran 47 timesteps per second against bare
+metal's 42, with less network overhead and less of the CPU spent on
+communication. Averaged across 2 to 32 cores, the picture is closer, with an
+average slowdown of 7.6%.
+
+<Figure caption="Screenshot: the dashboard comparing bare metal and Kubernetes." />
+
+The OSU benchmark showed bandwidth peaking at 32 KB and 64 KB messages, the
+same shape reported in earlier research on HPC over Kubernetes (Beltre et
+al., 2019).
+
+## Why it might be faster
+
+Our best guess, and only a guess: Kubernetes puts every worker in its own
+Linux control group, which may let each one use the L1 and L2 caches more
+effectively. On bare metal, the OS scheduler treats MPI ranks like any other
+process.
+
+## The catch
+
+This ran on a single node. Every message between pods crossed a virtual
+bridge in the kernel, never a physical network. Real Kubernetes clusters
+span many nodes, where traffic picks up physical latency and the overhead of
+the container network. The result needs testing on a multi-node cluster
+before anyone migrates on the strength of it.
+
+## My part
+
+On a team of three, I owned the analysis and the dashboard: turning the
+benchmark runs into the comparison above, in Python with Dash and Plotly.
+
+<Callout>
+  Read the full report (in Indonesian): [MPI on K8s Performance Analysis](https://drive.google.com/file/d/1MT5uYd_pIQZfRL85E5bc8FC7TUBIAPtA/view).
+</Callout>

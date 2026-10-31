@@ -1,14 +1,15 @@
 export const metadata = { title: "Coretax Scraper" };
 
-{/* TODO(kv): draft built from your answers. Rewrite in your own voice, add
-    how the extension finds and collects the data and what the team does with
-    it next, and swap the figure placeholder for a real screenshot (put it in
-    public/ and pass src="/…"). Check the stack line too. */}
+{/* TODO(kv): written from your answers. Swap the figure placeholder for a real screenshot (put it in
+    public/project-media/SE/ and pass src="/project-media/SE/…"):
+    coretax_extension.png, the extension running on a Coretax table. Blur
+    any real tax data first. */}
 
 The tax team's data lives in Coretax, and getting it out was slow: the
 records sit in a paged table, and each page could only be downloaded on its
 own, by hand. Coretax Scraper is a Chrome extension that does that
-extraction for them, built during my internship.
+extraction for them, built during my internship. It's now part of how the
+team works every month.
 
 <Stats
   items={[
@@ -26,14 +27,28 @@ extraction for them, built during my internship.
   <Point title="The result">A task that took about ten minutes now takes under fifteen seconds.</Point>
 </Points>
 
+<Flow
+  steps={[
+    { title: "Coretax", body: "The records, in a paged table." },
+    { title: "The extension", body: "Reads each page of the table, then turns to the next." },
+    { title: "Reconciliation", body: "The team matches the data against their own." },
+    { title: "Monthly reports", body: "The monthly report and the PPh recap." },
+  ]}
+  caption="Where the extension sits in the tax team's month."
+/>
+
 ## How it's built
 
 A Chrome extension written in JavaScript. It runs in the browser alongside
-Coretax, so it works with the same session the team already uses.
+Coretax, so it works with the same session the team already uses. It reads
+the table straight from the page and clicks through the table's pages by
+itself, collecting every row on the way.
 
-<Figure caption="Screenshot goes here: the extension running on a Coretax table." />
+<Figure caption="Screenshot: the extension running on a Coretax table." />
 
 ## My role
 
 I built it on my own from October to December 2025, as the automation
-engineer and data analyst on the project.
+engineer and data analyst on the project. It started as a tool for one task
+and became part of the team's routine: the data it collects feeds their
+reconciliation, the monthly report, and the PPh recap.

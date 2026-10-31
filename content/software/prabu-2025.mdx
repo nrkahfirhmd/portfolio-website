@@ -1,13 +1,21 @@
 export const metadata = { title: "Prabu 2025" };
 
-{/* TODO(kv): draft built from your answers. Rewrite in your own voice, add
-    what you led on the frontend and how it held up with 5,000+ students on
-    it, and swap the figure placeholder for a real screenshot (put it in
-    public/ and pass src="/…"). */}
+{/* TODO(kv): written from your answers. Swap the figure placeholder for a
+    real screenshot (put it in public/project-media/SE/ and pass
+    src="/project-media/SE/…"): prabu_tasks.png, the home page or task
+    submission. */}
 
 Every new batch starts at orientation, and in 2025 that meant more than
 5,000 students arriving at once. Prabu 2025 was the website they did it
 through: where they met the university, studied, and handed in their work.
+
+<Stats
+  items={[
+    { label: "New students", value: "5,000+" },
+    { label: "Team", value: "5 people" },
+    { label: "Built in", value: "3 months" },
+  ]}
+/>
 
 ## What it does
 
@@ -19,18 +27,19 @@ through: where they met the university, studied, and handed in their work.
 
 ## How it's built
 
-A Next.js site, built to serve the whole incoming batch.
+A Next.js site, built to serve the whole incoming batch. The busiest moments
+came right before task deadlines, when thousands of students showed up at
+once to submit, and the site held up through them.
 
-<Stats
-  items={[
-    { label: "New students", value: "5,000+" },
-    { label: "Built in", value: "3 months" },
-  ]}
-/>
-
-<Figure caption="Screenshot goes here: the Prabu 2025 home page or task submission." />
+<Figure caption="Screenshot: the Prabu 2025 home page or task submission." />
 
 ## My role
 
-I was the lead frontend engineer on the team that built it, from June to
-August 2025.
+I was the lead frontend engineer on a team of five, from June to August 2025.
+
+<Points>
+  <Point title="Architecture">How the frontend was structured, from pages down to data.</Point>
+  <Point title="Code standard">The conventions everyone wrote to, so five people's code read as one.</Point>
+  <Point title="Components">Breaking the designs down into components the team could build in parallel.</Point>
+  <Point title="Stakeholders">The link between the team and the orientation committee.</Point>
+</Points>

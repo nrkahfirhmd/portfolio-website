@@ -1,9 +1,5 @@
 export const metadata = { title: "KataMata" };
 
-{/* TODO(kv): draft built from your answers. Rewrite in your own voice, add
-    what you built as the applied AI engineer, and swap the figure placeholder
-    for a real screenshot (put it in public/ and pass src="/…"). */}
-
 Living abroad means running a life in a language you don't speak yet: the
 landlord, the market, the clinic. A dictionary gives you a word, but not
 when to use it. KataMata is for expats picking up the everyday language of
@@ -23,9 +19,33 @@ A SwiftUI app. The explanations and examples are generated with Apple's
 Foundation Models framework, so the language help comes from the model
 built into the device.
 
-<Figure caption="Screenshot goes here: a collected word with its translation, explanation, and example." />
+<Flow
+  steps={[
+    { title: "A word", body: "Collected from daily life." },
+    { title: "Prompt", body: "Written for this one use: an expat learning everyday words." },
+    { title: "Structured output", body: "Translation, explanation, and example as fields, not free text." },
+    { title: "Check or fall back", body: "If the result doesn't fit, a fallback instead of a bad card." },
+  ]}
+  caption="From a collected word to a card, on the device."
+/>
 
 ## My role
 
-I was the iOS applied AI engineer, building KataMata at the Apple Developer
-Academy from May to June 2026.
+I was the iOS applied AI engineer on a team of six, at the Apple Developer
+Academy from May to June 2026. I built the AI side: the prompts, the
+structured output the app reads, and the fallbacks for when the model's
+answer doesn't fit. All of it had one job: make sure what the model gives
+back matches what an expat actually needs.
+
+<Figure
+  src="/project-media/SE/katamata_preview.png"
+  alt="Three iPhones: a collection of words captured from photos, and two opened words, pengunjung and gratis, each with a translation, definition, and spoken examples"
+  caption="The collection, and two words opened: the translation, a definition, and examples you can listen to."
+/>
+
+## What surprised me
+
+The model on the device has real limits, and it isn't instant. Both shaped
+the design more than I expected: the prompts had to stay focused, and the
+app had to handle the wait and the misses gracefully instead of assuming
+every answer would be fast and right.

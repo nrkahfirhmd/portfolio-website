@@ -1,0 +1,56 @@
+export const metadata = { title: "Nyisa" };
+
+{/* TODO(kv): written from your answers. Swap the figure placeholder for a
+    real screenshot (put it in public/project-media/SE/ and pass
+    src="/project-media/SE/…"): nyisa_recommend.png, the recommended
+    dishes on the home page. */}
+
+Restaurants end most days with food that's still perfectly good and no one
+to eat it. Nyisa is a web marketplace for exactly that food: restaurants list
+their surplus, customers pick it up at a lower price, and less of it ends up
+in the bin. We built it as coursework.
+
+<Stats
+  items={[
+    { label: "Team", value: "6 people" },
+    { label: "Built in", value: "Feb – Jun 2025" },
+    { label: "Stage", value: "Coursework demo" },
+  ]}
+/>
+
+## What it does
+
+<Points>
+  <Point title="Browse">By restaurant or by dish, with recommendations picked for you.</Point>
+  <Point title="Order">Add to cart and order, at a lower price than the menu.</Point>
+  <Point title="Pick up">Collect it from the restaurant.</Point>
+</Points>
+
+## My part
+
+I was the backend developer and AI engineer on a team of six. The backend
+handles orders, each restaurant's stock of surplus food, and pickups. The AI
+part is a recommendation system that suggests dishes to each customer.
+
+<Figure caption="Screenshot: recommended dishes on Nyisa's home page." />
+
+## Wiring in the model
+
+The hardest part was getting the recommendation model and the backend to
+talk. The model is Python; the backend is Express.js. My first attempt was to
+run the model as a subprocess from the backend, and I'd never wired one up
+before. What worked in the end was giving the model its own small Python API
+and having the backend call it like any other service.
+
+<Flow
+  steps={[
+    { title: "React app", body: "The customer opens the marketplace." },
+    { title: "Express.js backend", body: "Orders, stock, pickups, and the request for picks." },
+    { title: "Python model API", body: "The recommendation model, served on its own." },
+    { title: "Recommended dishes", body: "Back through the backend to the customer." },
+  ]}
+  caption="The model runs as its own service; the backend calls it over HTTP."
+/>
+
+That split also keeps each side in the language it's best at: the model
+stays in Python with its libraries, and the backend stays in JavaScript.

@@ -1,0 +1,55 @@
+export const metadata = { title: "Dekorin" };
+
+{/* TODO(kv): written from your answers. Swap the figure placeholder for a
+    real screenshot (put it in public/project-media/SE/ and pass
+    src="/project-media/SE/…"): dekorin_vendor.png, the vendor's order
+    dashboard. */}
+
+Booking someone to rearrange your furniture or redo your lighting usually
+means chasing vendors one chat at a time. Dekorin puts them in one place: a
+marketplace where customers browse home-decoration services and book them,
+and vendors run their orders from their own dashboard. We built it for the
+Information System Competition at Diesco 2024.
+
+<Stats
+  items={[
+    { label: "Competition", value: "ISC Diesco 2024" },
+    { label: "Team", value: "5 people" },
+    { label: "Developers", value: "2" },
+  ]}
+/>
+
+## How a booking works
+
+<Flow
+  steps={[
+    { title: "Browse", body: "The customer finds a vendor's service and asks questions." },
+    { title: "Request", body: "They send a booking request." },
+    { title: "Accept or reject", body: "The vendor decides from their dashboard." },
+    { title: "Complete", body: "The vendor marks the job done." },
+  ]}
+  caption="A booking, from the customer's first look to a finished job."
+/>
+
+Vendors also list new services from the same dashboard.
+
+<Figure caption="Screenshot: the vendor's order dashboard." />
+
+## How it's built
+
+A Laravel app with Blade templates, in PHP.
+
+## My role
+
+I was the project manager, and one of the two developers. On the code side I
+built authentication and the data flow between customers, vendors, and
+their orders.
+
+## The hard part
+
+Five people, two of them developers, and no AI tools to lean on. The hardest
+part wasn't the code but the scope: deciding what the requirements actually
+were, and keeping everyone's expectations in line with what two developers
+could ship in time.
+
+We didn't make the finals.

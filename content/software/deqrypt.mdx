@@ -1,0 +1,71 @@
+export const metadata = { title: "DeQRypt" };
+
+{/* TODO(kv): written from your answers and the base-hackathon repo. Swap the
+    figure placeholder for a real screenshot (put it in
+    public/project-media/SE/ and pass src="/project-media/SE/…"):
+    deqrypt_agent.png, the agent's recommendation in the chat. */}
+
+Crypto that sits in a lending pool earns yield, but the moment you want to
+pay for something with it, you have to pull it out, swap it, and send it,
+by hand. DeQRypt makes it two moves: scan a QR invoice and pay straight from
+your DeFi position. Alongside it, an AI agent helps put idle crypto to work,
+without ever moving it on its own. We built it for the Base Hackathon.
+
+<Stats
+  items={[
+    { label: "Hackathon", value: "Base Hackathon" },
+    { label: "Team", value: "5 people" },
+    { label: "Network", value: "Base Sepolia" },
+  ]}
+/>
+
+## Scan to pay
+
+<Flow
+  steps={[
+    { title: "Scan", body: "The merchant's QR invoice." },
+    { title: "Pay with IDRX", body: "From the funds in your DeFi position." },
+    { title: "Router contract", body: "Swaps and settles in one atomic transaction." },
+    { title: "Settled", body: "The merchant is paid; nothing half-done." },
+  ]}
+  caption="A payment either completes in full or not at all."
+/>
+
+## The agent
+
+Ask in plain language, like "invest my idle ETH", and the agent works out
+what you mean with LangChain and Gemini. It then looks up live APYs for
+trusted lending pools on Base, such as Moonwell and Aave V3, from DefiLlama,
+and recommends one for your token, with what you'd earn over two months, six
+months, and a year.
+
+<Flow
+  steps={[
+    { title: "Your request", body: "In plain language." },
+    { title: "LangChain + Gemini", body: "Reads the intent." },
+    { title: "Live APYs", body: "Trusted Base lending pools, from DefiLlama." },
+    { title: "Recommendation", body: "A pool and the projected profit. You decide." },
+  ]}
+  caption="The agent recommends; only you can act on it."
+/>
+
+<Figure caption="Screenshot: the agent's lending recommendation in the chat." />
+
+## Consultant mode
+
+An agent that can move money is only as safe as what stops it. In consultant
+mode, the agent never lends on its own: it can only recommend. That rule
+lives in two places, the prompt and the code, so even if the model is talked
+into trying, the backend won't let the move through.
+
+## My part
+
+I was one of the two AI agent architects and backend engineers on a team of
+five. I orchestrated the agent's flow, from reading the request to returning
+a recommendation, and built the API the app needed around it.
+
+## Where it ended
+
+We didn't make the finals. DeQRypt runs on Base Sepolia, Base's test
+network, with test tokens; moving to mainnet and real protocol integrations
+was the next step on the roadmap.

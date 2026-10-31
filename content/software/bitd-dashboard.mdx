@@ -1,0 +1,70 @@
+export const metadata = { title: "BITD Dashboard" };
+
+{/* TODO(kv): written from your answers. Swap the figure placeholder for a real screenshot (put it in
+    public/project-media/SE/ and pass src="/project-media/SE/…"):
+    bitd_admin.png, the admin portal. Hide customer data first. */}
+
+BITD is an internet provider in the Jakarta area. The BITD Dashboard is the
+platform it runs on: customers, packages, invoices, support tickets, and
+subscribers provisioned straight onto its routers. The same platform hosts
+other ISPs as tenants, each with its own branded site.
+
+<Stats
+  items={[
+    { label: "Customers", value: "100+" },
+    { label: "Team", value: "2 people" },
+    { label: "Running since", value: "May 2026" },
+  ]}
+/>
+
+## What it does
+
+<Points>
+  <Point title="Landing site">Each ISP's public site, with its own branding.</Point>
+  <Point title="Admin portal">Customers, packages, invoices, and support tickets for staff.</Point>
+  <Point title="Customer portal">The subscribers' side of the platform.</Point>
+</Points>
+
+<Figure caption="Screenshot: the admin portal." />
+
+## From the dashboard to the router
+
+Staff create the customer in the dashboard and the platform does the rest,
+over RADIUS, straight onto the MikroTik routers.
+
+<Flow
+  steps={[
+    { title: "Admin portal", body: "Staff create the customer and pick a package." },
+    { title: "Backend", body: "NestJS, with PostgreSQL and Redis." },
+    { title: "RADIUS", body: "Authenticates the subscriber and applies the package." },
+    { title: "MikroTik", body: "The subscriber is online." },
+  ]}
+  caption="Provisioning a subscriber, with no router config by hand."
+/>
+
+## One platform, many ISPs
+
+Every ISP on the platform runs on its own. When a new one joins, a spawner
+on the VPS sets up a fresh instance for it, with its own branded landing
+site, kept apart from every other tenant.
+
+<Flow
+  steps={[
+    { title: "New ISP", body: "Signs up to the platform." },
+    { title: "Spawner", body: "Runs on the VPS and builds the tenant." },
+    { title: "Its own instance", body: "Separate from every other ISP." },
+    { title: "Branded site", body: "Live under the ISP's own name." },
+  ]}
+  caption="How a new tenant comes to life."
+/>
+
+Building that spawner has been the hardest part so far.
+
+## My part
+
+On a team of two, I own the backend and the system it runs on, hosted on
+BITD's own VPS.
+
+<Callout>
+  See it live at [project.bitd.my.id](https://project.bitd.my.id).
+</Callout>

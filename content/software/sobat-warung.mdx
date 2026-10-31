@@ -1,0 +1,87 @@
+export const metadata = { title: "Sobat Warung" };
+
+{/* TODO(kv): written from your answers and Tim CEBEES's slides. Swap the figure
+    placeholder for a real screenshot (put it in public/project-media/SE/
+    and pass src="/project-media/SE/…"): sobat_chat.png, a WhatsApp chat
+    with the bot. */}
+
+A warung owner restocks by gut feeling: how much rice, how many eggs, how
+much instant noodles for tomorrow. Guess too low and customers walk to the
+next shop; guess too high and money sits on the shelf. Sobat Warung is a
+WhatsApp assistant that does the guessing with data instead, built by Tim
+CEBEES for the AI Innovation Challenge at COMPFEST 2025.
+
+<Stats
+  items={[
+    { label: "Competition", value: "COMPFEST 2025" },
+    { label: "Team", value: "3 people" },
+    { label: "Stage", value: "Proof of concept" },
+  ]}
+/>
+
+## Why WhatsApp
+
+Warung owners already live in WhatsApp; it's how they talk to suppliers,
+family, and customers every day. So there's no app to install and nothing
+new to learn. They register their shop and log the day's sales just by
+chatting, and the forecasts come back in the same chat.
+
+<Points>
+  <Point title="Register">Set up the shop in a conversation.</Point>
+  <Point title="Log sales">Report the day's sales by chatting.</Point>
+  <Point title="Get advice">What to buy for tomorrow, and which products to bundle.</Point>
+</Points>
+
+<Figure caption="Screenshot: a WhatsApp chat with Sobat Warung." />
+
+## What to buy tomorrow
+
+The forecast answers one question: how many of each product should the owner
+buy for tomorrow. It's a lag-based ensemble: the past sales of every product
+go through Darts, which forecasts many time series at once with a single
+global model, into three LightGBM models whose predictions are averaged.
+
+<Flow
+  steps={[
+    { title: "Sales history", body: "Every product's past daily sales." },
+    { title: "Darts preprocessing", body: "All products as one global forecasting problem." },
+    { title: "Three LightGBM models", body: "Fast, tree-based, each predicting from lagged sales." },
+    { title: "Ensemble forecast", body: "The average of the three: what to buy tomorrow." },
+  ]}
+  caption="The forecast, from sales history to tomorrow's shopping list."
+/>
+
+The models also see what's coming, not just what happened: holidays, the day
+of the week, and fuel prices go in as future covariates. They're evaluated
+on RMSLE, which treats best-sellers and slow movers fairly and punishes
+under-prediction hard. For a warung, running out costs more than a little
+extra stock.
+
+## What to bundle
+
+Slow-selling products tie up money. To move them, Sobat Warung suggests
+bundles, found with FP-Growth: it compresses the shop's transactions into a
+compact tree of patterns, then reads off which products customers buy
+together.
+
+<Flow
+  steps={[
+    { title: "Scan", body: "Count how often each product sells." },
+    { title: "Sort", body: "Order each transaction by those counts." },
+    { title: "FP-Tree", body: "Merge transactions into one tree of shared paths." },
+    { title: "Extract", body: "Read off products that sell together." },
+  ]}
+  caption="FP-Growth, from transactions to bundle ideas for the products that sell least."
+/>
+
+## My role
+
+I was the backend developer and machine learning engineer on a team of
+three. The backend is FastAPI with MongoDB, with Twilio carrying the
+WhatsApp conversation.
+
+## Where it stands
+
+We didn't make the finals. Sobat Warung is a proof of concept: it hasn't
+been tried by real warung owners yet. The next step would be exactly that, putting it in front of a
+few shops and seeing whether the forecasts beat their instinct.
