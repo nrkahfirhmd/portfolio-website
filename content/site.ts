@@ -42,7 +42,7 @@ export const SOCIALS: { label: string; href: string; icon: IconName }[] = [
 export const HOME = {
   /** Browser tab title and search snippet for the whole site. */
   title: "Kahfi's Portfolio",
-  description: "Kahfi Rahmada. Creating systems that think, play, and solves problem.",
+  description: "Kahfi Rahmada. Creating systems that think, play, and solve problems.",
   /** Words in [brackets] become the clickable green sparks. */
   tagline: "I make software [behave] and games [misbehave], on [purpose].",
   /** The muted line under the tagline. */
