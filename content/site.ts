@@ -477,21 +477,25 @@ export const SIDE_QUEST_ENTRIES: SideQuest[] = [
       "I'm still early in this journey, but every prototype is an experiment in creating meaningful experiences. More than building mechanics, I want to create the same sense of wonder, attachment, and lasting memories that the games I love have given me. If a player walks away remembering how they felt rather than what they clicked, I've done something right."
     ],
     skills: ["Game Design", "Interaction Design", "Player Engagement"],
+    highlight:
+      "The games I love stayed with me long after I stopped playing. Now I want to make one that stays with someone else.",
   },
   {
     period: "Ongoing",
-    title: "Public Speaking Study",
-    org: "Part of Pushing Myself to The Brink",
+    title: "Video Essay Creator",
+    org: "Product of Boredom",
     kind: "project",
     size: "sm",
     summary:
-      "Studying communication as a skill to connect, influence, and adapt, not simply to speak with confidence.",
+      "Turning my love for games as an art form into videos anyone can feel and relate to.",
     story:
-      "Public speaking started as a way to become more confident, but it quickly became something much deeper. The more I learned, the more I realised that speaking isn't about being heard, it's about making sure the message reaches the person on the other side.",
+      "To me, games are art, and the best ones move people the way a great film or book does. Video essays are my attempt to put that feeling into a form anyone can watch, whether or not they've ever held a controller.",
     body: [
-      "Today, I study how words shape perception, how stories make ideas memorable, and how different audiences require different approaches. Every conversation is an opportunity to practise choosing better words, communicating with intention, and adapting to the people in front of me rather than expecting them to adapt to me."
+      "Each video takes something I love about a game and tries to make it land with someone who isn't me: finding the story worth telling, writing it so it's felt rather than just explained, and cutting it together so it holds attention to the end."
     ],
-    skills: ["Public Speaking", "Communication"],
+    skills: ["Storytelling", "Scriptwriting", "Video Editing"],
+    highlight:
+      "Games are art. I want people who've never played them to feel why.",
   },
 ];
 
