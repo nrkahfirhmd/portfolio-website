@@ -5,11 +5,15 @@ export type JourneyStop = {
   title: string;
   /** Where: the organisation, team, or event. */
   place?: string;
-  kind: "work" | "education" | "competition";
-  /** Competitions: the placement, e.g. "5th overall". The card's headline. */
-  result?: string;
+  kind: "work" | "education";
+  /** One line on the card, under the title. */
+  summary?: string;
+  /** Up to three chips on the card. */
+  skills?: string[];
   /** The panel's story, one string per paragraph. */
   story?: string[];
-  /** A photo in public/, shown at the top of the story. */
-  image?: string;
+  /** Photos in public/: thumbnails on the card, the first one tops the story. */
+  images?: string[];
+  /** Related pages, linked at the end of the story (e.g. a project's write-up). */
+  links?: { href: string; label: string }[];
 };

@@ -525,102 +525,141 @@ export const SIDE_QUEST_STICKERS = [
 
 export const JOURNEY = {
   title: "Kahfi R — Journey",
-  description: "The path so far: the roles, the learning, and the competitions along the way.",
+  description: "The path so far: the roles and the learning along the way.",
   heading: "Journey",
   tagline: "Every stop on the way here, newest first. The path keeps going.",
 };
 
 // The stops, in any order: the page groups them by `kind` and sorts each
 // group by start date, newest first. "work" stops become the winding career
-// path, "education" a list, and "competition" a grid of cards with the
-// `result` as the headline.
-// Every stop opens a story panel: `story` (paragraphs, one string each) and
-// `image` (a photo in public/journey/) fill it; until then it says the
-// story is still being written. A `when` ending in "now" marks the stop
-// as current.
-// TODO(kv): a story and photo for each stop.
+// path, "education" a list.
+// A card shows `summary`, up to three `skills`, and `images` (photos in
+// public/journey/ or elsewhere in public/) as thumbnails. Every stop opens a
+// story panel: `story` (paragraphs, one string each), the photos, and
+// `links` on to related pages; without a story it says it's still being
+// written. A `when` ending in "now" marks the stop as current.
+// TODO(kv): photos.
 export const JOURNEY_STOPS: JourneyStop[] = [
-  // TODO(kv): placeholder. Start month, degree, and graduation date; 2022 is
-  // from the praktikum-tiunpad-angkatan-2022 org.
   {
-    when: "2022 – now",
-    title: "Informatics undergraduate",
+    when: "Aug 2022 – Aug 2026",
+    title: "Bachelor's in Informatics",
     place: "Universitas Padjadjaran",
     kind: "education",
-  },
-  // TODO(kv): placeholder. Month and result; from the aic-14 repo.
-  {
-    when: "2022",
-    title: "AI Innovation Challenge",
-    place: "COMPFEST 14",
-    kind: "competition",
-  },
-  {
-    when: "Jan 2024",
-    title: "Landing page competition",
-    place: "Festida, Universitas Darussalam Gontor",
-    result: "5th overall",
-    kind: "competition",
-  },
-  // TODO(kv): placeholder. Result; from the isc-diesco repo (Dekorin).
-  {
-    when: "Aug 2024",
-    title: "Information System Competition",
-    place: "Diesco 2024",
-    kind: "competition",
-  },
-  {
-    when: "Feb – Dec 2024",
-    title: "Practicum Assistant",
-    place: "Computer Science, Universitas Padjadjaran",
-    kind: "work",
+    summary: "Majored in Artificial Intelligence. GPA 3.92 / 4.00.",
+    skills: ["Artificial Intelligence", "Machine Learning", "Software Engineering"],
+    story: [
+      "I studied Informatics at Universitas Padjadjaran, majoring in Artificial Intelligence, and graduated with a GPA of 3.92 out of 4.00.",
+      "In 2025, Himatif, the Informatics Engineering student association, named me its Most Outstanding Student. Alongside the coursework I taught as a practicum assistant, led committees, and kept building outside class, most of which is on this site.",
+    ],
+    links: [{ href: "/side-quests", label: "What I did outside class" }],
   },
   {
     when: "Nov – Dec 2024",
-    title: "Bangkit Academy",
-    place: "Machine Learning cohort",
-    kind: "education",
+    title: "Machine Learning Engineer",
+    place: "Bangkit Academy",
+    kind: "work",
+    summary: "Built AgriClime's forecast models and the API that serves them.",
+    skills: ["Machine Learning", "TensorFlow", "Flask"],
+    story: [
+      "Bangkit Academy is a career-readiness program led by Google, with GoTo and Traveloka, run as part of the Indonesian government's Kampus Merdeka initiative. I was in its Machine Learning cohort.",
+      "The program ends with a team capstone, and ours was AgriClime: an Android app that forecasts the weather for a farmer's location. I owned the machine learning flow, an LSTM forecast and a TensorFlow classifier, and the backend API that serves them to the app.",
+    ],
+    links: [{ href: "/software/work/agriclime", label: "Read the AgriClime story" }],
   },
   {
     when: "Feb – Dec 2025",
     title: "Himatif Apps v2",
     place: "Freelance, Project Manager",
     kind: "work",
+    summary: "Led the rebuild of Himatif's superapp, used by 300+ people.",
+    skills: ["Product Management", "Next.js", "Express.js"],
+    story: [
+      "Himatif's superapp keeps the Informatics student association's records in one place. Version 1 ran on an outdated, slow version of Laravel, so we rebuilt it on Next.js and Express.js.",
+      "On a team of three, I owned the product side, from planning the rebuild to shipping it.",
+    ],
+    links: [{ href: "/software/work/himatif-apps-v2", label: "Read the Himatif Apps v2 story" }],
   },
   {
     when: "Jun – Aug 2025",
     title: "Prabu 2025",
     place: "Freelance, Lead Frontend Engineer",
     kind: "work",
+    summary: "Led the frontend of the orientation site for 5,000+ new students.",
+    skills: ["Frontend Architecture", "Next.js", "Stakeholder Management"],
+    story: [
+      "Prabu 2025 was where the university's 5,000+ new students met the campus, studied the orientation material, and handed in their tasks.",
+      "On a team of five, I led the frontend: its architecture, the code standard, how the designs broke down into components, and the conversations with the orientation committee. It held up through the rush right before every task deadline.",
+    ],
+    links: [{ href: "/software/work/prabu-2025", label: "Read the Prabu 2025 story" }],
   },
   {
     when: "Aug – Dec 2025",
     title: "Automation Engineer & Data Analyst",
     place: "PT Tunas Ridean (Tunas Group)",
     kind: "work",
+    summary: "Automated the tax team's workflows, from KNIME pipelines to a Chrome extension.",
+    skills: ["Workflow Automation", "KNIME", "Data Analysis"],
+    story: [
+      "Most of my work was automating the tax team's workflows in KNIME. The piece that stuck was Coretax Scraper, a Chrome extension that cut a ten-minute export to under fifteen seconds and became part of the team's monthly routine.",
+      "My first corporate job taught me the work around the work: handling tasks under pressure and deadlines, managing stakeholders, and presenting what I'd built.",
+    ],
+    links: [{ href: "/software/work/coretax-scraper", label: "Read the Coretax Scraper story" }],
   },
   {
     when: "Nov 2025 – Jan 2026",
     title: "System Engineer",
     place: "Guriang HPC Facility, Universitas Padjadjaran",
     kind: "work",
+    summary: "Kept the university's HPC cluster running and supported the people using it.",
+    skills: ["Linux", "HPC", "User Support"],
+    story: [
+      "Guriang is Universitas Padjadjaran's high-performance computing facility. My job was keeping the cluster healthy and helping its users get their work running on it.",
+    ],
   },
   {
     when: "Mar 2026 – now",
     title: "Junior iOS Developer",
     place: "Apple Developer Academy @ BINUS, Bali",
     kind: "work",
+    summary: "Accepted from 10,000+ applicants across Indonesia.",
+    skills: ["Swift", "Challenge Based Learning", "Product Thinking"],
+    images: ["/side-quests/academy.jpg", "/side-quests/omawe.jpg"],
+    story: [
+      "I was accepted into the Apple Developer Academy from more than 10,000 applicants across Indonesia. The program's motto is to unlearn, and it runs on curiosity: every project starts from a real challenge, through Challenge Based Learning.",
+      "It changed how I look at a problem, how I research it, and how I build a solution from what I find. Omawe and KataMata both came out of it.",
+    ],
+    links: [
+      { href: "/software/work/omawe", label: "Read the Omawe story" },
+      { href: "/software/work/katamata", label: "Read the KataMata story" },
+    ],
   },
   {
     when: "May 2026 – now",
     title: "BITD",
     place: "Freelance, Backend Engineer & Infra",
     kind: "work",
+    summary: "Backend and infrastructure for an ISP platform that also hosts other ISPs.",
+    skills: ["NestJS", "Infrastructure", "Multi-tenancy"],
+    story: [
+      "BITD's platform runs its customers, packages, invoices, and support, and provisions subscribers straight onto its MikroTik routers over RADIUS. Other ISPs run on it too, each as its own tenant.",
+      "On a team of two, I own the backend and the system it runs on. The hardest part so far: the spawner that sets up each new tenant.",
+    ],
+    links: [{ href: "/software/work/bitd-dashboard", label: "Read the BITD Dashboard story" }],
   },
   {
     when: "Aug 2026 – now",
     title: "Game Developer",
     place: "Batang Kayu Studio",
     kind: "work",
+    summary: "Lead game designer on Project Akar Fehu, a team of 12.",
+    skills: ["Game Design", "Godot", "Team Leadership"],
+    story: [
+      "Batang Kayu Studio started with a jam entry: WarNet, our game for GameSeed 2026, which finished in the top 90 of 260.",
+      "Now the studio is making its first full-scale game, Project Akar Fehu, a narrative-driven puzzle game for Steam, built in Godot. I'm its lead game designer, on a team of twelve.",
+    ],
+    links: [
+      { href: "/games/stage/warnet", label: "Read the WarNet devlog" },
+      { href: "/games", label: "See the library" },
+    ],
   },
 ];

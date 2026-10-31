@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import type { JourneyStop } from "./types";
 
 const KIND_LABEL: Record<JourneyStop["kind"], string> = {
   work: "Career",
   education: "Education",
-  competition: "Competition",
 };
 
 /**
@@ -36,8 +36,8 @@ export function StoryPanel({ stop }: { stop: JourneyStop }) {
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         <div className="sq-dialog-cover">
-          {stop.image ? (
-            <Image className="sq-cover" src={stop.image} alt="" fill sizes="(max-width: 768px) 100vw, 48rem" />
+          {stop.images?.length ? (
+            <Image className="sq-cover" src={stop.images[0]} alt="" fill sizes="(max-width: 768px) 100vw, 48rem" />
           ) : (
             <span className="sq-cover sq-art" aria-hidden="true" />
           )}
@@ -56,12 +56,36 @@ export function StoryPanel({ stop }: { stop: JourneyStop }) {
             <h2 className="sq-dialog-title">{stop.title}</h2>
             {stop.place && <p className="sq-org">{stop.place}</p>}
           </div>
-          {stop.result && <p className="sq-lead">{stop.result}</p>}
           {stop.story?.length ? (
             stop.story.map((paragraph) => <p key={paragraph.slice(0, 24)}>{paragraph}</p>)
           ) : (
             <p className="jr-pending">The story behind this one is still being written.</p>
           )}
+          {stop.images && stop.images.length > 1 && (
+            <ul className="jr-gallery">
+              {stop.images.slice(1).map((src) => (
+                <li key={src}>
+                  <Image src={src} alt="" fill sizes="(max-width: 768px) 50vw, 16rem" />
+                </li>
+              ))}
+            </ul>
+          )}
+          {stop.skills?.length ? (
+            <ul className="sq-skills">
+              {stop.skills.map((skill) => (
+                <li key={skill}>{skill}</li>
+              ))}
+            </ul>
+          ) : null}
+          {stop.links?.length ? (
+            <p className="jr-links">
+              {stop.links.map((l) => (
+                <Link key={l.href} href={l.href} transitionTypes={["nav-forward"]}>
+                  {l.label}
+                </Link>
+              ))}
+            </p>
+          ) : null}
         </div>
       </dialog>
     </>

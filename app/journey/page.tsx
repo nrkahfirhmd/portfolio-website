@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { JOURNEY, JOURNEY_STOPS } from "@/content/site";
 import { BackLink, PageShell } from "../page-shell";
 import { StoryPanel } from "./story-panel";
@@ -11,8 +12,6 @@ export const metadata: Metadata = {
   title: JOURNEY.title,
   description: JOURNEY.description,
 };
-
-
 
 /** One row's stretch of path (100x100, stretched): centre, out to the node at x, back to centre, so rows join into one line. */
 function bend(x: number) {
@@ -29,6 +28,31 @@ function start(when: string) {
 }
 
 const isNow = (when: string) => /now$/i.test(when);
+
+/** What a card shows beyond its title: the one-liner, skill chips, and photo thumbnails. */
+function StopExtras({ stop }: { stop: JourneyStop }) {
+  return (
+    <>
+      {stop.summary && <p className="jr-summary">{stop.summary}</p>}
+      {stop.skills?.length ? (
+        <ul className="sq-skills jr-skills">
+          {stop.skills.slice(0, 3).map((skill) => (
+            <li key={skill}>{skill}</li>
+          ))}
+        </ul>
+      ) : null}
+      {stop.images?.length ? (
+        <ul className="jr-media" aria-label={`${stop.images.length} photos`}>
+          {stop.images.map((src) => (
+            <li key={src}>
+              <Image src={src} alt="" width={112} height={112} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </>
+  );
+}
 
 /** One kind of stop, newest first. */
 const stopsOf = (kind: JourneyStop["kind"]) =>
@@ -54,6 +78,7 @@ function CareerPath({ stops }: { stops: JourneyStop[] }) {
               </p>
               <h3 className="jr-title">{stop.title}</h3>
               {stop.place && <p className="jr-place">{stop.place}</p>}
+              <StopExtras stop={stop} />
               <StoryPanel stop={stop} />
             </article>
           </li>
@@ -73,6 +98,7 @@ function EducationList({ stops }: { stops: JourneyStop[] }) {
           <div className="jr-edu-body">
             <h3 className="jr-title">{stop.title}</h3>
             {stop.place && <p className="jr-place">{stop.place}</p>}
+            <StopExtras stop={stop} />
             <StoryPanel stop={stop} />
           </div>
         </li>
@@ -81,33 +107,12 @@ function EducationList({ stops }: { stops: JourneyStop[] }) {
   );
 }
 
-/** Competitions: separate events, so cards with the result as the headline. */
-function CompetitionGrid({ stops }: { stops: JourneyStop[] }) {
-  return (
-    <ul className="jr-comps">
-      {stops.map((stop) => (
-        <li key={`${stop.when}-${stop.title}`} className="jr-comp reveal">
-          <p className="jr-result" data-pending={!stop.result || undefined}>
-            {stop.result ?? "Result to come"}
-          </p>
-          <h3 className="jr-title">{stop.title}</h3>
-          <p className="jr-place">
-            {[stop.place, stop.when].filter(Boolean).join(" · ")}
-          </p>
-          <StoryPanel stop={stop} />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 const SECTIONS = [
   { kind: "work", heading: "Professional career", List: CareerPath },
   { kind: "education", heading: "Education", List: EducationList },
-  { kind: "competition", heading: "Competitions", List: CompetitionGrid },
 ] as const;
 
-/** The story so far: career path, education, competitions, each newest first. */
+/** The story so far: career path and education, each newest first. */
 export default function JourneyPage() {
   return (
     <PageShell section="journey">
