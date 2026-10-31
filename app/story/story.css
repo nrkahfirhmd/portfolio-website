@@ -173,23 +173,11 @@
   display: grid;
   gap: 0.5rem;
 }
-.st-figure img,
-.st-figure-empty {
+.st-figure img {
   width: 100%;
   height: auto;
   border: 1px solid var(--color-border);
   border-radius: var(--primitive-radius-lg);
-}
-.st-figure-empty {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  padding: 1.5rem;
-  text-align: center;
-  /* Placeholder paper; the caption stays ink-muted to stay readable. */
-  background: var(--placeholder-bg);
-  font-size: var(--typography-caption);
-  color: var(--color-ink-muted);
 }
 .st-figure figcaption {
   font-size: var(--typography-caption);
@@ -249,10 +237,58 @@
   margin: 0;
 }
 
+/* Flow: cards joined by arrows; the arrow sits in the gap after every card but the last. */
+.st-flow {
+  --gap: 1.75rem;
+  display: grid;
+  grid-template-columns: repeat(var(--steps, 3), minmax(0, 1fr));
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.st-flow li {
+  position: relative;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-surface);
+  font-size: var(--typography-caption);
+  line-height: 1.5;
+}
+.st-flow li + li::before {
+  content: "→" / "";
+  position: absolute;
+  top: 50%;
+  left: calc(var(--gap) / -2);
+  translate: -50% -50%;
+  color: var(--color-accent);
+  font-size: var(--typography-body);
+  font-weight: var(--primitive-fontWeight-bold);
+}
+.st-flow-title {
+  margin: 0;
+  font-weight: var(--primitive-fontWeight-bold);
+  color: var(--color-ink);
+}
+.st-flow-body {
+  margin: 0.25rem 0 0;
+  color: var(--color-ink-muted);
+}
+
 @media (max-width: 640px) {
   .st-points,
-  .st-stats {
+  .st-stats,
+  .st-flow {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .st-flow {
+    --gap: 1.5rem;
+  }
+  .st-flow li + li::before {
+    content: "↓" / "";
+    top: calc(var(--gap) / -2);
+    left: 50%;
   }
 }
 

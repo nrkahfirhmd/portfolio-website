@@ -3,7 +3,7 @@ import { Children, type ComponentPropsWithoutRef, type ReactNode } from "react";
 
 // Story blocks shared by every section: lowercase keys restyle markdown's HTML, Capitalized ones are tags a story can use without importing.
 
-/** An image, or a captioned placeholder until the screenshot exists. */
+/** An image with a caption; renders nothing until it has a `src`, so a story can hold its slot early. */
 export function Figure({
   src,
   alt = "",
@@ -13,13 +13,11 @@ export function Figure({
   alt?: string;
   caption?: string;
 }) {
+  if (!src) return null;
   return (
     <figure className="st-figure">
-      {src ? (
-        <Image src={src} alt={alt} width={1600} height={900} />
-      ) : (
-        <div className="st-figure-empty">{caption ?? "figure"}</div>
-      )}
+      {/* The reading column is at most 42rem (story.css .prose), so no screen needs more than ~2x that. */}
+      <Image src={src} alt={alt} width={1600} height={900} sizes="(max-width: 42rem) 100vw, 42rem" />
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );
@@ -63,6 +61,29 @@ export function Stats({ items }: { items: { label: string; value: string }[] }) 
 
 export function Callout({ children }: { children: ReactNode }) {
   return <aside className="st-callout">{children}</aside>;
+}
+
+/** A left-to-right chain of steps (top-to-bottom on phones): pipelines, system parts, states. */
+export function Flow({
+  steps,
+  caption,
+}: {
+  steps: { title: string; body?: string }[];
+  caption?: string;
+}) {
+  return (
+    <figure className="st-figure">
+      <ol className="st-flow" style={{ "--steps": steps.length } as React.CSSProperties}>
+        {steps.map((step) => (
+          <li key={step.title}>
+            <p className="st-flow-title">{step.title}</p>
+            {step.body ? <p className="st-flow-body">{step.body}</p> : null}
+          </li>
+        ))}
+      </ol>
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
+  );
 }
 
 // --- markdown element overrides ---------------------------------------------
@@ -110,4 +131,5 @@ export const baseComponents = {
   Point,
   Stats,
   Callout,
+  Flow,
 };

@@ -154,3 +154,195 @@
 .gd-contact .back {
   margin-top: var(--spacing-stack-lg);
 }
+
+/* ============================================================
+   DIAGRAMS — diagrams.tsx, inside a story's .st-figure
+   ============================================================ */
+.dg-panel {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--primitive-radius-lg);
+  background: var(--color-surface);
+}
+.dg-legend {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--typography-label);
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+.dg-legend li {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.dg-legend b {
+  justify-self: start;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--chip-radius);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+/* --- suspicion meter: calm → asked → final question → caught --- */
+[data-level="calm"] {
+  --level: color-mix(in srgb, var(--color-ink) 8%, var(--color-surface));
+}
+[data-level="asked"] {
+  --level: color-mix(in srgb, var(--color-danger) 30%, var(--color-surface));
+}
+[data-level="final"] {
+  --level: color-mix(in srgb, var(--color-danger) 65%, var(--color-surface));
+}
+[data-level="caught"] {
+  --level: var(--color-danger);
+}
+.dg-legend [data-level] b {
+  background: var(--level);
+}
+.dg-legend [data-level="caught"] b {
+  color: var(--color-accent-foreground);
+}
+
+.dg-meter {
+  display: grid;
+  gap: 0.4rem;
+}
+.dg-meter-bar {
+  position: relative;
+  display: flex;
+  height: 1rem;
+  border-radius: var(--primitive-radius-full);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+.dg-meter-bar > [data-level] {
+  background: var(--level);
+}
+/* "You": drifts up as suspicion builds, gets talked back down, then pushes on. */
+.dg-meter-you {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.5rem;
+  height: 1.5rem;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-ink);
+  box-shadow: 0 0 0 2px var(--color-surface);
+  translate: -50% -50%;
+  animation: dg-suspicion 9s var(--motion-ease-default) infinite;
+}
+@keyframes dg-suspicion {
+  0% { left: 4%; }
+  30% { left: 58%; }
+  40% { left: 34%; }
+  70% { left: 88%; }
+  82% { left: 52%; }
+  100% { left: 4%; }
+}
+.dg-meter-ticks {
+  position: relative;
+  height: 1.1rem;
+  font-size: var(--typography-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-muted);
+}
+.dg-meter-ticks span {
+  position: absolute;
+  left: var(--at);
+  translate: -50% 0;
+}
+.dg-meter-ticks span:first-child {
+  translate: 0 0;
+}
+.dg-meter-ticks span:last-child {
+  translate: -100% 0;
+}
+/* Phones: 90 and 100 sit too close to both fit; the legend still names 90. */
+@media (max-width: 40rem) {
+  .dg-meter-ticks span:nth-child(3) {
+    display: none;
+  }
+}
+
+/* --- crowd flow: walkers cross the screen, spawning above it and removed below --- */
+.dg-crowd {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.dg-screen {
+  fill: color-mix(in srgb, var(--color-ink) 4%, var(--color-surface));
+  stroke: var(--color-border);
+}
+.dg-zebra {
+  fill: color-mix(in srgb, var(--color-ink) 7%, transparent);
+}
+.dg-edge {
+  stroke: var(--color-ink-faint);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+.dg-walker {
+  fill: var(--color-accent);
+  animation: dg-cross linear infinite;
+}
+/* Fade in above the screen (spawn), fade out past the bottom line (removed). */
+@keyframes dg-cross {
+  0% { translate: 0 18px; opacity: 0; }
+  12% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { translate: 0 248px; opacity: 0; }
+}
+.dg-step circle {
+  fill: var(--color-surface);
+  stroke: var(--color-ink);
+  stroke-width: 1.5;
+}
+.dg-step text {
+  font-size: 14px;
+  font-weight: var(--primitive-fontWeight-bold);
+  text-anchor: middle;
+  fill: var(--color-ink);
+}
+.dg-legend--steps {
+  counter-reset: step;
+}
+.dg-legend--steps li {
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.dg-legend--steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1.5px solid var(--color-ink);
+  border-radius: var(--primitive-radius-full);
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-bold);
+  color: var(--color-ink);
+}
+.dg-legend--steps b {
+  padding: 0;
+}
+
+/* Reduced motion: walkers stand mid-crossing, the marker parks just past 60. */
+@media (prefers-reduced-motion: reduce) {
+  .dg-walker {
+    opacity: 1;
+    translate: 0 130px;
+  }
+  .dg-meter-you {
+    left: 64%;
+  }
+}
