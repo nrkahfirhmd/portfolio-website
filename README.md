@@ -1,4 +1,4 @@
-# portfolio-home
+# portfolio-website
 
 Kahfi Rahmada's portfolio: a single-viewport index that leads to the Software Engineering and Game Development portfolios, side quests, and the career journey.
 
