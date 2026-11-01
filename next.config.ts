@@ -2,6 +2,8 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Self-contained server bundle for the VPS deploy; see DEPLOY.md.
+  output: "standalone",
   pageExtensions: ["ts", "tsx", "md", "mdx"],
   images: {
     // Lets a game cover point straight at itch.io's image CDN.
