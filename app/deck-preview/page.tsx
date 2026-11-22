@@ -39,7 +39,6 @@ const SETS: { id: AcrylicSetId; name: string; desc: string }[] = [
   },
 ];
 
-typeDestId = "software" | "games" | "quests" | "journey";
 type DestId = "software" | "games" | "quests" | "journey";
 type VariantIdx = 0 | 1 | 2 | 3 | 4;
 
@@ -443,7 +442,7 @@ export default function DeckPreviewPage() {
               const order = ["software", "games", "quests", "journey"] as const;
               const activeIndex = activeId ? order.indexOf(activeId) : -1;
 
-              const baseAngle = isSpread ? pos.fanAngle : pos.restAngle;
+              const baseAngle = isSpread ? pos.fanA : pos.restA;
               const baseX = isSpread ? pos.fanX : pos.restX;
               const baseY = isSpread ? pos.fanY : pos.restY;
 
