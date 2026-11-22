@@ -1,400 +1,768 @@
-/* /journey: the career path, the education list, and the story panel (on side-quests.css). */
-
-/* --- one section per kind: career, education --- */
-.jr-section + .jr-section {
-  margin-top: clamp(3rem, 10vh, 6rem);
+/* ============================================================
+   MY JOURNEY — Editorial chronology aligned with DESIGN.md
+   ============================================================ */
+.jr-main {
+  width: 100%;
+  padding: clamp(2.25rem, 6vh, 4rem) var(--gh-pad-x) clamp(2rem, 5vh, 3.5rem);
 }
-.jr-h2 {
-  margin: 0 0 var(--spacing-stack-sm);
-  font-size: var(--typography-tagline);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
+
+/* --- Editorial Hero --- */
+.jr-hero {
+  max-width: 72rem;
+  margin: 0 auto clamp(2.5rem, 6vh, 4rem);
+  padding-bottom: clamp(1.75rem, 4vh, 2.5rem);
+  border-bottom: 1px solid rgba(15, 15, 20, 0.08);
+}
+
+.jr-eyebrow {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gh-muted);
+}
+
+.jr-hero-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.55rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  color: var(--gh-ink);
+}
+
+.jr-hero-lede {
+  margin: 0.8rem 0 0;
+  max-width: 44ch;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--gh-muted);
+  text-wrap: pretty;
+}
+
+/* --- Two-column Editorial Split: Sticky Index Rail + Spine --- */
+.jr-layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.jr-rail {
+  position: sticky;
+  top: 6.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.jr-rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.jr-rail-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 36px;
+  padding: 0.3rem 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #3f3f46;
+  text-decoration: none;
+  transition:
+    color 150ms var(--gh-ease),
+    transform 150ms var(--gh-ease);
+}
+
+.jr-rail-link:hover,
+.jr-rail-link:focus-visible {
+  color: var(--gh-accent);
+  transform: translateX(3px);
+}
+
+.jr-rail-num {
+  color: var(--gh-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.jr-rail-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(15, 15, 20, 0.08);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gh-muted);
+}
+
+/* --- Main Chronology Column --- */
+.jr-content {
+  min-width: 0;
+}
+
+.jr-section {
+  scroll-margin-top: 6rem;
+}
+
+.jr-section + .jr-section {
+  margin-top: clamp(3.25rem, 8vh, 5rem);
+}
+
+.jr-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(15, 15, 20, 0.08);
+}
+
+.jr-section-num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--gh-muted);
+}
+
+.jr-section-title {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gh-ink);
 }
 
 /* ============================================================
-   THE PATH — card | trail band | card; each row draws its own stretch of trail (page.tsx)
+   CAREER TIMELINE — Architectural hairline spine + editorial rows
    ============================================================ */
-.jr-path {
-  --band: 12rem;
+.jr-timeline {
+  position: relative;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.jr-stop {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--band) minmax(0, 1fr);
-  align-items: center;
-  padding-block: clamp(1rem, 3vh, 1.75rem);
+
+.jr-timeline::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1.35rem;
+  bottom: 1.5rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 128, 73, 0.35) 0%,
+    rgba(15, 15, 20, 0.12) 22%,
+    rgba(15, 15, 20, 0.1) 88%,
+    transparent 100%
+  );
 }
 
-.jr-trail {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: stretch;
-  /* Stretch over the row's padding too, or rows leave gaps. */
-  margin-block: calc(-1 * clamp(1rem, 3vh, 1.75rem));
-  width: 100%;
-  height: calc(100% + 2 * clamp(1rem, 3vh, 1.75rem));
-  overflow: visible;
+.jr-entry {
+  position: relative;
+  padding-left: clamp(1.75rem, 3.2vw, 2.65rem);
 }
-.jr-trail path {
-  fill: none;
-  stroke-linecap: round;
-  /* Stretched to the row, but the line keeps its width. */
-  vector-effect: non-scaling-stroke;
-}
-/* The trail ahead: faint and dashed. */
-.jr-trail-base {
-  stroke: var(--color-ink-faint);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 6;
-}
-/* Walked: solid ink revealed by scroll; a clip, since non-scaling strokes dash in screen space. */
-.jr-trail-walked {
-  stroke: var(--color-ink);
-  stroke-width: 1.5;
-}
-@supports (animation-timeline: view()) {
-  .jr-trail-walked {
-    animation: jr-walk linear both;
-    animation-timeline: view();
-    animation-range: entry 40% cover 55%;
-  }
-}
-@keyframes jr-walk {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-/* Fade in above the newest stop (it keeps going) and out below the oldest. */
-.jr-stop:first-child .jr-trail {
-  mask-image: linear-gradient(to bottom, transparent, black 35%);
-}
-.jr-stop:last-child .jr-trail {
-  mask-image: linear-gradient(to bottom, black 55%, transparent);
+
+.jr-entry + .jr-entry {
+  margin-top: 0.65rem;
 }
 
 .jr-node {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: start;
-  /* On the bend's apex: 20% across the band, or 80%. */
-  margin-left: calc(20% - 7px);
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--color-ink);
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-surface);
-}
-.jr-stop[data-side="right"] .jr-node {
-  margin-left: calc(80% - 7px);
-}
-/* Still going: the green, breathing dot from "Open to work". */
-.jr-stop[data-now] .jr-node {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
-  animation: pulse var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
+  position: absolute;
+  left: 0;
+  top: 1.35rem;
+  width: 11px;
+  height: 11px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1.5px solid #0f0f0f;
+  transition:
+    background-color 160ms var(--gh-ease),
+    border-color 160ms var(--gh-ease),
+    transform 160ms var(--gh-ease);
 }
 
-/* --- the stop's card --- */
+.jr-entry[data-now] .jr-node {
+  background: #1c8049;
+  border-color: #1c8049;
+  box-shadow: 0 0 0 4px rgba(28, 128, 73, 0.14);
+}
+
+.jr-entry:has(.jr-open:is(:hover, :focus-visible)) .jr-node {
+  border-color: var(--gh-accent);
+  background: var(--gh-accent);
+  transform: scale(1.18);
+}
+
+.jr-entry[data-now]:has(.jr-open:is(:hover, :focus-visible)) .jr-node {
+  border-color: #1c8049;
+  background: #1c8049;
+}
+
+/* --- Entry Surface --- */
 .jr-card {
-  grid-row: 1;
-  display: grid;
-  gap: 0.35rem;
-  width: min(100%, 30rem);
-  padding: var(--spacing-stack-sm);
-  border: 1px solid var(--gateway-card-border);
-  border-radius: var(--gateway-card-radius);
-  background: var(--gateway-card-bg);
-  box-shadow: var(--gateway-card-shadow);
+  position: relative;
+  padding: 1.15rem 1.35rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition:
+    background-color 180ms var(--gh-ease),
+    border-color 180ms var(--gh-ease),
+    box-shadow 180ms var(--gh-ease);
 }
-.jr-stop[data-side="left"] .jr-card {
-  grid-column: 1;
-  justify-self: end;
+
+.jr-card:has(.jr-open:is(:hover, :focus-visible)) {
+  background: #f9fafb;
+  border-color: rgba(15, 15, 20, 0.08);
+  box-shadow: 0 12px 28px -20px rgba(15, 23, 42, 0.22);
 }
-.jr-stop[data-side="right"] .jr-card {
-  grid-column: 3;
-  justify-self: start;
-}
+
 .jr-meta {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-stack-xs);
-  margin: 0;
-  font-size: var(--typography-caption);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--primitive-tracking-wide);
-  color: var(--color-ink-muted);
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
 }
+
+.jr-when {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--gh-muted);
+}
+
+.jr-now-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.16rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(220, 248, 232, 0.76);
+  border: 1px solid rgba(22, 98, 56, 0.2);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #145932;
+}
+
+.jr-now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #1c8049;
+  flex-shrink: 0;
+}
+
 .jr-title {
-  margin: 0.25rem 0 0;
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1.15;
+  margin: 0;
+  font-size: clamp(1.125rem, 1.75vw, 1.325rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--gh-ink);
   text-wrap: balance;
 }
+
 .jr-place {
-  margin: 0;
-  font-size: var(--typography-label);
-  color: var(--color-ink-muted);
+  margin: 0.2rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gh-accent);
 }
-/* --- what a card shows beyond its title (page.tsx StopExtras) --- */
+
 .jr-summary {
-  margin: 0.35rem 0 0;
-  font-size: var(--typography-label);
+  margin: 0.55rem 0 0;
+  max-width: 58ch;
+  font-size: 0.90625rem;
   line-height: 1.55;
+  color: #3f3f46;
   text-wrap: pretty;
 }
-.jr-skills {
-  margin-top: 0.5rem;
-  gap: 0.35rem;
-}
-.jr-skills li {
-  font-size: 11px;
-}
-/* Photo thumbnails in a row, like a career entry's media on a profile. */
+
+/* --- Photo Thumbnails --- */
 .jr-media {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0.6rem 0 0;
+  gap: 0.55rem;
+  margin: 0.85rem 0 0;
   padding: 0;
   list-style: none;
 }
+
 .jr-media img {
   display: block;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4.5rem;
+  height: 3.35rem;
   object-fit: cover;
-  border: 1px solid var(--color-border);
-  border-radius: var(--primitive-radius-md);
+  border-radius: 9px;
+  border: 1px solid rgba(15, 15, 20, 0.09);
+  box-shadow: 0 6px 14px -10px rgba(15, 23, 42, 0.28);
 }
 
-/* --- in the story panel: the rest of the photos, and links on to project write-ups --- */
-.jr-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
-  gap: 0.5rem;
+/* --- Footer Row inside Entry --- */
+.jr-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin-top: 0.9rem;
+}
+
+.jr-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.jr-gallery li {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: var(--primitive-radius-md);
+
+.jr-skills li {
+  padding: 0.22rem 0.55rem;
+  border-radius: 7px;
+  background: #f4f4f6;
+  border: 1px solid rgba(15, 15, 20, 0.07);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #3f3f46;
 }
-.jr-gallery img {
-  object-fit: cover;
+
+.jr-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--gh-muted);
+  transition: color 150ms var(--gh-ease);
 }
-.jr-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
+
+.jr-read-arrow {
+  display: inline-block;
+  transition: transform 180ms var(--gh-ease);
 }
-.jr-links a {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: color var(--motion-hover) var(--motion-ease-default);
+
+.jr-card:has(.jr-open:is(:hover, :focus-visible)) .jr-read,
+.jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) .jr-read {
+  color: var(--gh-accent);
 }
-.jr-links a:hover {
-  color: var(--color-accent-hover);
+
+.jr-card:has(.jr-open:is(:hover, :focus-visible)) .jr-read-arrow,
+.jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) .jr-read-arrow {
+  transform: translateX(3px);
 }
 
 /* ============================================================
-   EDUCATION — a transcript: period beside programme
+   EDUCATION — Clean editorial monograph row
    ============================================================ */
 .jr-edu {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-border);
-}
-.jr-edu-row {
-  display: grid;
-  grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
-  gap: var(--spacing-stack-sm);
-  padding-block: var(--spacing-stack-sm);
-  border-bottom: 1px solid var(--color-border);
-}
-.jr-edu-when {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  align-self: start;
-  padding-top: 0.3rem;
-  font-size: var(--typography-caption);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--primitive-tracking-wide);
-  color: var(--color-ink-muted);
-}
-/* Still going: the same breathing dot as the career path's. */
-.jr-edu-row[data-now] .jr-edu-when::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  flex: none;
-  border-radius: var(--primitive-radius-full);
-  background: var(--color-accent);
-  animation: pulse var(--primitive-duration-ambient) var(--primitive-easing-linear) infinite;
-}
-.jr-edu-body {
-  display: grid;
-  gap: 0.25rem;
-  max-width: 40rem;
-}
-.jr-edu-body .jr-title {
-  margin: 0;
 }
 
-@media (max-width: 48rem) {
-  .jr-edu-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.35rem;
-  }
-}
-
-/* ============================================================
-   STORY PANEL — a button stretched over each stop opens a modal <dialog> (story-panel.tsx)
-   ============================================================ */
-.jr-card,
 .jr-edu-row {
   position: relative;
+  display: grid;
+  grid-template-columns: 11.5rem minmax(0, 1fr);
+  gap: 1rem 2rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 15, 20, 0.08);
+  background: #ffffff;
+  transition:
+    background-color 180ms var(--gh-ease),
+    border-color 180ms var(--gh-ease),
+    box-shadow 180ms var(--gh-ease);
 }
+
+.jr-edu-row + .jr-edu-row {
+  margin-top: 0.75rem;
+}
+
+.jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) {
+  background: #f9fafb;
+  border-color: rgba(15, 15, 20, 0.12);
+  box-shadow: 0 12px 28px -20px rgba(15, 23, 42, 0.22);
+}
+
+.jr-edu-when {
+  padding-top: 0.2rem;
+}
+
+.jr-edu-body {
+  min-width: 0;
+}
+
+/* --- Stretched Accessible Trigger --- */
 .jr-open {
   position: absolute;
   inset: 0;
   padding: 0;
   border: 0;
   border-radius: inherit;
-  background: none;
+  background: transparent;
   cursor: pointer;
 }
-/* Career cards lift and take the accent border, like the gateway cards. */
-.jr-card {
-  transition:
-    translate var(--motion-hover) var(--motion-ease-default),
-    border-color var(--motion-hover) var(--motion-ease-default);
-}
-.jr-card:has(.jr-open:is(:hover, :focus-visible)) {
-  translate: 0 var(--gateway-card-lift-hover);
-  border-color: var(--gateway-card-border-hover);
-  transition-duration: var(--motion-enter);
-  transition-timing-function: var(--motion-ease-playful), var(--motion-ease-default);
-}
-/* Education rows tint instead: they're rows, not cards. */
-.jr-edu-row {
-  transition: background var(--motion-hover) var(--motion-ease-default);
-}
-.jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) {
-  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+
+.jr-open:focus-visible {
+  outline: 2px solid var(--gh-accent);
+  outline-offset: 2px;
 }
 
-/* The card itself is .sq-dialog; here only what a native modal needs (.sq-dialog's flex would show it closed). */
-.jr-panel {
+/* ============================================================
+   STORY MODAL — Gallery-grade native <dialog>
+   ============================================================ */
+.jr-dialog {
   --edge: clamp(1rem, 4vw, 2.5rem);
   inset: 0;
-  width: calc(100% - 2 * var(--edge));
+  width: min(40rem, calc(100% - 2 * var(--edge)));
   max-height: calc(100dvh - 2 * var(--edge));
   margin: auto;
   padding: 0;
-  color: inherit;
+  border: 1px solid rgba(15, 15, 20, 0.1);
+  border-radius: 18px;
+  background: #ffffff;
+  color: var(--gh-ink);
+  box-shadow: 0 28px 64px -20px rgba(15, 23, 42, 0.24);
+  overflow: hidden;
   opacity: 0;
-  translate: 0 12px;
+  transform: translateY(12px) scale(0.99);
   transition:
-    opacity var(--motion-playful) var(--motion-ease-default),
-    translate var(--motion-playful) var(--motion-ease-default),
-    display var(--motion-playful) allow-discrete,
-    overlay var(--motion-playful) allow-discrete;
+    opacity 220ms var(--gh-ease),
+    transform 220ms var(--gh-ease),
+    display 220ms allow-discrete,
+    overlay 220ms allow-discrete;
 }
-.jr-panel:not([open]) {
+
+.jr-dialog:not([open]) {
   display: none;
 }
-.jr-panel[open] {
+
+.jr-dialog[open] {
+  display: flex;
+  flex-direction: column;
   opacity: 1;
-  translate: 0 0;
+  transform: translateY(0) scale(1);
 }
+
 @starting-style {
-  .jr-panel[open] {
+  .jr-dialog[open] {
     opacity: 0;
-    translate: 0 12px;
+    transform: translateY(12px) scale(0.99);
   }
 }
-/* Same veil as side-quests' .sq-backdrop. */
-.jr-panel::backdrop {
-  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
-  backdrop-filter: blur(4px);
+
+.jr-dialog::backdrop {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   transition:
-    opacity 0.2s var(--motion-ease-default),
-    display 0.2s allow-discrete,
-    overlay 0.2s allow-discrete;
+    opacity 200ms var(--gh-ease),
+    display 200ms allow-discrete,
+    overlay 200ms allow-discrete;
 }
-.jr-panel[open]::backdrop {
+
+.jr-dialog[open]::backdrop {
   opacity: 1;
 }
+
 @starting-style {
-  .jr-panel[open]::backdrop {
+  .jr-dialog[open]::backdrop {
     opacity: 0;
   }
 }
-/* The page behind stays put while a story is open. */
-html:has(.jr-panel[open]) {
+
+html:has(.jr-dialog[open]) {
   overflow: hidden;
 }
-/* The modal covers the cursor dot (top layer), so the native cursor returns inside it. */
-[data-cursor-hidden] .jr-panel,
-[data-cursor-hidden] .jr-panel * {
-  cursor: auto !important;
+
+.jr-dialog-inner {
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
-[data-cursor-hidden] .jr-panel button {
-  cursor: pointer !important;
+
+.jr-dialog-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #f4f4f6;
+  overflow: hidden;
 }
+
+.jr-dialog-cover-img {
+  object-fit: cover;
+}
+
+.jr-dialog-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 1.5rem 0;
+}
+
+.jr-dialog-close {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 15, 20, 0.1);
+  background: #f4f4f6;
+  color: #27272a;
+  transition:
+    background-color 150ms var(--gh-ease),
+    color 150ms var(--gh-ease);
+}
+
+.jr-dialog-close:hover,
+.jr-dialog-close:focus-visible {
+  background: #0f0f0f;
+  border-color: #0f0f0f;
+  color: #ffffff;
+}
+
+.jr-dialog-close--overlay {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(15, 15, 20, 0.08),
+    0 8px 20px -10px rgba(15, 23, 42, 0.35);
+}
+
+.jr-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.35rem 1.5rem 1.65rem;
+}
+
+.jr-dialog-meta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--gh-muted);
+}
+
+.jr-dialog-badge {
+  padding: 0.18rem 0.5rem;
+  border-radius: 6px;
+  background: #f4f4f6;
+  border: 1px solid rgba(15, 15, 20, 0.08);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gh-ink);
+}
+
+.jr-dialog-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.jr-dialog-title {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.4vw, 1.65rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--gh-ink);
+}
+
+.jr-dialog-place {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--gh-accent);
+}
+
+.jr-dialog-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.jr-dialog-prose p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #27272a;
+}
+
 .jr-pending {
   font-style: italic;
-  color: var(--color-ink-faint);
+  color: var(--gh-muted);
+}
+
+.jr-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jr-gallery li {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 15, 20, 0.08);
+}
+
+.jr-gallery img {
+  object-fit: cover;
+}
+
+.jr-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding-top: 0.35rem;
+}
+
+.jr-link-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 38px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(244, 244, 247, 0.78);
+  border: 1px solid rgba(15, 15, 20, 0.1);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gh-accent);
+  text-decoration: none;
+  transition:
+    background-color 150ms var(--gh-ease),
+    color 150ms var(--gh-ease),
+    border-color 150ms var(--gh-ease);
+}
+
+.jr-link-pill:hover,
+.jr-link-pill:focus-visible {
+  background: var(--gh-accent);
+  border-color: var(--gh-accent);
+  color: #ffffff;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+@media (max-width: 959px) {
+  .jr-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+
+  .jr-rail {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(15, 15, 20, 0.08);
+  }
+
+  .jr-rail-nav {
+    flex-direction: row;
+    gap: 1.25rem;
+  }
+
+  .jr-rail-legend {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .jr-rail-link,
+  .jr-link-pill {
+    min-height: 44px;
+  }
+
+  .jr-dialog-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .jr-entry {
+    padding-left: 1.5rem;
+  }
+
+  .jr-card {
+    padding: 0.95rem 0.9rem 1rem;
+  }
+
+  .jr-edu-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.4rem;
+    padding: 1rem;
+  }
+
+  .jr-edu-when {
+    padding-top: 0;
+  }
+
+  .jr-dialog-bar {
+    padding: 1rem 1.15rem 0;
+  }
+
+  .jr-dialog-body {
+    padding: 1.1rem 1.15rem 1.35rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .jr-panel,
-  .jr-panel::backdrop {
+  .jr-rail-link,
+  .jr-node,
+  .jr-card,
+  .jr-edu-row,
+  .jr-read,
+  .jr-read-arrow,
+  .jr-dialog,
+  .jr-dialog::backdrop,
+  .jr-dialog-close,
+  .jr-link-pill {
     transition: none;
-  }
-  .jr-card:has(.jr-open:is(:hover, :focus-visible)) {
-    translate: none;
-  }
-}
-
-/* Phones: the trail runs down the left edge, every card to its right. */
-@media (max-width: 48rem) {
-  .jr-path {
-    --band: 3.5rem;
-  }
-  .jr-stop {
-    grid-template-columns: var(--band) minmax(0, 1fr);
-  }
-  .jr-trail,
-  .jr-node {
-    grid-column: 1;
-  }
-  .jr-stop[data-side] .jr-card {
-    grid-column: 2;
-    justify-self: start;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* No drawing in: the walked trail is simply there. */
-  .jr-trail-walked {
-    animation: none;
   }
 }

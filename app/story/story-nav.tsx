@@ -50,6 +50,7 @@ export function StoryNav() {
 
   return (
     <nav aria-label="On this page" className="story-nav">
+      <p className="story-nav-label">On this page</p>
       <ul>
         {items.map(({ id, text }) => (
           <li key={id}>
