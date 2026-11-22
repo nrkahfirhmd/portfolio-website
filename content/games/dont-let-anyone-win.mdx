@@ -1,0 +1,34 @@
+export const metadata = { title: "Don't Let Anyone Win" };
+
+You work the night shift in a drab back office as a lottery operator. The
+mechanical ball machine draws honest numbers from 00 to 99, but your actual
+job is the opposite of winning: make sure no claimant is ever confirmed to
+take the jackpot on your watch so you can pocket the cash.
+
+## The draw is honest, the math is rigged
+
+Created for the Unity Game Jam around the theme **Lucky Number**, the game
+flips the usual lottery fantasy upside down. Instead of hoping your ticket
+hits, you are racing the broadcast timer to stop anyone else's from counting.
+
+<Flow
+  loop
+  steps={[
+    { title: "1. Honest draw", body: "The ball machine pulls numbers from 00 to 99 on live broadcast." },
+    { title: "2. Rig the math", body: "Juggle arithmetic punch cards before the numbers lock in." },
+    { title: "3. Suppress claims", body: "Use the emergency shredder and incoming phone lines to block winners." },
+    { title: "4. Beat the clock", body: "Keep the jackpot unclaimed until the broadcast timer runs out." },
+  ]}
+/>
+
+## Back-office tools
+
+<Points>
+  <Point title="Arithmetic punch cards">Alter how the drawn digits combine before a ticket can match.</Point>
+  <Point title="Emergency shredder">Destroy inconvenient paperwork before anyone verifies it.</Point>
+  <Point title="Phone lines">Handle incoming callers and stall claims while the clock ticks down.</Point>
+</Points>
+
+<Callout>
+  Play it in the browser on [itch.io](https://firanda.itch.io/dont-let-anyone-win).
+</Callout>

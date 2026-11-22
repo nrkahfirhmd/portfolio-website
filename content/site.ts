@@ -44,9 +44,7 @@ export const HOME = {
   title: "Kahfi's Portfolio",
   description: "Kahfi Rahmada. Creating systems that think, play, and solve problems.",
   /** Words in [brackets] become the clickable green sparks. */
-  tagline: "I make software [behave] and games [misbehave], on [purpose].",
-  /** The muted line under the tagline. */
-  roles: "Full-stack engineer, AI tinkerer, Game maker.",
+  tagline: "Software Engineer by [discipline]. Game Developer by [obsession].",
   /** What you're building right now: the island shows how many, and lists
    * them when opened. */
   nowBuilding: ["Project Akar Fehu", "Final Challenge ADA", "Omawe"],
@@ -301,9 +299,9 @@ export const GAMES = {
   title: "Kahfi R — Game Development",
   description:
     "Games by Kahfi Rahmada with Batang Kayu Studio: stealth comedy, crowd-spotting puzzles, and whatever's next in the forge.",
-  role: "Game Developer",
+  role: "Founder",
   summary:
-    "I make games that stay with you long after the credits roll. Design, code, art, sound: whatever it needs, I take it to done.",
+    "Game Designer who builds what he designs. I bridge systems thinking, rapid prototyping, and player feel.",
   libraryHeading: "Library",
   /** Last line of the credits footer. */
   thanks: "Thanks for playing.",
@@ -326,14 +324,16 @@ export const STAGES: Stage[] = [
     slug: "warnet",
     name: "WarNet: War on The Bandwidth",
     blurb:
-      "A comedy stealth sim set in an early-2000s Indonesian internet café. Sneak an enormous download to 100% before your session runs out, without the operator catching on.",
+      "A comedy stealth sim set in an early-2000s Indonesian internet café. Look busy, manage the chaos around you, and sneak a huge download to 100% before the operator catches on.",
     genre: "Stealth / Survival",
     engine: "Unity",
     platforms: "Browser, Windows, macOS",
-    role: "Game Designer & Music Composer, team of 8",
-    jam: "GameSeed 2026, top 90 of 260, themes \"So Absurd, It's Cool\" and \"Childhood Dreams\"",
+    role: "Game Designer & Programmer",
+    team: "Team of 8",
+    jam: "GameSeed 2026 · themes \"So Absurd, It's Cool\", \"Childhood Dreams\", and \"Meme Driven\"",
+    award: "Top 90 out of 235",
     status: "Done",
-    year: "2026",
+    year: "Jun - Jul 2026",
     cover: "/project-media/GD/warnet_cover.png",
     wide: true,
     play: "https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc",
@@ -346,13 +346,16 @@ export const STAGES: Stage[] = [
       "A crowd-spotting casual game on Shibuya's rush-hour crossing. Read the target's hair, shirt, pants, and bag, tap the one person who matches, and hit each wave's score before your catches run out.",
     genre: "Casual / Arcade",
     engine: "Unity",
-    platforms: "Browser, iOS (TestFlight)",
-    role: "Music Composer & Game Programmer, team of 4",
-    jam: "Very Disco Game Jam Vol. 3 (Apple Developer Academy, Asia Pacific), 6th of 46, theme \"Compact\"",
+    platforms: "iOS",
+    role: "Game Programmer & Music Composer",
+    team: "Team of 4",
+    jam: "Very Disco Game Jam Vol. 3 (Apple Developer Academy across Asia Pacific) · theme \"Compact\"",
+    award: "6th out of 42 entries",
     status: "Done",
-    year: "2026",
+    year: "Sep 2026",
     cover: "/project-media/GD/bc_cover.png",
     play: "https://batangkayu.itch.io/body-count-shibuya-crossing",
+    testflight: "https://testflight.apple.com/join/7S21PHFq",
   },
   // TODO(kv): cover and `play` once they exist.
   {
@@ -365,13 +368,80 @@ export const STAGES: Stage[] = [
     engine: "Godot",
     platforms: "PC (Steam)",
     year: "2027",
-    role: "Lead game designer, team of 12",
+    role: "Lead game designer",
+    team: "Team of 12",
     status: "In development",
+  },
+  // TODO(kv): fill in blurb, metadata, cover, and `play` for these entries.
+  {
+    id: "1-4",
+    slug: "green-sapphire",
+    name: "Green Sapphire",
+    blurb:
+      "A minimalist ASCII boss-rush game where you play as a knight trapped in a five-cell jail. Defeat the wardens, collect five green sapphires, and open the great gate to escape.",
+    genre: "Action / Boss Rush",
+    engine: "Unity",
+    platforms: "iOS",
+    role: "Game Developer",
+    team: "Solo",
+    jam: "Challenge 6 · Apple Developer Academy",
+    status: "Done",
+    year: "Sep 2026",
+    play: "https://firanda.itch.io/green-sapphire",
+    testflight: "https://testflight.apple.com/join/tEvGHRhf",
+  },
+  {
+    id: "1-5",
+    slug: "dont-let-anyone-win",
+    name: "Don't Let Anyone Win",
+    blurb:
+      "A puzzle comedy game where you work the night shift as a lottery operator. The draw is honest, the math is rigged: keep every claimant from winning the jackpot on your watch.",
+    genre: "Puzzle / Comedy",
+    engine: "Unity",
+    platforms: "Browser",
+    role: "Game Developer",
+    team: "Solo",
+    jam: "Unity Game Jam · theme \"Lucky Number\"",
+    status: "Done",
+    year: "Nov 2026",
+    play: "https://firanda.itch.io/dont-let-anyone-win",
+  },
+  {
+    id: "1-6",
+    slug: "pakem-unbound",
+    name: "Pakem: Unbound",
+    blurb:
+      "A Wayang Kulit turn-based RPG retelling Gadjah Mada's story. The Dalang scripted your defeat into the Pakem, so flare the Blencong lamp to pause the stage and rewrite the rules yourself.",
+    genre: "Turn-Based RPG",
+    engine: "Unity",
+    platforms: "Browser",
+    role: "Game Developer",
+    team: "Solo",
+    jam: "Game Jam Plus 2026 · themes \"Roots & Legends\", \"Rules Are Made to be Broken\", and \"Small Actions, Big Impact\"",
+    status: "Done",
+    year: "Nov 2026",
+    play: "https://firanda.itch.io/pakem-unbound",
+  },
+  {
+    id: "1-7",
+    slug: "whitejack",
+    name: "WhiteJack",
+    blurb:
+      "A reverse-blackjack roguelite where you sit down with an overpowered championship deck that keeps busting past 21. Spend your winnings between antes to shred, stamp, and sabotage your own cards until you can actually play.",
+    genre: "Roguelite / Deckbuilder",
+    engine: "Unity",
+    platforms: "Browser",
+    role: "Game Developer",
+    team: "Solo",
+    jam: "GGG Jam · theme \"Overpowered\"",
+    status: "Done",
+    year: "Nov 2026",
+    play: "https://firanda.itch.io/whitejack",
   },
 ];
 
 /** Entries with a devlog at content/games/<slug>.mdx. */
-export const STORY_SLUGS = new Set<string>(["warnet", "body-count"]);
+export const STORY_SLUGS = new Set<string>(["warnet", "body-count", "green-sapphire", "dont-let-anyone-win", "pakem-unbound", "whitejack"]);
 
 // ============================================================
 // SIDE QUESTS — /side-quests, the door at the bottom left of the index
