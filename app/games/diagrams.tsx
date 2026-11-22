@@ -39,21 +39,20 @@ export function SuspicionMeter() {
           ))}
         </ol>
       </div>
-      <figcaption>The dark marker is a run in progress: suspicion climbs, gets talked back down, then climbs again.</figcaption>
     </figure>
   );
 }
 
 /** Pedestrians as [x, seconds to cross, delay]: different speeds, staggered starts. */
 const WALKERS: [x: number, dur: number, delay: number][] = [
-  [92, 7, 0],
-  [128, 9.5, -3],
-  [166, 6, -1.5],
-  [204, 8.5, -6],
-  [238, 7.5, -4],
-  [276, 10, -2],
-  [312, 6.5, -5],
-  [346, 9, -7.5],
+  [162, 7, 0],
+  [180, 9.5, -3],
+  [198, 6, -1.5],
+  [216, 8.5, -6],
+  [234, 7.5, -4],
+  [252, 10, -2],
+  [270, 6.5, -5],
+  [288, 9, -7.5],
 ];
 
 /** Body Count's crowd: spawned above the screen only when needed, removed past the bottom line. */
@@ -67,13 +66,13 @@ export function CrowdFlow() {
           role="img"
           aria-label="Pedestrians spawn above the visible crossing only when the crowd needs more, cross it at different speeds, and are removed once they pass the bottom line."
         >
-          {/* The visible crossing, with zebra stripes along the walking direction. */}
-          <rect className="dg-screen" x="70" y="50" width="310" height="160" rx="6" />
-          {Array.from({ length: 9 }, (_, i) => (
-            <rect key={i} className="dg-zebra" x={84 + i * 33} y="62" width="16" height="136" rx="2" />
+          {/* The visible portrait crossing, with horizontal zebra bars stacked down the street. */}
+          <rect className="dg-screen" x="155" y="42" width="140" height="176" rx="6" />
+          {Array.from({ length: 6 }, (_, i) => (
+            <rect key={i} className="dg-zebra" x="166" y={54 + i * 26} width="118" height="14" rx="2" />
           ))}
-          <line className="dg-edge" x1="62" y1="50" x2="388" y2="50" />
-          <line className="dg-edge" x1="62" y1="210" x2="388" y2="210" />
+          <line className="dg-edge" x1="147" y1="42" x2="303" y2="42" />
+          <line className="dg-edge" x1="147" y1="218" x2="303" y2="218" />
 
           {WALKERS.map(([x, dur, delay]) => (
             <circle

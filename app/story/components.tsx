@@ -1,23 +1,143 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Children, type ComponentPropsWithoutRef, type ReactNode } from "react";
 
 // Story blocks shared by every section: lowercase keys restyle markdown's HTML, Capitalized ones are tags a story can use without importing.
+
+const isVideoSrc = (src: string) => /\.(mp4|webm|mov)(#.*)?$/i.test(src);
 
 /** An image with a caption; renders nothing until it has a `src`, so a story can hold its slot early. */
 export function Figure({
   src,
   alt = "",
   caption,
+  size,
+  wide,
 }: {
   src?: string;
   alt?: string;
   caption?: string;
+  size?: "phone";
+  wide?: boolean;
+}) {
+  if (!src) return null;
+  const phone = size === "phone";
+  const cls = [
+    "st-figure",
+    phone && "st-figure--phone",
+    wide && !phone && "st-wide",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return (
+    <figure className={cls}>
+      <Image
+        src={src}
+        alt={alt}
+        width={phone ? 600 : 1600}
+        height={phone ? 1300 : 900}
+        sizes={
+          phone
+            ? "18rem"
+            : wide
+              ? "(max-width: 54rem) 100vw, 54rem"
+              : "(max-width: 42rem) 100vw, 42rem"
+        }
+      />
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
+  );
+}
+
+/** A demo video block with native pause/play controls; renders nothing until `src` is provided. */
+export function Video({
+  src,
+  poster,
+  caption,
+  wide,
+}: {
+  src?: string;
+  poster?: string;
+  caption?: string;
+  wide?: boolean;
 }) {
   if (!src) return null;
   return (
-    <figure className="st-figure">
-      {/* The reading column is at most 42rem (story.css .prose), so no screen needs more than ~2x that. */}
-      <Image src={src} alt={alt} width={1600} height={900} sizes="(max-width: 42rem) 100vw, 42rem" />
+    <figure className={wide ? "st-figure st-wide" : "st-figure"}>
+      <video
+        className="st-video"
+        src={src.includes("#") ? src : `${src}#t=0.1`}
+        poster={poster}
+        controls
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+      {caption ? <figcaption>{caption}</figcaption> : null}
+    </figure>
+  );
+}
+
+type CompareSide = {
+  label: string;
+  note?: string;
+  src?: string;
+  alt?: string;
+  text?: string;
+};
+
+/** Side-by-side Before/After comparison card (stacks on narrow viewports). */
+export function Compare({
+  before,
+  after,
+  caption,
+  wide = true,
+}: {
+  before: CompareSide;
+  after: CompareSide;
+  caption?: string;
+  wide?: boolean;
+}) {
+  const renderPanel = (side: CompareSide, isAfter: boolean) => (
+    <div className={isAfter ? "st-compare-panel st-compare-panel--after" : "st-compare-panel"}>
+      <div className="st-compare-head">
+        <span>{side.label}</span>
+        {side.note ? <span className="st-compare-note">{side.note}</span> : null}
+      </div>
+      <div className="st-compare-body">
+        {side.src ? (
+          isVideoSrc(side.src) ? (
+            <video
+              className="st-video"
+              src={side.src.includes("#") ? side.src : `${side.src}#t=0.1`}
+              controls
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <Image
+              src={side.src}
+              alt={side.alt ?? side.label}
+              width={1200}
+              height={750}
+              sizes="(max-width: 640px) 100vw, 27rem"
+            />
+          )
+        ) : null}
+        {side.text ? <p className="st-compare-text">{side.text}</p> : null}
+      </div>
+    </div>
+  );
+
+  return (
+    <figure className={wide ? "st-figure st-wide" : "st-figure"}>
+      <div className="st-compare">
+        {renderPanel(before, false)}
+        {renderPanel(after, true)}
+      </div>
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
   );
@@ -27,18 +147,40 @@ export function Figure({
 export function Points({ children }: { children: ReactNode }) {
   const cols = Math.min(Math.max(Children.count(children), 1), 4);
   return (
-    <div className="st-points" style={{ "--cols": cols } as React.CSSProperties}>
+    <div className="st-points st-wide" style={{ "--cols": cols } as React.CSSProperties}>
       {children}
     </div>
   );
 }
 
-export function Point({ title, children }: { title?: string; children: ReactNode }) {
+export function Point({
+  title,
+  accent,
+  children,
+}: {
+  title?: string;
+  accent?: boolean;
+  children: ReactNode;
+}) {
   return (
-    <div className="st-point">
+    <div className={accent ? "st-point st-point--accent" : "st-point"}>
       {title ? <p className="st-point-title">{title}</p> : null}
       {children}
     </div>
+  );
+}
+
+/** Two-column key/detail rows to vary rhythm from card grids. */
+export function CraftList({ children }: { children: ReactNode }) {
+  return <ul className="st-craft">{children}</ul>;
+}
+
+export function CraftItem({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <li className="st-craft-item">
+      <h3 className="st-craft-key">{title}</h3>
+      <div className="st-craft-val">{children}</div>
+    </li>
   );
 }
 
@@ -46,7 +188,7 @@ export function Point({ title, children }: { title?: string; children: ReactNode
 export function Stats({ items }: { items: { label: string; value: string }[] }) {
   return (
     <dl
-      className="st-stats"
+      className="st-stats st-wide"
       style={{ "--cols": Math.min(Math.max(items.length, 1), 4) } as React.CSSProperties}
     >
       {items.map((item) => (
@@ -67,12 +209,14 @@ export function Callout({ children }: { children: ReactNode }) {
 export function Flow({
   steps,
   caption,
+  loop,
 }: {
   steps: { title: string; body?: string }[];
   caption?: string;
+  loop?: boolean;
 }) {
   return (
-    <figure className="st-figure">
+    <figure className="st-figure st-wide">
       <ol className="st-flow" style={{ "--steps": steps.length } as React.CSSProperties}>
         {steps.map((step) => (
           <li key={step.title}>
@@ -81,8 +225,115 @@ export function Flow({
           </li>
         ))}
       </ol>
+      {loop && (
+        <svg className="st-flow-loop" viewBox="0 0 400 28" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M 350 2 V 16 H 50 V 4" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+          <path d="M 45 9 L 50 3 L 55 9" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        </svg>
+      )}
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
+  );
+}
+
+// --- shared case-study chrome (headers & footer pager) ----------------------
+
+/** Structured 4-cell metadata strip in the case-study hero; skips empty items. */
+export function StoryMetaGrid({ items }: { items: { label: string; value?: string }[] }) {
+  const filled = items.filter((item): item is { label: string; value: string } => Boolean(item.value));
+  if (!filled.length) return null;
+  return (
+    <dl
+      className="story-meta-grid"
+      style={{ "--cols": Math.min(filled.length, 4) } as React.CSSProperties}
+    >
+      {filled.map((item) => (
+        <div key={item.label} className="story-meta-cell">
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** Full-width hero media stage above the article; supports video recordings and cover/screen images. */
+export function HeroMedia({
+  src,
+  alt,
+  kind = "web",
+}: {
+  src?: string;
+  alt: string;
+  kind?: "mobile" | "web";
+}) {
+  if (!src) return null;
+  const video = isVideoSrc(src);
+  const mobile = kind === "mobile";
+  return (
+    <figure className={mobile ? "story-hero-stage story-hero-stage--mobile" : "story-hero-stage"}>
+      <div className="story-hero-frame">
+        {video ? (
+          <video
+            className="story-hero-video"
+            src={src.includes("#") ? src : `${src}#t=0.1`}
+            controls
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={alt}
+          />
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            width={mobile ? 600 : 1600}
+            height={mobile ? 1300 : 900}
+            sizes={mobile ? "18rem" : "(max-width: 72rem) 100vw, 64rem"}
+            loading="eager"
+            fetchPriority="high"
+          />
+        )}
+      </div>
+    </figure>
+  );
+}
+
+export type PagerItem = {
+  href: string;
+  name: string;
+  desc?: string;
+};
+
+/** Continuous discovery footer: links to the previous and next project in the same section. */
+export function StoryPager({ prev, next }: { prev?: PagerItem; next?: PagerItem }) {
+  if (!prev && !next) return null;
+  return (
+    <nav className="story-pager" aria-label="More projects">
+      {prev ? (
+        <Link className="story-pager-card" href={prev.href} transitionTypes={["nav-back"]}>
+          <span className="story-pager-dir">← Previous</span>
+          <span className="story-pager-name">{prev.name}</span>
+          {prev.desc ? <span className="story-pager-desc">{prev.desc}</span> : null}
+        </Link>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+      {next ? (
+        <Link
+          className="story-pager-card story-pager-card--next"
+          href={next.href}
+          transitionTypes={["nav-forward"]}
+        >
+          <span className="story-pager-dir">Next →</span>
+          <span className="story-pager-name">{next.name}</span>
+          {next.desc ? <span className="story-pager-desc">{next.desc}</span> : null}
+        </Link>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+    </nav>
   );
 }
 
@@ -127,8 +378,12 @@ export const baseComponents = {
   a: Anchor,
   code: InlineCode,
   Figure,
+  Video,
+  Compare,
   Points,
   Point,
+  CraftList,
+  CraftItem,
   Stats,
   Callout,
   Flow,

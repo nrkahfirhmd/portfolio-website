@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PERSON, PROJECTS, STORY_REPOS } from "@/content/site";
 import { BackLink, PageShell } from "../../../page-shell";
+import { StoryPager } from "../../../story/components";
 import { StoryNav } from "../../../story/story-nav";
 import { ArticleHeader } from "../../story-components";
 import "../../software.css";
@@ -23,7 +24,11 @@ export async function generateMetadata({ params }: PageProps<"/software/work/[sl
 
 export default async function StoryPage({ params }: PageProps<"/software/work/[slug]">) {
   const { slug } = await params;
-  if (!PROJECTS.some((p) => p.slug === slug)) notFound();
+  const index = PROJECTS.findIndex((p) => p.slug === slug);
+  if (index === -1) notFound();
+
+  const prevProject = index > 0 ? PROJECTS[index - 1] : undefined;
+  const nextProject = index < PROJECTS.length - 1 ? PROJECTS[index + 1] : undefined;
 
   // MDX picks up its components from mdx-components.tsx.
   const Story = STORY_REPOS.has(slug) ? (await import(`@/content/software/${slug}.mdx`)).default : null;
@@ -40,12 +45,29 @@ export default async function StoryPage({ params }: PageProps<"/software/work/[s
           </article>
         </div>
       ) : (
-        <p className="story-soon">The full write-up is on its way.</p>
+        <section className="story-soon" aria-labelledby="story-soon-heading">
+          <h2 id="story-soon-heading">Full write-up in progress</h2>
+          <p>The project overview and links above are live while the full engineering write-up is being prepared.</p>
+        </section>
       )}
 
-      <BackLink href="/software#work" className="page-back">
-        Back to the work
-      </BackLink>
+      <footer className="story-footer">
+        <StoryPager
+          prev={
+            prevProject
+              ? { href: `/software/work/${prevProject.slug}`, name: prevProject.name, desc: prevProject.tagline }
+              : undefined
+          }
+          next={
+            nextProject
+              ? { href: `/software/work/${nextProject.slug}`, name: nextProject.name, desc: nextProject.tagline }
+              : undefined
+          }
+        />
+        <BackLink href="/software#work" className="story-footer-back">
+          Back to all software
+        </BackLink>
+      </footer>
     </PageShell>
   );
 }

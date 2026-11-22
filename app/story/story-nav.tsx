@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Item = { id: string; text: string };
 
@@ -10,10 +10,11 @@ const slugify = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-/** The section rail beside a story, built from the article's `##` headings. */
+/** The section rail beside a story (plus a collapsible jump menu on narrow screens), built from `##` headings. */
 export function StoryNav() {
   const [items, setItems] = useState<Item[]>([]);
   const [active, setActive] = useState<string | null>(null);
+  const mobileRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     const headings = Array.from(
@@ -48,17 +49,46 @@ export function StoryNav() {
 
   if (!items.length) return <div aria-hidden="true" />;
 
+  const closeMobile = () => {
+    if (mobileRef.current) mobileRef.current.open = false;
+  };
+
   return (
-    <nav aria-label="On this page" className="story-nav">
-      <ul>
-        {items.map(({ id, text }) => (
-          <li key={id}>
-            <a href={`#${id}`} aria-current={active === id ? "true" : undefined}>
-              {text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <>
+      <details ref={mobileRef} className="story-mobile-toc">
+        <summary>
+          <span>On this page ({items.length} sections)</span>
+          <span className="story-mobile-toc-icon" aria-hidden="true">
+            +
+          </span>
+        </summary>
+        <ul>
+          {items.map(({ id, text }) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                aria-current={active === id ? "true" : undefined}
+                onClick={closeMobile}
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+
+      <nav aria-label="On this page" className="story-nav">
+        <p className="story-nav-label">On this page</p>
+        <ul>
+          {items.map(({ id, text }) => (
+            <li key={id}>
+              <a href={`#${id}`} aria-current={active === id ? "true" : undefined}>
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }

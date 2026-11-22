@@ -13,8 +13,10 @@ export type Stage = {
   engine?: string;
   platforms?: string;
   role?: string;
+  team?: string;
   /** Jam or event it was made for. */
   jam?: string;
+  award?: string;
   status: string;
   year?: string;
   /** Front art (the piece, poster, or album art); remote hosts must be allowed in next.config.ts. */
@@ -33,6 +35,7 @@ export type Stage = {
   audio?: string;
   /** A playable build. */
   play?: string;
+  testflight?: string;
   /** GitHub repo under PERSON.github. */
   repo?: string;
   locked?: boolean;
