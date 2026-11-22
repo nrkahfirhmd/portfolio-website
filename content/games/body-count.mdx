@@ -4,15 +4,6 @@ Body Count drops you on a rooftop over Shibuya's rush-hour crossing with a
 target list and a limited number of catches. Somewhere in the crowd below is
 the one person who matches every trait. Find them before the wave runs out.
 
-<Stats
-  items={[
-    { label: "Placement", value: "6th of 46 teams" },
-    { label: "Team", value: "4 people" },
-    { label: "Jam length", value: "5 days" },
-    { label: "Playtesters", value: "24" },
-  ]}
-/>
-
 ## Reading the theme
 
 The jam theme was **Compact**. We read it two ways. First, the crowd itself:
@@ -23,14 +14,18 @@ nothing else to press.
 
 ## The core loop
 
-<Points>
-  <Point title="Read. Spot. Tap.">Check the target's hair, shirt, pants, and bag, find someone who matches all four, and tap to catch them. "ANY" accepts any colour or bag; "X" means no bag at all.</Point>
-  <Point title="Clear. Upgrade. Repeat.">Hit the wave's score target before your catches run out, pick an upgrade, and face a bigger crowd.</Point>
-</Points>
+<Flow
+  loop
+  steps={[
+    { title: "1. Read", body: "Check hair, shirt, pants, and bag (ANY = any, X = no bag)." },
+    { title: "2. Spot & Tap", body: "Find the matching person in the crossing and tap to catch." },
+    { title: "3. Clear", body: "Hit the wave's score target before your catches run out." },
+    { title: "4. Upgrade", body: "Pick an upgrade between waves, then face a bigger crowd." },
+  ]}
+/>
 
-Catches are the constraint. Upgrades and special passersby are how you buy
-some of that room back, so a good run is as much about spending them well as
-about sharp eyes.
+Catches are the constraint. Upgrades are how you buy some of that room back,
+so a good run is as much about picking them well as about sharp eyes.
 
 <Figure
   src="/project-media/GD/body_count_ss.png"
@@ -43,10 +38,16 @@ about sharp eyes.
 I made the music and programmed a big share of the game.
 
 <Points>
-  <Point title="Music">It had to feel Japanese and feel fun. I landed on funk jazz and lo-fi jazz, made in GarageBand.</Point>
-  <Point title="Waves and upgrades">How each wave grows, and the upgrades you pick between them.</Point>
-  <Point title="Game feel">The small touches on every interaction that make a catch feel satisfying.</Point>
+  <Point title="Music">Funk jazz and lo-fi jazz in GarageBand to feel Japanese and fun. On pause or the upgrade screen, a deep-sea filter kicks in and the backing instruments drop out, leaving only the melody.</Point>
+  <Point title="Waves and upgrades">Each wave scales crowd size, speed, and required matching traits (from 1 up to all 4), with Health, Multiplier, Combo Bonus, and Combo Decay Time upgrades between waves.</Point>
+  <Point title="Game feel">Layered visual, audio, and haptic feedback on catches, refined iteratively as we tested.</Point>
 </Points>
+
+<AudioPlayer
+  src="/project-media/GD/body_count_music.wav"
+  title="Shibuya Crossing (Main Theme)"
+  subtitle="Funk jazz & lo-fi jazz · GarageBand"
+/>
 
 ## A crowd that stays light
 
@@ -61,9 +62,10 @@ exist.
 
 ## Tuning the difficulty
 
-Each wave starts the crowd a little bigger than the last. I tuned the
-difficulty mostly around each wave's score target and the abilities the
-player had picked up by then.
+Each wave ramps up crowd size, pedestrian speed, and the number of traits
+you have to match, starting at 1 and climbing to all 4. I tuned the
+difficulty around each wave's score target and the upgrades the player had
+picked up by then.
 
 Playtesting turned up a different problem: a lot of players were frustrated
 by the target prompt, the list of traits to match. It was a sentence to read
@@ -77,6 +79,44 @@ in at a glance.
   caption="Before: the target as a sentence. After: one slot per trait."
 />
 
+## Distinctly Apple
+
+<Points>
+  <Point title="Core Haptics">Catch feedback ramps up with your combo, with distinct cues for misses, wave clears, and the end of a run.</Point>
+  <Point title="Share Sheet & GameKit">The result screen opens the native iOS Share Sheet with a run screenshot and score caption (anchored popover on iPad), paired with GameKit leaderboards.</Point>
+  <Point title="Touch & Safe Area">One-tap crowd catching built around the notch, Dynamic Island, and home indicator.</Point>
+</Points>
+
+<Figure
+  size="phone"
+  src="/project-media/GD/body_count_leaderboard.PNG"
+  alt="Game Center High Score leaderboard for Body Count: Shibuya Crossing showing Friends and Global tabs"
+  caption="GameKit High Score leaderboard integrated with Game Center."
+/>
+
+## Accessibility
+
+<Points>
+  <Point title="Colorblind Assist & Icons">An alternative palette paired with shape symbols on both pedestrians and the prompt, so matching never depends on color alone.</Point>
+  <Point title="Reduce Motion">Disables menu parallax, score punches, combo shaking, and confetti while keeping pedestrians moving.</Point>
+  <Point title="Text & Audio">Small, Default, or Large interface text, plus separate sliders for music, SFX, and haptics.</Point>
+</Points>
+
+<Figure
+  src="/project-media/GD/body_count_colorblind.png"
+  alt="Three iPhone screens showing Settings, the default crowd palette, and Colorblind Assist with shape icons enabled"
+  caption="Settings, default palette, and Colorblind Assist with matching shape icons."
+/>
+
+## Judge feedback
+
+Across 42 entries, Body Count placed **#6 Overall** (3.515), with **#4 in Core Loop** (3.909), **#4 in Distinctly Apple** (3.273), and **#10 in Cohesion** (3.364).
+
+<Points>
+  <Point title="What landed">Judges praised the colorblind assist (color plus shape icons), touchscreen haptics, upbeat art direction, and the Shibuya hidden-object hook.</Point>
+  <Point title="What to fix">The player's role and wave goal felt unclear, losing a heart on right catches confused people, dense crowds made taps feel finicky, and upgrades needed stronger visual payoff.</Point>
+</Points>
+
 ## What I'd change
 
 The idea is for everything to point your attention back at the crowd:
@@ -85,5 +125,5 @@ didn't get all the way there. If I made it again, I'd work on cohesion and
 the core loop first, because those are where it fell short.
 
 <Callout>
-  Play it in the browser on [itch.io](https://batangkayu.itch.io/body-count-shibuya-crossing), or grab the iOS test build through TestFlight from the same page.
+  See the game on [itch.io](https://batangkayu.itch.io/body-count-shibuya-crossing), or play the iOS build on [TestFlight](https://testflight.apple.com/join/7S21PHFq).
 </Callout>

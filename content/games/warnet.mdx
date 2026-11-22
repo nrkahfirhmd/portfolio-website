@@ -5,17 +5,10 @@ don't download big files. It drags the whole warnet's bandwidth down, and if
 the operator notices, you're out. WarNet asks what would happen if you broke
 that rule on purpose, and did everything you could to get away with it.
 
-<Stats
-  items={[
-    { label: "GameSeed 2026", value: "Top 90 of 260" },
-    { label: "Team", value: "8 people" },
-    { label: "Jam length", value: "1 month" },
-  ]}
-/>
-
 ## The idea
 
-GameSeed gave us two themes: "So Absurd, It's Cool" and "Childhood Dreams".
+GameSeed gave us three themes: "So Absurd, It's Cool", "Childhood Dreams", and "Meme Driven".
+We mainly leaned into "Childhood Dreams", with a touch of "So Absurd, It's Cool".
 Back when warnets were everywhere, I always wondered what it would be like to
 actually start that huge download and then do whatever it took not to get
 caught. That was the childhood dream. Turning it into a stealth game, with
@@ -53,9 +46,9 @@ team could build. "Don't get caught while downloading" became three pillars,
 each one an obstacle or a way around it:
 
 <Points>
-  <Point title="Random events">Things happen around you, often with the people nearby, and you have to deal with them.</Point>
+  <Point title="Random events">Things happen around you, often with the people nearby, and you have to deal with them. I wrote 10 NPCs with backstories so the event and dialogue writers had lore to pull from; 7 made it into the game.</Point>
   <Point title="Side tasks">Cover for the download: chatting, playing games, refreshing pages, looking busy.</Point>
-  <Point title="Abilities">Tools like hacking that buy you room when suspicion climbs.</Point>
+  <Point title="Abilities">Tools like hacking that buy you room when suspicion climbs, balanced so they shift risk rather than making the game easier or harder.</Point>
 </Points>
 
 The most absurd moment comes when they all collide: three random events at
@@ -69,25 +62,31 @@ once, the operator almost sure of you, and you in the middle of a hack.
 
 ## Design into code
 
-The hardest part wasn't any single system. It was getting the design out of
+My favorite part of the jam was breaking the premise down into mechanics and
+making the whole system make sense together, especially while the team was still
+trying to wrap their heads around how the game played.
+
+The hardest part wasn't any single system. It was getting that design out of
 my head and the document, and into the code, with a team of eight. It's hard
 to make sure everyone has read the design document, let alone understood it
 the same way. A lot of my month went into explaining the design to the team
 while we built it.
 
-> Small scope first. Get the core loop and mechanics working, then expand and polish.
+<Figure
+  src="/project-media/GD/warnet_figma.png"
+  alt="WarNet FigJam design board showing the kanban priorities, moodboard, UI references, terminal commands, and full gameplay flow"
+  caption="The design board: kanban priorities, UI references, terminal commands, and the full gameplay flow."
+/>
 
 ## What we cut
 
-Time ran out before the list did. We cut a lot of random events and side
-tasks, and I wish we'd had time to polish the game. That's what WarNet taught
-me: keep the scope small, make the core loop work first, and only then add
-more.
+Our biggest pivot came when time ran out before the list did: we had to cut
+deep into the random events, side tasks, and 3 of the 10 NPCs. As a first-time
+game builder with high standards, that was the hardest trade-off. You can write
+a complete, polished design doc, only to watch most of it get left on the
+table once the cuts hit.
 
-## Team
-
-Game design by ichsanfrds and me. Programming by dyan, Ken, and Waffles.
-Illustration by PAl. UI and assets by aditfhm and KopiCan. Music by me.
+> Small scope first. Get the core loop and mechanics working, then expand and polish.
 
 <Callout>
   Play it in the browser on [itch.io](https://batangkayu.itch.io/237-warnet-tunggu-aku-buat-game-nanti-pc).
