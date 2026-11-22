@@ -47,7 +47,23 @@ a {
   text-decoration: none;
 }
 
-:where(a, button, [tabindex]):focus-visible {
+/* Base-layer interaction affordances (R-39). */
+a[href],
+button:not(:disabled),
+select:not(:disabled),
+summary,
+label[for],
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+button:disabled,
+select:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+:where(a, button, select, [tabindex]):focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
   border-radius: var(--primitive-radius-sm);

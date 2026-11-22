@@ -1,141 +1,288 @@
-import Link from "next/link";
-import { BaliClock } from "./bali-clock";
-import { Canopy } from "./canopy";
-import { CursorDot } from "./cursor-dot";
-import { getGithubSnapshot } from "./github";
-import { GithubActivity } from "./github-activity";
-import { MagneticGrid } from "./magnetic-grid";
-import { PaintName } from "./paint-name";
-import { PortraitToggle } from "./portrait-toggle";
-import { SOCIALS } from "./socials";
-import { SparkWord } from "./spark-word";
-import { GATEWAYS, HOME, PERSON } from "@/content/site";
+import { CURRENT, PERSON } from "@/content/site";
+import { GalleryHome, type FeaturedShowcase } from "./gallery-home";
 import "./home.css";
 import { PageTransition } from "./page-transition";
+import { SOCIALS } from "./socials";
 
-export default async function Home() {
-  const github = await getGithubSnapshot(PERSON.github);
+const FEATURED_PROJECTS: FeaturedShowcase[] = [
+  {
+    id: "omawe",
+    title: "Omawe",
+    subtitle: "iOS App",
+    href: "/software/work/omawe",
+    labelLeft: "35%",
+    labelBottom: "6%",
+    layers: [
+      {
+        src: "/featured/omawe/LIVE_ACTIVITY.png",
+        width: 1499,
+        height: 658,
+        left: "11%",
+        top: "19.5%",
+        w: "73.5%",
+        z: 1,
+        hx: "0px",
+        hy: "-3px",
+        hr: "0deg",
+      },
+      {
+        src: "/featured/omawe/MAPS.png",
+        width: 311,
+        height: 232,
+        left: "6%",
+        top: "8%",
+        w: "15.5%",
+        z: 3,
+        hx: "-8px",
+        hy: "-8px",
+        hr: "-5deg",
+      },
+      {
+        src: "/featured/omawe/SOS.png",
+        width: 269,
+        height: 200,
+        left: "52.5%",
+        top: "6.5%",
+        w: "10%",
+        z: 3,
+        hx: "-3px",
+        hy: "-10px",
+        hr: "-4deg",
+      },
+      {
+        src: "/featured/omawe/WARNING.png",
+        width: 220,
+        height: 164,
+        left: "62.5%",
+        top: "12.5%",
+        w: "8%",
+        z: 3,
+        hx: "5px",
+        hy: "-9px",
+        hr: "5deg",
+      },
+      {
+        src: "/featured/omawe/MOTORCYCLE.png",
+        width: 448,
+        height: 335,
+        left: "11.5%",
+        top: "62.5%",
+        w: "20.5%",
+        z: 4,
+        hx: "-10px",
+        hy: "4px",
+        hr: "-3deg",
+      },
+      {
+        src: "/featured/omawe/MOCKUP.png",
+        width: 510,
+        height: 535,
+        left: "68.5%",
+        top: "38%",
+        w: "25.5%",
+        z: 4,
+        hx: "8px",
+        hy: "-6px",
+        hr: "2deg",
+      },
+    ],
+  },
+  {
+    id: "body-count",
+    title: "Body Count",
+    subtitle: "Game",
+    href: "/games/stage/body-count",
+    labelLeft: "10%",
+    labelBottom: "8%",
+    layers: [
+      {
+        src: "/featured/body_count/TRAFFIC_LIGHT.png",
+        width: 379,
+        height: 822,
+        left: "13%",
+        top: "19%",
+        w: "15%",
+        z: 1,
+        hx: "-9px",
+        hy: "-4px",
+        hr: "-3deg",
+      },
+      {
+        src: "/featured/body_count/KANJI_1.png",
+        width: 123,
+        height: 129,
+        left: "50%",
+        top: "12%",
+        w: "5.5%",
+        z: 1,
+        hx: "3px",
+        hy: "-10px",
+        hr: "-4deg",
+      },
+      {
+        src: "/featured/body_count/KANJI_2.png",
+        width: 153,
+        height: 159,
+        left: "54%",
+        top: "16%",
+        w: "6.5%",
+        z: 1,
+        hx: "7px",
+        hy: "-8px",
+        hr: "4deg",
+      },
+      {
+        src: "/featured/body_count/MOCKUP.png",
+        width: 1413,
+        height: 933,
+        left: "17.5%",
+        top: "9%",
+        w: "65%",
+        z: 2,
+        hx: "0px",
+        hy: "-5px",
+        hr: "0deg",
+      },
+      {
+        src: "/featured/body_count/PRIEST.png",
+        width: 357,
+        height: 759,
+        left: "60%",
+        top: "37%",
+        w: "16%",
+        z: 4,
+        hx: "4px",
+        hy: "-8px",
+        hr: "-2deg",
+      },
+      {
+        src: "/featured/body_count/PUPPET.png",
+        width: 342,
+        height: 726,
+        left: "77%",
+        top: "32%",
+        w: "11.5%",
+        z: 4,
+        hx: "10px",
+        hy: "-6px",
+        hr: "3deg",
+      },
+    ],
+  },
+  {
+    id: "prabu-2025",
+    title: "Prabu 2025",
+    subtitle: "Website",
+    href: "/software/work/prabu-2025",
+    labelLeft: "39%",
+    labelBottom: "5%",
+    layers: [
+      {
+        src: "/featured/prabu_2025/REKTORAT.png",
+        width: 1920,
+        height: 672,
+        left: "6%",
+        top: "18%",
+        w: "88%",
+        z: 1,
+        hx: "0px",
+        hy: "-4px",
+        hr: "0deg",
+      },
+      {
+        src: "/featured/prabu_2025/MOCKUP.png",
+        width: 4096,
+        height: 3072,
+        left: "11%",
+        top: "2%",
+        w: "78%",
+        z: 2,
+        hx: "0px",
+        hy: "-5px",
+        hr: "0deg",
+      },
+      {
+        src: "/featured/prabu_2025/NAME.png",
+        width: 468,
+        height: 181,
+        left: "5%",
+        top: "7%",
+        w: "24%",
+        z: 3,
+        hx: "-7px",
+        hy: "-8px",
+        hr: "-3deg",
+      },
+      {
+        src: "/featured/prabu_2025/LOGO.png",
+        width: 615,
+        height: 537,
+        left: "74%",
+        top: "5%",
+        w: "17%",
+        z: 3,
+        hx: "8px",
+        hy: "-9px",
+        hr: "5deg",
+      },
+      {
+        src: "/featured/prabu_2025/ODONG.png",
+        width: 1980,
+        height: 1229,
+        left: "4%",
+        top: "53%",
+        w: "32%",
+        z: 4,
+        hx: "10px",
+        hy: "2px",
+        hr: "-2deg",
+      },
+      {
+        src: "/featured/prabu_2025/MAN_1.png",
+        width: 284,
+        height: 598,
+        left: "72%",
+        top: "40%",
+        w: "13.5%",
+        z: 4,
+        hx: "4px",
+        hy: "-8px",
+        hr: "-2deg",
+      },
+      {
+        src: "/featured/prabu_2025/MAN_2.png",
+        width: 195,
+        height: 613,
+        left: "84%",
+        top: "41%",
+        w: "9.5%",
+        z: 4,
+        hx: "9px",
+        hy: "-7px",
+        hr: "3deg",
+      },
+    ],
+  },
+];
 
+export default function Home() {
   return (
     <PageTransition>
-      <main className="home">
-        <CursorDot />
-        <MagneticGrid />
-
-        <Canopy />
-
-        <div className="eyebrow flex justify-between items-center w-full" data-enter style={{ "--i": 0 } as React.CSSProperties}>
-          <p className="kv" aria-label="KV">
-            <span className="kv-letter" tabIndex={0}>
-              <span className="kv-base" aria-hidden="true">K</span>
-              <span className="kv-alt" aria-hidden="true">ƙ</span>
-            </span>
-            <span className="kv-letter" tabIndex={0}>
-              <span className="kv-base" aria-hidden="true">V</span>
-              <span className="kv-alt" aria-hidden="true">Ɣ</span>
-            </span>
-          </p>
-          <GithubActivity github={github} nowBuilding={HOME.nowBuilding} />
-          <BaliClock />
-        </div>
-
-        <div className="stage">
-          <div className="halo" data-enter style={{ "--i": 1 } as React.CSSProperties}>
-            <PortraitToggle name={PERSON.name} />
-          </div>
-
-          <PaintName>{PERSON.name}</PaintName>
-
-          <p className="tagline" data-enter style={{ "--i": 3 } as React.CSSProperties}>
-            {/* "[word]" in the tagline marks a spark: split puts those at odd indexes. */}
-            {HOME.tagline.split(/\[(.+?)\]/).map((part, i) =>
-              i % 2 ? <SparkWord key={i}>{part}</SparkWord> : part,
-            )}
-            <br />
-            <span className="muted">{HOME.roles}</span>
-          </p>
-
-          <nav className="gates" aria-label="Portfolios">
-            {GATEWAYS.map((g, i) => (
-              <Link
-                key={g.slug}
-                transitionTypes={["nav-forward"]}
-                className="gate"
-                href={`/${g.slug}`}
-                data-enter
-                style={{ "--i": i + 4 } as React.CSSProperties}
-              >
-                <svg
-                  className="arrow"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  aria-hidden="true"
-                >
-                  <path d="M7 17 17 7M9 7h8v8" />
-                </svg>
-                <h2>{g.name}</h2>
-                <p>{g.desc}</p>
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {/* Bottom-left: the door to the side quests. */}
-        <Link
-          href="/side-quests"
-          className="door"
-          aria-label="Side quests"
-          transitionTypes={["nav-forward"]}
-          data-enter
-          style={{ "--i": 8 } as React.CSSProperties}
-        >
-          <span className="door-frame" aria-hidden="true">
-            <span className="door-leaf" />
-          </span>
-          <span className="door-label">Side quests</span>
-        </Link>
-
-        {/* Bottom-right: the trail to the journey. */}
-        <Link
-          href="/journey"
-          className="trail"
-          aria-label="Journey"
-          transitionTypes={["nav-forward"]}
-          data-enter
-          style={{ "--i": 8 } as React.CSSProperties}
-        >
-          <span className="door-label">Journey</span>
-          <svg className="trail-icon" viewBox="0 0 30 30" aria-hidden="true">
-            <path className="trail-line" d="M3 27c6 0 5-9 11-9s5-9 11-9" />
-            <path className="trail-pin" d="M25 9.5c-2.2-2.4-3.3-4.1-3.3-5.2a3.3 3.3 0 0 1 6.6 0c0 1.1-1.1 2.8-3.3 5.2z" />
-          </svg>
-        </Link>
-
-        <footer className="foot" data-enter style={{ "--i": 7 } as React.CSSProperties}>
-          <nav className="socials" aria-label="Contact and social">
-            {SOCIALS.map((s) => (
-              <a key={s.label} className="social" href={s.href} aria-label={s.label}>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d={s.d} />
-                </svg>
-              </a>
-            ))}
-          </nav>
-          {PERSON.openToWork && <span className="status">Open to work</span>}
-        </footer>
-      </main>
+      <GalleryHome
+        name={PERSON.name}
+        roleSubtitle="Software Engineer"
+        currentRole={
+          CURRENT
+            ? {
+                company: "Apple Developer Academy @ BINUS, Bali",
+                companyUrl: CURRENT.companyUrl,
+              }
+            : null
+        }
+        openToWork={PERSON.openToWork}
+        items={FEATURED_PROJECTS}
+        socials={SOCIALS.map((s) => ({ label: s.label, href: s.href, d: s.d }))}
+      />
     </PageTransition>
   );
 }

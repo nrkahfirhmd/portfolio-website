@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { CursorDot } from "./cursor-dot";
 import { MagneticGrid } from "./magnetic-grid";
 import { PageTransition } from "./page-transition";
+import { StarSpace } from "./site-footer";
 
 /** Every page but the index: the page column, cursor, magnetic grid, and the "kv/<section>" bar back up. */
 export function PageShell({
@@ -29,6 +30,7 @@ export function PageShell({
           </Link>
         </header>
         {children}
+        <StarSpace />
       </main>
     </PageTransition>
   );

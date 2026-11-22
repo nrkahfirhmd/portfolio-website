@@ -402,6 +402,8 @@ function FlipCell({ fact }: { fact: string }) {
 /* --- article ---------------------------------------------------------- */
 
 function Article({ entry, layoutId, onClose }: { entry: SideQuest; layoutId: string; onClose: () => void }) {
+  const hasCover = Boolean(entry.image);
+
   return (
     <>
       <motion.div
@@ -414,24 +416,40 @@ function Article({ entry, layoutId, onClose }: { entry: SideQuest; layoutId: str
       />
       <div className="sq-dialog-wrap">
         <motion.article layoutId={layoutId} role="dialog" aria-modal="true" aria-label={entry.title} className="sq-dialog">
-          <div className="sq-dialog-cover">
-            <Cover entry={entry} />
-            <button type="button" className="sq-close" aria-label="Close story" onClick={onClose} autoFocus>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M18 6 6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          {hasCover ? (
+            <div className="sq-dialog-cover">
+              <Cover entry={entry} />
+              <button type="button" className="sq-close" aria-label="Close story" onClick={onClose} autoFocus>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <div className="sq-dialog-bar">
+              <p className="sq-meta">
+                <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
+                <span>{entry.period}</span>
+              </p>
+              <button type="button" className="sq-close sq-close--inline" aria-label="Close story" onClick={onClose} autoFocus>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
           <motion.div
             className="sq-dialog-body"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE_OUT, delay: 0.15 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.1 }}
           >
-            <p className="sq-meta">
-              <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
-              {entry.period}
-            </p>
+            {hasCover ? (
+              <p className="sq-meta">
+                <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
+                <span>{entry.period}</span>
+              </p>
+            ) : null}
             <div>
               <h3 className="sq-dialog-title">{entry.title}</h3>
               <p className="sq-org">{entry.org}</p>

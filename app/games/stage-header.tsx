@@ -5,6 +5,24 @@ import { stageBySlug } from "./games";
 
 const line = (parts: (string | undefined)[]) => parts.filter(Boolean).join(" · ");
 
+function Arrow() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  );
+}
+
 /** A devlog's title block, sharing the same 4-zone hero shape as software stories. */
 export function StageHeader({ slug }: { slug: string }) {
   const stage = stageBySlug(slug);
@@ -13,7 +31,7 @@ export function StageHeader({ slug }: { slug: string }) {
   const hasPrimary = Boolean(stage.play || stage.testflight);
 
   return (
-    <header className="story-head rise">
+    <header className="story-head">
       {(kicker || stage.award) && (
         <div className="story-kicker-row">
           {kicker && <p className="story-meta">{kicker}</p>}
@@ -51,42 +69,46 @@ export function StageHeader({ slug }: { slug: string }) {
         <div className="story-actions">
           {stage.play && (
             <a
-              className="story-btn story-btn--primary"
+              className="story-action story-action--primary"
               href={stage.play}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Play on itch.io
+              <span>See itch.io page</span>
+              <Arrow />
             </a>
           )}
           {stage.testflight && (
             <a
-              className={stage.play ? "story-btn story-btn--secondary" : "story-btn story-btn--primary"}
+              className={stage.play ? "story-action" : "story-action story-action--primary"}
               href={stage.testflight}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Try iOS TestFlight
+              <span>TestFlight</span>
+              <Arrow />
             </a>
           )}
           {stage.repo && (
             <a
-              className={hasPrimary ? "story-btn story-btn--secondary" : "story-btn story-btn--primary"}
+              className={hasPrimary ? "story-action" : "story-action story-action--primary"}
               href={`https://github.com/${PERSON.github}/${stage.repo}`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              View source on GitHub
+              <span>Source</span>
+              <Arrow />
             </a>
           )}
           {stage.locked && (
             <a
-              className={hasPrimary ? "story-btn story-btn--secondary" : "story-btn story-btn--primary"}
+              className={hasPrimary ? "story-action" : "story-action story-action--primary"}
               href={STUDIO.url}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Follow on itch.io
+              <span>Follow on itch.io</span>
+              <Arrow />
             </a>
           )}
         </div>
@@ -96,12 +118,16 @@ export function StageHeader({ slug }: { slug: string }) {
         items={[
           { label: "Role", value: stage.role },
           { label: "Genre", value: stage.genre },
-          { label: "Team", value: stage.team },
-          { label: "Engine & Platform", value: line([stage.engine, stage.platforms]) },
+          { label: "Engine", value: stage.engine },
+          { label: "Platforms & Team", value: line([stage.platforms, stage.team]) },
         ]}
       />
 
-      {heroSrc && <HeroMedia src={heroSrc} alt={`${stage.name} preview`} kind="web" />}
+      <HeroMedia
+        src={heroSrc}
+        alt={`${stage.name} showcase`}
+        kind={stage.platforms === "iOS" ? "mobile" : "web"}
+      />
     </header>
   );
 }

@@ -1,0 +1,154 @@
+/* /work — Sticky category sidebar + /software & /games bento masonry catalogue */
+
+.wk-page .gh-nav-link[data-active] {
+  color: var(--gh-ink);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 3px rgba(15, 15, 20, 0.08);
+}
+
+.wk-shell {
+  display: grid;
+  grid-template-columns: clamp(190px, 18vw, 240px) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  padding: clamp(2rem, 5vh, 3.25rem) var(--gh-pad-x) clamp(2.5rem, 6vh, 4rem);
+  min-width: 0;
+}
+
+/* Left sticky category sidebar */
+.wk-sidebar {
+  position: sticky;
+  top: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wk-cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  border-radius: 12px;
+  background: rgba(244, 244, 247, 0.72);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(15, 15, 20, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 10px 26px -16px rgba(15, 15, 20, 0.18);
+}
+
+.wk-cat-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 36px;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #3f3f46;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--gh-ease),
+    color 150ms var(--gh-ease),
+    box-shadow 150ms var(--gh-ease);
+}
+.wk-cat-btn:hover,
+.wk-cat-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--gh-ink);
+}
+.wk-cat-btn:focus-visible {
+  outline: 2px solid var(--gh-accent);
+  outline-offset: 1px;
+}
+.wk-cat-btn[data-active] {
+  background: #0f0f0f;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px -6px rgba(15, 15, 20, 0.4);
+}
+
+.wk-sidebar-toggle {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 15, 20, 0.08);
+}
+
+/* Right bento masonry catalogue (reuses .bento / .tile / .showcase from project-lists.css) */
+.wk-catalogue {
+  min-width: 0;
+}
+
+.wk-catalogue .tile:is(:hover, :focus-visible, :has(:focus-visible)) {
+  border-color: var(--gh-accent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--gh-accent) 35%, transparent),
+    0 14px 32px -14px color-mix(in srgb, var(--gh-accent) 35%, transparent);
+}
+
+.wk-empty {
+  margin: 2rem 0;
+  font-size: 0.9375rem;
+  color: var(--gh-muted);
+}
+
+/* Tablet (640px – 1023px) */
+@media (max-width: 1023px) {
+  .wk-shell {
+    grid-template-columns: 170px minmax(0, 1fr);
+  }
+}
+
+/* Mobile (< 640px): horizontal scrollable category bar + stacked bento tiles */
+@media (max-width: 639px) {
+  .wk-shell {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding-top: 1.25rem;
+  }
+
+  .wk-sidebar {
+    position: static;
+    gap: 0.75rem;
+  }
+
+  .wk-cat-list {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 0.25rem;
+    padding: 0.3rem;
+  }
+  .wk-cat-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wk-cat-btn {
+    width: auto;
+    min-height: 44px;
+    padding: 0.45rem 0.85rem;
+    white-space: nowrap;
+  }
+
+  .wk-sidebar-toggle {
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-cat-btn {
+    transition: none;
+  }
+}

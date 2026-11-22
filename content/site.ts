@@ -737,3 +737,230 @@ export const JOURNEY_STOPS: JourneyStop[] = [
     ],
   },
 ];
+
+// ============================================================
+// ABOUT — /about
+// ============================================================
+
+export interface AboutValue {
+  number: string;
+  title: string;
+  body: string;
+}
+
+export interface AboutPhoto {
+  src: string;
+  alt: string;
+  caption?: string;
+  featured?: boolean;
+  objectPosition?: string;
+}
+
+export interface GlobeMedia {
+  type: "image" | "video";
+  src: string;
+  alt: string;
+  caption?: string;
+  poster?: string;
+}
+
+export interface GlobePlace {
+  id: string;
+  label: string;
+  detail: string;
+  lat: number;
+  lon: number;
+  timeZone: string;
+  primary?: boolean;
+  media: GlobeMedia[];
+}
+
+export interface FriendEntry {
+  name: string;
+  role: string;
+  url?: string;
+  domain?: string;
+}
+
+export const ABOUT = {
+  title: "Kahfi R | About Me",
+  description:
+    "About Kahfi Rahmada: software engineer, AI tinkerer, and game maker based in Bali.",
+  heading: "Building software that feels like it was made for you.",
+  bio: [
+    "I'm Kahfi Rahmada, a software engineer, AI tinkerer, and game maker. I studied Informatics at Universitas Padjadjaran majoring in Artificial Intelligence (GPA 3.92 / 4.00) and currently build iOS products at the Apple Developer Academy @ BINUS, Bali.",
+    "Outside of apps and backend infrastructure, I lead game design at Batang Kayu Studio, where twelve of us are building Project Akar Fehu in Godot. Whether it is a multi-tenant ISP platform, an LSTM forecast API, or a puzzle game, I care about the small details that make something feel honest and alive.",
+  ],
+  quote: {
+    text: "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines. Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.",
+    author: "H. Jackson Brown Jr.",
+  },
+  values: [
+    {
+      number: "01",
+      title: "Earn a place in the day",
+      body: "Good software respects attention. I focus on the quiet, thoughtful details that make a tool feel natural instead of noisy.",
+    },
+    {
+      number: "02",
+      title: "Unlearn, then build",
+      body: "Start from curiosity and the real human problem. Let research and constraints shape the architecture, not habit.",
+    },
+    {
+      number: "03",
+      title: "Own it all the way to done",
+      body: "Mobile, web, backend, infrastructure, AI, or game systems. Whatever the product needs, I take responsibility until it ships.",
+    },
+    {
+      number: "04",
+      title: "Play on purpose",
+      body: "Serious engineering and playful craft belong together. Make software behave and games misbehave, intentionally.",
+    },
+  ] satisfies AboutValue[],
+  globeHeading: "Based in Bali. Working with teams worldwide.",
+  globeSubtitle:
+    "Currently building at Apple Developer Academy @ BINUS, Bali, and collaborating with teams across Indonesia and beyond.",
+  globePlaces: [
+    {
+      id: "bali",
+      label: "Bali",
+      detail: "Current base",
+      lat: -8.65,
+      lon: 115.22,
+      timeZone: "Asia/Makassar",
+      primary: true,
+      media: [
+        {
+          type: "image",
+          src: "/side-quests/academy.jpg",
+          alt: "Apple Developer Academy Kick-Off in Bali",
+          caption: "Apple Developer Academy Kick-Off",
+        },
+        {
+          type: "video",
+          src: "/project-media/SE/omawe_recording.mp4",
+          poster: "/project-media/SE/omawe_preview.png",
+          alt: "Omawe iOS app walkthrough",
+          caption: "Omawe iOS app built in Bali",
+        },
+        {
+          type: "image",
+          src: "/side-quests/omawe.jpg",
+          alt: "Building Omawe at Apple Developer Academy Bali",
+          caption: "Building Omawe with the team",
+        },
+      ],
+    },
+    {
+      id: "bandung",
+      label: "Bandung",
+      detail: "Unpad & Himatif",
+      lat: -6.91,
+      lon: 107.61,
+      timeZone: "Asia/Jakarta",
+      media: [
+        {
+          type: "image",
+          src: "/side-quests/po_cbs.jpg",
+          alt: "Character Building Season at Universitas Padjadjaran",
+          caption: "Leading Character Building Season at Unpad",
+        },
+        {
+          type: "video",
+          src: "/project-media/SE/himatif_recording.mp4",
+          poster: "/project-media/SE/himatif_dashboard.png",
+          alt: "Himatif Apps v2 walkthrough",
+          caption: "Himatif Apps v2 for Unpad Informatics",
+        },
+        {
+          type: "image",
+          src: "/side-quests/gathering.jpg",
+          alt: "First time leading a committee in Bandung",
+          caption: "First time leading a team in Bandung",
+        },
+      ],
+    },
+    {
+      id: "jakarta",
+      label: "Jakarta",
+      detail: "Work & clients",
+      lat: -6.21,
+      lon: 106.85,
+      timeZone: "Asia/Jakarta",
+      media: [
+        {
+          type: "image",
+          src: "/project-media/SE/bitd_capture.jpg",
+          alt: "BITD ISP operations dashboard",
+          caption: "BITD multi-tenant ISP dashboard",
+        },
+        {
+          type: "image",
+          src: "/project-media/SE/bitd_preview.png",
+          alt: "BITD platform preview",
+          caption: "BITD tenant portal preview",
+        },
+        {
+          type: "image",
+          src: "/project-media/SE/coretax_bg.jpg",
+          alt: "Coretax Scraper built during internship at PT Tunas Ridean",
+          caption: "Coretax Scraper at PT Tunas Ridean",
+        },
+      ],
+    },
+  ] satisfies GlobePlace[],
+  photos: [
+    {
+      src: "/portrait.png",
+      alt: "Kahfi Rahmada portrait",
+      caption: "Bali, Indonesia",
+      featured: true,
+      objectPosition: "center 20%",
+    },
+    {
+      src: "/side-quests/academy.jpg",
+      alt: "Kahfi at Apple Developer Academy Kick-Off",
+      objectPosition: "center center",
+    },
+    {
+      src: "/side-quests/omawe.jpg",
+      alt: "Building Omawe at Apple Developer Academy",
+      objectPosition: "center center",
+    },
+    {
+      src: "/side-quests/hike.jpg",
+      alt: "Kahfi hiking outdoors",
+      objectPosition: "center center",
+    },
+    {
+      src: "/side-quests/bfr.jpg",
+      alt: "Kahfi with close friends",
+      objectPosition: "center center",
+    },
+  ] satisfies AboutPhoto[],
+};
+
+export const FRIENDS: FriendEntry[] = [
+  {
+    name: "Umar Bin Abdul Aziz",
+    role: "Security Engineer @ FEHA",
+    url: "https://www.linkedin.com/in/umarbinabdulaziz10/",
+    domain: "linkedin.com/in/umarbinabdulaziz10",
+  },
+  {
+    name: "Rayhan Athar Prasnaputra",
+    role: "RPA Quality Assurance Intern @ CIMB Niaga",
+    url: "https://www.linkedin.com/in/rayhan-athar/",
+    domain: "linkedin.com/in/rayhan-athar",
+  },
+  {
+    name: "Next Friend",
+    role: "[-]",
+    domain: "-",
+  },
+  {
+    name: "Next Friend",
+    role: "[-]",
+    domain: "-",
+  },
+];

@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Fraunces } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Fraunces, Syne } from "next/font/google";
 import { HOME } from "@/content/site";
 import "./globals.css";
+
+const sans = DM_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const brand = Syne({
+  variable: "--font-brand",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
 
 const mono = JetBrains_Mono({
   variable: "--font-mono",
@@ -27,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       data-theme="light"
       data-density="comfortable"
-      className={`${mono.variable} ${flourish.variable} h-full antialiased`}
+      className={`${sans.variable} ${brand.variable} ${mono.variable} ${flourish.variable} h-full antialiased`}
     >
       <body className="min-h-full">{children}</body>
     </html>
