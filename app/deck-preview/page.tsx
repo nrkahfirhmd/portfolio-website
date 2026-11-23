@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { HOME, PERSON } from "@/content/site";
+import { PERSON } from "@/content/site";
 
 type AcrylicSetId = "classic" | "neon" | "bauhaus" | "monolith" | "botanical" | "mix";
 

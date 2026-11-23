@@ -37,14 +37,6 @@
   text-transform: uppercase;
 }
 
-/* A devlog's Play / Source / Follow links. */
-.stage-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-stack);
-  margin: 0;
-  font-size: var(--typography-label);
-}
 
 /* ============================================================
    CREDITS — label ....... value rows

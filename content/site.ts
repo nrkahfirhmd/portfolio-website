@@ -7,7 +7,6 @@
 // in public/ and are referenced by path.
 
 import type { Stage } from "@/app/games/games";
-import type { Gateway } from "@/app/gateways";
 import type { JourneyStop } from "@/app/journey/types";
 import type { Project } from "@/app/software/projects";
 import type { SideQuest, SideQuestPhoto } from "@/app/side-quests/types";
@@ -48,20 +47,6 @@ export const HOME = {
    * them when opened. */
   nowBuilding: ["Project Akar Fehu", "Final Challenge ADA", "Omawe"],
 };
-
-/** The index's portfolio cards. */
-export const GATEWAYS: Gateway[] = [
-  {
-    slug: "software",
-    name: "Software Engineering",
-    desc: "Software that earns its place in your day, and feels like it was made for you.",
-  },
-  {
-    slug: "games",
-    name: "Game Development",
-    desc: "Great games stayed with me. I'm making ones that stay with you.",
-  },
-];
 
 // ============================================================
 // SOFTWARE ENGINEERING — /software
@@ -762,13 +747,13 @@ export const JOURNEY_STOPS: JourneyStop[] = [
 // ABOUT — /about
 // ============================================================
 
-export interface AboutValue {
+interface AboutValue {
   number: string;
   title: string;
   body: string;
 }
 
-export interface AboutPhoto {
+interface AboutPhoto {
   src: string;
   alt: string;
   caption?: string;
@@ -776,7 +761,7 @@ export interface AboutPhoto {
   objectPosition?: string;
 }
 
-export interface GlobeMedia {
+interface GlobeMedia {
   type: "image" | "video";
   src: string;
   alt: string;
@@ -795,7 +780,7 @@ export interface GlobePlace {
   media: GlobeMedia[];
 }
 
-export interface FriendEntry {
+interface FriendEntry {
   name: string;
   role: string;
   url?: string;

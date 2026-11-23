@@ -8,18 +8,6 @@
   color: var(--color-ink);
 }
 
-/* Source / Live / App Store links under a story's title. */
-.show-links {
-  display: flex;
-  gap: var(--spacing-stack);
-  margin: 0;
-  font-size: var(--typography-label);
-}
-.show-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
 
 /* --- footer: contact links as git remotes, and the way home --- */
 .sw-contact {

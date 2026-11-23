@@ -7,7 +7,7 @@ import { PortraitToggle } from "./portrait-toggle";
 import { SiteFooter } from "./site-footer";
 import { WorkWithMeButton } from "./work-with-me";
 
-export interface FeaturedLayer {
+interface FeaturedLayer {
   src: string;
   width: number;
   height: number;

@@ -296,7 +296,7 @@ export function HeroMedia({
   );
 }
 
-export type PagerItem = {
+type PagerItem = {
   href: string;
   name: string;
   desc?: string;

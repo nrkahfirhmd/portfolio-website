@@ -128,15 +128,15 @@ select:disabled,
   text-wrap: pretty;
 }
 
-/* Inline accent links: role lines, project and devlog actions. */
-:is(.page-sub, .show-links, .stage-actions) a {
+/* Inline accent links under page titles. */
+:is(.page-sub) a {
   color: var(--color-accent);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
   transition: color var(--motion-hover) var(--motion-ease-default);
 }
-:is(.page-sub, .show-links, .stage-actions) a:hover {
+:is(.page-sub) a:hover {
   color: var(--color-accent-hover);
 }
 
@@ -158,9 +158,6 @@ select:disabled,
   background: var(--color-accent-soft);
   border-color: var(--color-accent);
   color: var(--color-accent-active);
-}
-.page-back {
-  margin-top: clamp(3rem, 10vh, 6rem);
 }
 
 /* "Open to work": a breathing green dot. */

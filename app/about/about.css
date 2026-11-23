@@ -862,16 +862,6 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
     min-height: 44px;
   }
 
-  .ab-pins {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 0.25rem;
-    -webkit-overflow-scrolling: touch;
-  }
-  .ab-pins::-webkit-scrollbar {
-    display: none;
-  }
   .ab-pin-btn {
     flex: none;
     white-space: nowrap;
@@ -1011,11 +1001,6 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
 }
 :root[data-theme="dark"] .ab-fan-card {
   border-color: #27272e;
-}
-:root[data-theme="dark"] .ab-pin-pill {
-  background: rgba(20, 20, 25, 0.9);
-  border-color: rgba(255, 255, 255, 0.16);
-  color: #f4f4f5;
 }
 :root[data-theme="dark"] .ab-pin-dot {
   background: #a1a1aa;

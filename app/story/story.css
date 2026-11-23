@@ -94,25 +94,7 @@
   text-wrap: pretty;
 }
 
-.story-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0.25rem 0 0;
-  padding: 0;
-  list-style: none;
-}
 
-.story-chips li {
-  padding: 0.24rem 0.6rem;
-  border-radius: 7px;
-  background: #f4f4f6;
-  border: 1px solid rgba(15, 15, 20, 0.08);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  color: #3f3f46;
-}
 
 /* Action pills inside software & game article headers */
 .story-actions {
@@ -679,8 +661,7 @@
   border-radius: 12px;
   background: #ffffff;
 }
-.story-hero-frame img,
-.story-hero-video {
+.story-hero-frame img {
   display: block;
   width: 100%;
   height: auto;
@@ -753,13 +734,6 @@
   max-width: 54rem;
 }
 
-.st-video {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid rgba(15, 15, 20, 0.08);
-  border-radius: 14px;
-}
 
 .st-figure--phone {
   justify-items: center;
@@ -1632,7 +1606,6 @@
   color: #d4d4d8;
 }
 
-:root[data-theme="dark"] .story-chips li,
 :root[data-theme="dark"] .st-code {
   background: #1b1b21;
   border-color: rgba(255, 255, 255, 0.12);
@@ -1687,8 +1660,7 @@
 :root[data-theme="dark"] .story-mobile-toc,
 :root[data-theme="dark"] .st-compare-panel,
 :root[data-theme="dark"] .story-pager-card,
-:root[data-theme="dark"] .ap-card,
-:root[data-theme="dark"] .dg-card {
+:root[data-theme="dark"] .ap-card {
   background: #141418;
 }
 
