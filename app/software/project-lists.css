@@ -131,6 +131,18 @@
   .tile[data-shape="wide"] {
     grid-column: auto;
   }
+  .tile[data-shape="wide"] > .showcase {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+  .tile[data-shape="tall"] > .showcase {
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+  .tile-caption {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
 /* ============================================================
@@ -282,6 +294,62 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--primitive-tracking-wide);
   color: color-mix(in srgb, var(--chip-fg) 70%, transparent);
+}
+
+/* Stretched card link; clicks fall through the caption except on action buttons. */
+.tile-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+.tile-link:focus-visible {
+  outline: none;
+}
+.tile:has(.tile-link) .tile-caption {
+  z-index: 2;
+  pointer-events: none;
+}
+.tile-actions {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  pointer-events: auto;
+}
+.tile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.7rem;
+  border: 0;
+  border-radius: var(--primitive-radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-foreground);
+  font: inherit;
+  font-size: var(--typography-caption);
+  font-weight: var(--primitive-fontWeight-medium);
+  cursor: pointer;
+  transition:
+    background var(--motion-hover) var(--motion-ease-default),
+    transform var(--motion-playful) var(--motion-ease-playful);
+}
+.tile-btn svg {
+  width: 12px;
+  height: 12px;
+}
+.tile-btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+.tile-btn:active {
+  transform: scale(0.96);
+  transition-duration: var(--motion-press);
+}
+.tile-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

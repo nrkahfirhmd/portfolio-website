@@ -7,6 +7,7 @@ import type { SocialLinkItem } from "../gallery-home";
 import { AutoplayToggle } from "../games/cart-media";
 import { SharedTitle } from "../page-transition";
 import { SiteFooter } from "../site-footer";
+import { WorkWithMeButton } from "../work-with-me";
 import { Masonry } from "../software/masonry";
 import { Showcase, type Shape } from "../software/project-lists";
 
@@ -100,12 +101,7 @@ export function WorkGrid({
           ))}
         </nav>
 
-        <a
-          href="mailto:nurkahfirahmada@gmail.com?subject=Work%20with%20Kahfi"
-          className="gh-cta"
-        >
-          Work With Me
-        </a>
+        <WorkWithMeButton />
       </header>
 
       <main className="wk-shell">

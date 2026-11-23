@@ -15,6 +15,7 @@ export type Project = {
   period?: string;
   tags?: string[];
   live?: string;
+  website?: string;
   stack?: string[];
   role?: string;
   /** Backdrop image in public/, shown blurred behind the screen or logo. */

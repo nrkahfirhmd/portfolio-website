@@ -28,7 +28,9 @@ export function ArticleHeader({ slug }: { slug: string }) {
   const hasLive = Boolean(project.live);
   const liveLabel = project.live?.includes("apps.apple.com")
     ? "App Store"
-    : "Visit Live";
+    : project.live?.includes("testflight.apple.com")
+      ? "TestFlight"
+      : "Visit Live";
 
   return (
     <header className="story-head">
@@ -39,7 +41,7 @@ export function ArticleHeader({ slug }: { slug: string }) {
       {project.tagline && <p className="story-msg">{project.tagline}</p>}
       {project.body && <p className="story-body">{project.body}</p>}
 
-      {(project.live || project.repo) && (
+      {(project.live || project.website || project.repo) && (
         <div className="story-actions">
           {project.live && (
             <a
@@ -52,9 +54,20 @@ export function ArticleHeader({ slug }: { slug: string }) {
               <Arrow />
             </a>
           )}
-          {project.repo && (
+          {project.website && (
             <a
               className={hasLive ? "story-action" : "story-action story-action--primary"}
+              href={project.website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span>Website</span>
+              <Arrow />
+            </a>
+          )}
+          {project.repo && (
+            <a
+              className={hasLive || project.website ? "story-action" : "story-action story-action--primary"}
               href={`https://github.com/${PERSON.github}/${project.repo}`}
               target="_blank"
               rel="noopener noreferrer"

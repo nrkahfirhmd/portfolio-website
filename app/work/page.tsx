@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PERSON, PROJECTS, STAGES, STORY_REPOS, STORY_SLUGS, STUDIO } from "@/content/site";
+import { PERSON, PROJECTS, STAGES, STORY_SLUGS, STUDIO } from "@/content/site";
 import { shelve } from "../games/games";
 import { PageTransition } from "../page-transition";
 import { SOCIALS } from "../socials";
@@ -50,8 +50,7 @@ function buildUnifiedWork(): UnifiedWorkItem[] {
     screen: p.screen,
     logo: p.logo ?? p.cover,
     categories: classifySoftware(p.slug, p.platform, p.stack),
-    href: STORY_REPOS.has(p.slug) ? `/software/work/${p.slug}` : (p.live ?? "/software"),
-    external: !STORY_REPOS.has(p.slug) && Boolean(p.live),
+    href: `/software/work/${p.slug}`,
   }));
 
   const gameItems: UnifiedWorkItem[] = shelve(STAGES).map((s) => {
