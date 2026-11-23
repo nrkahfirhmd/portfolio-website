@@ -6,16 +6,6 @@
   padding: 0 var(--gh-pad-x) clamp(2rem, 5vh, 3.5rem);
 }
 
-.ab-eyebrow {
-  margin: 0 0 0.65rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--gh-muted);
-}
-
 /* --- 1. About Me Hero (full-viewport editorial profile) --- */
 .ab-hero {
   display: flex;
@@ -61,6 +51,11 @@
   line-height: 1.68;
   color: #3f3f46;
   text-wrap: pretty;
+}
+
+.ab-bio strong {
+  font-weight: 600;
+  color: var(--gh-ink, #0f0f0f);
 }
 
 .ab-hero-actions {
@@ -244,15 +239,6 @@
   top: 6.25rem;
 }
 
-.ab-section-num {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--gh-accent);
-}
-
 .ab-section-title {
   margin: 0;
   font-size: clamp(1.35rem, 2.2vw, 1.75rem);
@@ -292,15 +278,6 @@
 .ab-value-card:hover {
   border-color: rgba(22, 98, 56, 0.26);
   background: #fafcfb;
-}
-
-.ab-value-num {
-  display: inline-block;
-  margin-bottom: 0.65rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--gh-accent);
 }
 
 .ab-value-title {
@@ -830,7 +807,8 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
 }
 
 .ab-friend-domain {
-  margin-top: 0.2rem;
+  margin-top: auto;
+  padding-top: 0.35rem;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.71875rem;
   color: var(--gh-accent);
@@ -872,12 +850,43 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
 }
 
 @media (max-width: 639px) {
+  .ab-hero {
+    min-height: auto;
+  }
+
   .ab-btn,
   .ab-pin-btn,
   .ab-lightbox-close,
   .ab-lightbox-nav-btn,
   .ab-media-retry {
     min-height: 44px;
+  }
+
+  .ab-pins {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ab-pins::-webkit-scrollbar {
+    display: none;
+  }
+  .ab-pin-btn {
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .ab-globe-stage {
+    min-height: 300px;
+    touch-action: pan-y;
+  }
+
+  .ab-lightbox-panel {
+    width: calc(100vw - 1.5rem);
+    max-height: 90dvh;
+    overflow-y: auto;
+    padding: 1rem;
   }
 
   .ab-pin-fan {
@@ -932,4 +941,85 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
   a.ab-friend-card:focus-visible {
     transform: none;
   }
+}
+
+:root[data-theme="dark"] .ab-bio p,
+:root[data-theme="dark"] .ab-value-body,
+:root[data-theme="dark"] .ab-media-caption {
+  color: #d4d4d8;
+}
+
+:root[data-theme="dark"] .ab-btn,
+:root[data-theme="dark"] .ab-pin-btn {
+  background: rgba(24, 24, 29, 0.8);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .ab-btn:hover,
+:root[data-theme="dark"] .ab-btn:focus-visible,
+:root[data-theme="dark"] .ab-pin-btn:hover,
+:root[data-theme="dark"] .ab-pin-btn:focus-visible,
+:root[data-theme="dark"] .ab-pin-btn[aria-pressed="true"] {
+  background: #1f1f26;
+  border-color: var(--gh-accent);
+  color: var(--gh-accent);
+}
+:root[data-theme="dark"] .ab-btn--primary {
+  background: #f4f4f5;
+  border-color: #f4f4f5;
+  color: #0c0c0e;
+}
+:root[data-theme="dark"] .ab-btn--primary:hover,
+:root[data-theme="dark"] .ab-btn--primary:focus-visible {
+  background: #4fc17f;
+  border-color: #4fc17f;
+  color: #06210f;
+}
+
+:root[data-theme="dark"] .ab-photo-tile,
+:root[data-theme="dark"] .ab-lightbox-stage,
+:root[data-theme="dark"] .ab-lightbox-img {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme="dark"] .ab-portrait-tag {
+  background: rgba(20, 20, 25, 0.86);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f4f4f5;
+}
+
+:root[data-theme="dark"] .ab-value-card,
+:root[data-theme="dark"] .ab-friend-card,
+:root[data-theme="dark"] .ab-lightbox-panel {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+:root[data-theme="dark"] .ab-value-card:hover,
+:root[data-theme="dark"] a.ab-friend-card:hover,
+:root[data-theme="dark"] a.ab-friend-card:focus-visible {
+  background: #1a1a20;
+  border-color: rgba(79, 193, 127, 0.4);
+}
+
+:root[data-theme="dark"] .ab-lightbox-close,
+:root[data-theme="dark"] .ab-lightbox-nav-btn,
+:root[data-theme="dark"] .ab-media-retry {
+  background: #1b1b21;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .ab-fan-card {
+  border-color: #27272e;
+}
+:root[data-theme="dark"] .ab-pin-pill {
+  background: rgba(20, 20, 25, 0.9);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .ab-pin-dot {
+  background: #a1a1aa;
+}
+:root[data-theme="dark"] .ab-pin-btn[aria-pressed="true"] .ab-pin-dot {
+  background: #4fc17f;
 }

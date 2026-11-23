@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ABOUT, FRIENDS, PERSON } from "@/content/site";
 import { PageTransition } from "../page-transition";
 import { SiteFooter } from "../site-footer";
+import { WorkWithMeButton } from "../work-with-me";
 import { SOCIALS } from "../socials";
 import { DottedGlobe } from "./dotted-globe";
 import "../home.css";
@@ -63,12 +64,7 @@ export default function AboutPage() {
             ))}
           </nav>
 
-          <a
-            href="mailto:nurkahfirahmada@gmail.com?subject=Work%20with%20Kahfi"
-            className="gh-cta"
-          >
-            Work With Me
-          </a>
+          <WorkWithMeButton />
         </header>
 
         <main className="ab-main">
@@ -82,7 +78,15 @@ export default function AboutPage() {
               <div className="ab-hero-copy">
                 <div className="ab-bio">
                   {ABOUT.bio.map((paragraph) => (
-                    <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                    <p key={paragraph.slice(0, 24)}>
+                      {paragraph.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+                        part.startsWith("**") && part.endsWith("**") ? (
+                          <strong key={i}>{part.slice(2, -2)}</strong>
+                        ) : (
+                          part
+                        ),
+                      )}
+                    </p>
                   ))}
                 </div>
 
@@ -152,9 +156,6 @@ export default function AboutPage() {
           <section className="ab-section ab-values-section" aria-labelledby="ab-values-heading">
             <div className="ab-split">
               <div className="ab-split-head">
-                <span className="ab-section-num" aria-hidden="true">
-                  01
-                </span>
                 <h2 id="ab-values-heading" className="ab-section-title">
                   My Values
                 </h2>
@@ -166,7 +167,6 @@ export default function AboutPage() {
               <ol className="ab-values-grid">
                 {ABOUT.values.map((v) => (
                   <li key={v.number} className="ab-value-card">
-                    <span className="ab-value-num">{v.number}</span>
                     <h3 className="ab-value-title">{v.title}</h3>
                     <p className="ab-value-body">{v.body}</p>
                   </li>
@@ -191,13 +191,12 @@ export default function AboutPage() {
           <section className="ab-section ab-friends-section" aria-labelledby="ab-friends-heading">
             <div className="ab-friends-head">
               <div>
-                <p className="ab-eyebrow">03 / COMMUNITY</p>
                 <h2 id="ab-friends-heading" className="ab-friends-title">
                   Friends &amp; Mentors
                 </h2>
               </div>
               <p className="ab-friends-note">
-                People, studios, and communities who shaped how I build.
+                Minds that influenced how I build, think, and create.
               </p>
             </div>
 
