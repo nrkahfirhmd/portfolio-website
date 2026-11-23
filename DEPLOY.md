@@ -69,17 +69,7 @@ chmod 440 /etc/sudoers.d/portfolio
 visudo -c   # must say "parsed OK"
 ```
 
-### 6. Runtime secrets
-
-The GitHub activity island refetches once a day, so the server needs the token too. The file
-sits outside `/srv/portfolio` so deploys never wipe it.
-
-```bash
-echo 'GITHUB_TOKEN=paste_token_here' > /etc/portfolio.env
-chmod 600 /etc/portfolio.env
-```
-
-### 7. systemd service
+### 6. systemd service
 
 ```bash
 cat > /etc/systemd/system/portfolio.service <<'EOF'
@@ -92,7 +82,6 @@ User=deploy
 WorkingDirectory=/srv/portfolio
 ExecStart=/usr/bin/node server.js
 Environment=NODE_ENV=production PORT=3000 HOSTNAME=127.0.0.1
-EnvironmentFile=/etc/portfolio.env
 Restart=always
 
 [Install]
@@ -104,7 +93,7 @@ systemctl enable portfolio
 
 It starts on the first deploy; there's no `server.js` to run yet.
 
-### 8. nginx
+### 7. nginx
 
 ```bash
 cat > /etc/nginx/sites-available/portfolio <<'EOF'
@@ -129,7 +118,7 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t && systemctl reload nginx
 ```
 
-### 9. Firewall
+### 8. Firewall
 
 ```bash
 ufw allow OpenSSH
@@ -139,7 +128,7 @@ ufw enable
 
 Allow OpenSSH **before** enabling, or you lock yourself out.
 
-### 10. HTTPS
+### 9. HTTPS
 
 Needs DNS already pointing at the server (`dig +short example.com` prints `SERVER_IP`).
 
@@ -160,9 +149,6 @@ Repo → Settings → Secrets and variables → Actions → New repository secre
 | `SSH_USER` | `deploy` |
 | `SSH_KEY` | full contents of `~/.ssh/portfolio_deploy` (the private one, no `.pub`) |
 | `SSH_KNOWN_HOSTS` | output of `ssh-keyscan SERVER_IP` run on your laptop |
-| `GH_ACTIVITY_TOKEN` | same token as in `/etc/portfolio.env` |
-
-(GitHub reserves names starting with `GITHUB_`, hence `GH_ACTIVITY_TOKEN`.)
 
 ## First deploy
 
