@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 
@@ -22,32 +22,23 @@ function applyTheme(next: Theme) {
   window.dispatchEvent(new CustomEvent<Theme>(EVENT_NAME, { detail: next }));
 }
 
+function subscribe(notify: () => void) {
+  const onStorage = (e: StorageEvent) => {
+    if (e.key !== STORAGE_KEY) return;
+    document.documentElement.dataset.theme = e.newValue === "dark" ? "dark" : "light";
+    notify();
+  };
+  window.addEventListener(EVENT_NAME, notify);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener(EVENT_NAME, notify);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
 /** Frosted-glass light/dark theme switcher placed beside the header CTA. */
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
-
-  useEffect(() => {
-    setTheme(readTheme());
-
-    const onThemeChange = (e: Event) => {
-      const detail = (e as CustomEvent<Theme>).detail;
-      setTheme(detail === "dark" ? "dark" : readTheme());
-    };
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEY) {
-        const next: Theme = e.newValue === "dark" ? "dark" : "light";
-        document.documentElement.dataset.theme = next;
-        setTheme(next);
-      }
-    };
-
-    window.addEventListener(EVENT_NAME, onThemeChange);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(EVENT_NAME, onThemeChange);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, []);
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "light" as Theme);
 
   const isDark = theme === "dark";
   const label = isDark ? "Switch to light mode" : "Switch to dark mode";
