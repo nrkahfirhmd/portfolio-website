@@ -617,7 +617,6 @@ export const JOURNEY = {
 // story panel: `story` (paragraphs, one string each), the photos, and
 // `links` on to related pages; without a story it says it's still being
 // written. A `when` ending in "now" marks the stop as current.
-// TODO(kv): photos.
 export const JOURNEY_STOPS: JourneyStop[] = [
   {
     when: "Aug 2022 – Aug 2026",
