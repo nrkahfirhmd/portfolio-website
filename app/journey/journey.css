@@ -743,12 +743,21 @@ html:has(.jr-dialog[open]) {
     padding-top: 0;
   }
 
+  .jr-dialog {
+    margin: auto auto 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 90dvh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: 0;
+  }
+
   .jr-dialog-bar {
     padding: 1rem 1.15rem 0;
   }
 
   .jr-dialog-body {
-    padding: 1.1rem 1.15rem 1.35rem;
+    padding: 1.1rem 1.15rem max(1.5rem, env(safe-area-inset-bottom));
   }
 }
 
@@ -765,4 +774,68 @@ html:has(.jr-dialog[open]) {
   .jr-link-pill {
     transition: none;
   }
+}
+
+:root[data-theme="dark"] .jr-rail-link,
+:root[data-theme="dark"] .jr-summary,
+:root[data-theme="dark"] .jr-dialog-prose p {
+  color: #d4d4d8;
+}
+
+:root[data-theme="dark"] .jr-node {
+  background: #0c0c0e;
+  border-color: #f4f4f5;
+}
+
+:root[data-theme="dark"] .jr-card:has(.jr-open:is(:hover, :focus-visible)),
+:root[data-theme="dark"] .jr-edu-row:has(.jr-open:is(:hover, :focus-visible)) {
+  background: #18181e;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme="dark"] .jr-now-pill {
+  background: rgba(22, 98, 56, 0.28);
+  border-color: rgba(79, 193, 127, 0.32);
+  color: #86efac;
+}
+
+:root[data-theme="dark"] .jr-skills li,
+:root[data-theme="dark"] .jr-dialog-badge {
+  background: #1b1b21;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e4e4e7;
+}
+
+:root[data-theme="dark"] .jr-edu-row,
+:root[data-theme="dark"] .jr-dialog {
+  background: #141418;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+:root[data-theme="dark"] .jr-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.68);
+}
+
+:root[data-theme="dark"] .jr-dialog-cover {
+  background: #1b1b21;
+}
+
+:root[data-theme="dark"] .jr-dialog-close,
+:root[data-theme="dark"] .jr-dialog-close--overlay,
+:root[data-theme="dark"] .jr-link-pill {
+  background: rgba(24, 24, 29, 0.86);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .jr-dialog-close:hover,
+:root[data-theme="dark"] .jr-dialog-close:focus-visible {
+  background: #f4f4f5;
+  border-color: #f4f4f5;
+  color: #0c0c0e;
+}
+:root[data-theme="dark"] .jr-link-pill:hover,
+:root[data-theme="dark"] .jr-link-pill:focus-visible {
+  background: #4fc17f;
+  border-color: #4fc17f;
+  color: #06210f;
 }

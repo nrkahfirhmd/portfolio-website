@@ -313,6 +313,8 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
       const cosL = Math.cos(st.lon);
       const sinL = Math.sin(st.lon);
 
+      const isDark = document.documentElement.dataset.theme === "dark";
+
       // 1. Sculptural spherical body shading + subtle Fresnel atmospheric rim.
       const sphereGrad = ctx.createRadialGradient(
         cx - r * 0.28,
@@ -322,10 +324,17 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
         cy,
         r * 1.04
       );
-      sphereGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
-      sphereGrad.addColorStop(0.68, "rgba(244, 245, 248, 0.52)");
-      sphereGrad.addColorStop(0.92, "rgba(226, 232, 240, 0.34)");
-      sphereGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      if (isDark) {
+        sphereGrad.addColorStop(0, "rgba(32, 32, 40, 0.92)");
+        sphereGrad.addColorStop(0.68, "rgba(20, 20, 26, 0.56)");
+        sphereGrad.addColorStop(0.92, "rgba(14, 14, 18, 0.34)");
+        sphereGrad.addColorStop(1, "rgba(12, 12, 14, 0)");
+      } else {
+        sphereGrad.addColorStop(0, "rgba(255, 255, 255, 0.92)");
+        sphereGrad.addColorStop(0.68, "rgba(244, 245, 248, 0.52)");
+        sphereGrad.addColorStop(0.92, "rgba(226, 232, 240, 0.34)");
+        sphereGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      }
       ctx.fillStyle = sphereGrad;
       ctx.beginPath();
       ctx.arc(cx, cy, r * 1.04, 0, Math.PI * 2);
@@ -334,9 +343,15 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
       // Subtle crisp atmospheric rim ring (masked softly at the bottom horizon).
       ctx.save();
       const rimGrad = ctx.createLinearGradient(0, cy - r, 0, h);
-      rimGrad.addColorStop(0, "rgba(15, 23, 42, 0.09)");
-      rimGrad.addColorStop(0.65, "rgba(15, 23, 42, 0.05)");
-      rimGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
+      if (isDark) {
+        rimGrad.addColorStop(0, "rgba(255, 255, 255, 0.14)");
+        rimGrad.addColorStop(0.65, "rgba(255, 255, 255, 0.06)");
+        rimGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      } else {
+        rimGrad.addColorStop(0, "rgba(15, 23, 42, 0.09)");
+        rimGrad.addColorStop(0.65, "rgba(15, 23, 42, 0.05)");
+        rimGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
+      }
       ctx.strokeStyle = rimGrad;
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -365,7 +380,7 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
             drawing = false;
           }
         }
-        ctx.strokeStyle = "rgba(15, 23, 42, 0.042)";
+        ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(15, 23, 42, 0.042)";
         ctx.stroke();
       }
       ctx.restore();
@@ -385,7 +400,9 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
         // Faint translucent back-hemisphere silhouette for 3D volume
         if (p.z < 0) {
           const backAlpha = (0.045 * (1 + p.z / 0.22)) * bottomFade;
-          ctx.fillStyle = `rgba(113, 113, 122, ${backAlpha.toFixed(3)})`;
+          ctx.fillStyle = isDark
+            ? `rgba(161, 161, 170, ${(backAlpha * 1.4).toFixed(3)})`
+            : `rgba(113, 113, 122, ${backAlpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(sx, sy, 0.85, 0, Math.PI * 2);
           ctx.fill();
@@ -404,9 +421,13 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
         const ry = baseRadius;
 
         const alpha = (dot.coast ? 0.22 + limb * 0.62 : 0.14 + limb * 0.44) * shade * bottomFade;
-        ctx.fillStyle = dot.coast
-          ? `rgba(24, 24, 27, ${alpha.toFixed(3)})`
-          : `rgba(63, 63, 70, ${alpha.toFixed(3)})`;
+        ctx.fillStyle = isDark
+          ? dot.coast
+            ? `rgba(244, 244, 245, ${alpha.toFixed(3)})`
+            : `rgba(161, 161, 170, ${alpha.toFixed(3)})`
+          : dot.coast
+            ? `rgba(24, 24, 27, ${alpha.toFixed(3)})`
+            : `rgba(63, 63, 70, ${alpha.toFixed(3)})`;
 
         ctx.beginPath();
         ctx.ellipse(sx, sy, rx, ry, radialAngle, 0, Math.PI * 2);
@@ -435,7 +456,7 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
             started = false;
           }
         }
-        ctx.strokeStyle = "rgba(22, 98, 56, 0.34)";
+        ctx.strokeStyle = isDark ? "rgba(79, 193, 127, 0.48)" : "rgba(22, 98, 56, 0.34)";
         ctx.stroke();
       }
       ctx.restore();
@@ -464,19 +485,31 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
         ctx.globalAlpha = bottomFade;
 
         // Soft outer halo
-        ctx.fillStyle = isActive ? "rgba(22, 98, 56, 0.18)" : "rgba(15, 23, 42, 0.12)";
+        ctx.fillStyle = isDark
+          ? isActive
+            ? "rgba(79, 193, 127, 0.28)"
+            : "rgba(255, 255, 255, 0.14)"
+          : isActive
+            ? "rgba(22, 98, 56, 0.18)"
+            : "rgba(15, 23, 42, 0.12)";
         ctx.beginPath();
         ctx.arc(sx, sy, isActive ? 12 : 6.5, 0, Math.PI * 2);
         ctx.fill();
 
         if (isActive) {
-          ctx.fillStyle = "#ffffff";
+          ctx.fillStyle = isDark ? "#0c0c0e" : "#ffffff";
           ctx.beginPath();
           ctx.arc(sx, sy, 7.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        ctx.fillStyle = isActive ? "#166238" : "#27272a";
+        ctx.fillStyle = isDark
+          ? isActive
+            ? "#4fc17f"
+            : "#e4e4e7"
+          : isActive
+            ? "#166238"
+            : "#27272a";
         ctx.beginPath();
         ctx.arc(sx, sy, isActive ? 5.2 : 3.2, 0, Math.PI * 2);
         ctx.fill();

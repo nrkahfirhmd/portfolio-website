@@ -33,15 +33,20 @@ export const metadata: Metadata = {
   description: HOME.description,
 };
 
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t;}}catch(e){}})();`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // Light theme pinned (even under a dark OS), comfortable density; green is the default accent.
     <html
       lang="en"
       data-theme="light"
       data-density="comfortable"
+      suppressHydrationWarning
       className={`${sans.variable} ${brand.variable} ${mono.variable} ${flourish.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );

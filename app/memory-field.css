@@ -468,3 +468,136 @@
     transition: none;
   }
 }
+
+/* ============================================================
+   DARK THEME — Deep celestial night sky & smoked-glass cards
+   ============================================================ */
+:root[data-theme="dark"] .sp-add-btn {
+  background: rgba(244, 244, 245, 0.94);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #0c0c0e;
+}
+:root[data-theme="dark"] .sp-add-btn:hover,
+:root[data-theme="dark"] .sp-add-btn:focus-visible {
+  background: #4fc17f;
+  color: #06210f;
+}
+
+:root[data-theme="dark"] .sp-sky {
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(ellipse 75% 55% at 74% 22%, rgba(79, 193, 127, 0.12), transparent 72%),
+    radial-gradient(ellipse 60% 50% at 22% 78%, rgba(59, 130, 246, 0.08), transparent 70%),
+    linear-gradient(180deg, #0d1015 0%, #10151b 58%, #0e1714 100%);
+}
+:root[data-theme="dark"] .sp-sky::before {
+  background-image:
+    radial-gradient(1px 1px at 17px 29px, rgba(244, 244, 245, 0.45), transparent),
+    radial-gradient(1px 1px at 63px 84px, rgba(244, 244, 245, 0.3), transparent),
+    radial-gradient(1px 1px at 112px 41px, rgba(96, 165, 250, 0.55), transparent),
+    radial-gradient(1px 1px at 158px 97px, rgba(244, 244, 245, 0.32), transparent);
+}
+:root[data-theme="dark"] .sp-sky::after {
+  background-image:
+    radial-gradient(1.6px 1.6px at 34px 52px, rgba(244, 244, 245, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 142px 28px, rgba(96, 165, 250, 0.65), transparent),
+    radial-gradient(1.4px 1.4px at 218px 119px, rgba(251, 191, 36, 0.55), transparent);
+}
+
+:root[data-theme="dark"] .sp-star--polaris,
+:root[data-theme="dark"] .sp-card-badge--polaris {
+  --star-color: #f4f4f5;
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .sp-star--rigel,
+:root[data-theme="dark"] .sp-card-badge--rigel {
+  --star-color: #60a5fa;
+  color: #60a5fa;
+}
+:root[data-theme="dark"] .sp-star--sol,
+:root[data-theme="dark"] .sp-card-badge--sol {
+  --star-color: #fbbf24;
+  color: #fbbf24;
+}
+:root[data-theme="dark"] .sp-star--vega,
+:root[data-theme="dark"] .sp-card-badge--vega {
+  --star-color: #34d399;
+  color: #34d399;
+}
+
+:root[data-theme="dark"] .sp-star-name,
+:root[data-theme="dark"] .sp-card {
+  background: rgba(20, 20, 25, 0.9);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f4f4f5;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.45),
+    0 14px 32px -12px rgba(0, 0, 0, 0.75);
+}
+
+:root[data-theme="dark"] .sp-target {
+  border-color: #4fc17f;
+  background: rgba(79, 193, 127, 0.16);
+}
+
+:root[data-theme="dark"] .sp-card-close {
+  color: #a1a1aa;
+}
+:root[data-theme="dark"] .sp-card-close:hover,
+:root[data-theme="dark"] .sp-card-close:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+:root[data-theme="dark"] .sp-card-msg,
+:root[data-theme="dark"] .sp-label,
+:root[data-theme="dark"] .sp-tones-legend {
+  color: #d4d4d8;
+}
+
+:root[data-theme="dark"] .sp-input,
+:root[data-theme="dark"] .sp-textarea {
+  background: #1b1b21;
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #f4f4f5;
+}
+:root[data-theme="dark"] .sp-input::placeholder,
+:root[data-theme="dark"] .sp-textarea::placeholder {
+  color: #8e8e98;
+}
+
+:root[data-theme="dark"] .sp-tone-swatch {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+:root[data-theme="dark"] .sp-tone-swatch--polaris {
+  background: #f4f4f5;
+}
+:root[data-theme="dark"] .sp-tone-swatch--rigel {
+  background: #60a5fa;
+}
+:root[data-theme="dark"] .sp-tone-swatch--sol {
+  background: #fbbf24;
+}
+:root[data-theme="dark"] .sp-tone-swatch--vega {
+  background: #34d399;
+}
+:root[data-theme="dark"] .sp-tone-swatch[aria-pressed="true"] {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(79, 193, 127, 0.35);
+}
+
+:root[data-theme="dark"] .sp-error {
+  color: #f87171;
+}
+
+:root[data-theme="dark"] .sp-btn-cancel {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #d4d4d8;
+}
+:root[data-theme="dark"] .sp-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+:root[data-theme="dark"] .sp-btn-submit {
+  background: #4fc17f;
+  color: #06210f;
+}
