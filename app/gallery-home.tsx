@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { PortraitToggle } from "./portrait-toggle";
 import { SiteFooter } from "./site-footer";
+import { WorkWithMeButton } from "./work-with-me";
 
 export interface FeaturedLayer {
   src: string;
@@ -14,9 +15,11 @@ export interface FeaturedLayer {
   top: string;
   w: string;
   z: number;
+  r?: string;
   hx: string;
   hy: string;
   hr: string;
+  pixelated?: boolean;
 }
 
 export interface FeaturedShowcase {
@@ -176,12 +179,7 @@ export function GalleryHome({
           )}
         </nav>
 
-        <a
-          href="mailto:nurkahfirahmada@gmail.com?subject=Work%20with%20Kahfi"
-          className="gh-cta"
-        >
-          Work With Me
-        </a>
+        <WorkWithMeButton />
       </header>
 
       <main className="gh-main">
@@ -212,13 +210,7 @@ export function GalleryHome({
           </div>
         </section>
 
-        <section id="selected-work" className="gh-work-section" aria-labelledby="gh-work-heading">
-          <div className="gh-work-head">
-            <h2 id="gh-work-heading" className="gh-work-label">
-              Work
-            </h2>
-          </div>
-
+        <section id="selected-work" className="gh-work-section" aria-label="Selected work">
           <div
             ref={marqueeRef}
             className="gh-marquee"
@@ -269,6 +261,7 @@ export function GalleryHome({
                                   top: layer.top,
                                   width: layer.w,
                                   zIndex: layer.z,
+                                  "--r": layer.r,
                                   "--hx": layer.hx,
                                   "--hy": layer.hy,
                                   "--hr": layer.hr,
@@ -282,6 +275,11 @@ export function GalleryHome({
                                 height={layer.height}
                                 sizes="(max-width: 640px) 84vw, 520px"
                                 className="gh-diorama-img"
+                                style={
+                                  layer.pixelated
+                                    ? { imageRendering: "pixelated" }
+                                    : undefined
+                                }
                                 priority={!isClone}
                               />
                             </span>

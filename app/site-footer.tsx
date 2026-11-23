@@ -364,7 +364,7 @@ export function SiteFooter({ name, openToWork, socials, showSpace = true }: Site
                 |
               </span>
               <a
-                href="mailto:nurkahfirahmada@gmail.com?subject=Open%20Role%20for%20Kahfi"
+                href="mailto:nurkahfirahmada@gmail.com?subject=Inquiry%20Regarding%20Work%20Opportunity"
                 className="gh-open-status"
               >
                 <span className="gh-open-dot" aria-hidden="true" />
