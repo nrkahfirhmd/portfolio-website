@@ -1,17 +1,12 @@
 export const metadata = { title: "Prabu 2025" };
 
-{/* TODO(kv): written from your answers. Swap the figure placeholder for a
-    real screenshot (put it in public/project-media/SE/ and pass
-    src="/project-media/SE/…"): prabu_tasks.png, the home page or task
-    submission. */}
-
-Every new batch starts at orientation, and in 2025 that meant more than
-5,000 students arriving at once. Prabu 2025 was the website they did it
-through: where they met the university, studied, and handed in their work.
+Every new batch at Padjadjaran University starts with orientation. In 2025,
+that meant over 10.000 new students arriving on the same site to learn about
+the campus, read their orientation material, and finish their tasks.
 
 <Stats
   items={[
-    { label: "New students", value: "5,000+" },
+    { label: "New students", value: "10.000+" },
     { label: "Team", value: "5 people" },
     { label: "Built in", value: "3 months" },
   ]}
@@ -20,26 +15,126 @@ through: where they met the university, studied, and handed in their work.
 ## What it does
 
 <Points>
-  <Point title="Meet the university">A profile of the university for the students joining it.</Point>
-  <Point title="Learn the material">The orientation's learning material, in one place.</Point>
-  <Point title="Hand in tasks">Where students submit their orientation tasks.</Point>
+  <Point title="Meet the campus">A public university profile anyone can browse without logging in.</Point>
+  <Point title="Read the material">All orientation guides and modules gathered in one place.</Point>
+  <Point title="Finish the tasks">A clear path from reading each brief to handing in the work before deadline.</Point>
 </Points>
+
+<Flow
+  steps={[
+    { title: "Visit the site", body: "Browse campus info and announcements with no login." },
+    { title: "Read the guide", body: "Go through the material for each orientation task." },
+    { title: "Submit work", body: "Upload files and turn in the task before cutoff." },
+    { title: "Check status", body: "Confirm the submission went through and see what's next." },
+  ]}
+  caption="How a new student goes from first visit to task submission."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_about.png"
+  alt="Prabu 2025 about page introducing Padjadjaran University orientation"
+  caption="About Prabu 2025: introducing the orientation theme and campus overview."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_sejarah.png"
+  alt="Padjadjaran University history section on Prabu 2025"
+  caption="Campus history and heritage for incoming students."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_fasilitas.png"
+  alt="Campus facilities guide on Prabu 2025"
+  caption="Interactive guide to campus facilities."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_ukm.png"
+  alt="Student organizations and UKM directory on Prabu 2025"
+  caption="Student organizations (UKM) directory so new students can explore campus life."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_platform.png"
+  alt="Directory of Padjadjaran University websites and platforms on Prabu 2025"
+  caption="Directory of Unpad's official websites and campus platforms for incoming students."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_infografis.png"
+  alt="Orientation infographics page on Prabu 2025"
+  caption="Visual infographics breaking down orientation schedules and rules."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_faq.png"
+  alt="Frequently asked questions page on Prabu 2025"
+  caption="FAQ page answering common freshman questions before day one."
+/>
 
 ## How it's built
 
-A Next.js site, built to serve the whole incoming batch. The busiest moments
-came right before task deadlines, when thousands of students showed up at
-once to submit, and the site held up through them.
+Orientation traffic spikes hard right before a task deadline. To keep the
+site fast, we tuned cached Next.js pages to load in about 0.2ms on average.
+For task submissions, we connected the forms to **Google Sheets and Google
+Drive** through the Google API. Letting Google handle storage meant we didn't
+have to build custom file servers from scratch, and student data stayed safe
+under heavy traffic.
 
-<Figure caption="Screenshot: the Prabu 2025 home page or task submission." />
+<CraftList>
+  <CraftItem title="First self-hosted Docker deploy">This was my first time deploying outside Vercel or Railway. Getting CI/CD working took a few tries, especially writing a custom Docker entrypoint so environment variables loaded properly during the build.</CraftItem>
+  <CraftItem title="Sorted submissions via Google API">Our form handler sent student entries straight to Google Sheets and sorted uploaded files into Google Drive folders, so the committee wouldn't have to dig through raw uploads.</CraftItem>
+</CraftList>
+
+<Figure
+  src="/project-media/SE/prabu_capture.png"
+  alt="Prabu 2025 orientation website showcase"
+  caption="Prabu 2025: the home for Padjadjaran University's 2025 incoming batch."
+/>
+
+<Figure
+  src="/project-media/SE/prabu_login.png"
+  alt="Student login screen on Prabu 2025"
+  caption="Student sign-in screen for accessing orientation tasks."
+/>
+
+## Why we switched to Google Form
+
+Right near launch, university stakeholders asked us to drop the custom task
+form and use a manual Google Form instead. We pushed back at first because our
+automated handler already organized every file for the committee. In the end,
+we went with the stakeholders' call, swapped in the Google Form, and shipped on
+time.
+
+<Compare
+  before={{
+    label: "Automated API form",
+    note: "Built first",
+    text: "Custom form sending entries to Google Sheets and sorting student files into Drive folders automatically.",
+  }}
+  after={{
+    label: "Manual Google Form",
+    note: "Shipped",
+    text: "Switched to a standard Google Form near launch to match what university stakeholders wanted.",
+  }}
+  caption="How task intake changed right before launch."
+/>
 
 ## My role
 
-I was the lead frontend engineer on a team of five, from June to August 2025.
+I led the frontend on a team of five from June to August 2025.
 
 <Points>
-  <Point title="Architecture">How the frontend was structured, from pages down to data.</Point>
-  <Point title="Code standard">The conventions everyone wrote to, so five people's code read as one.</Point>
-  <Point title="Components">Breaking the designs down into components the team could build in parallel.</Point>
-  <Point title="Stakeholders">The link between the team and the orientation committee.</Point>
+  <Point title="Architecture & CI/CD">Set up the Next.js app structure, Docker entrypoint, and server deploy pipeline.</Point>
+  <Point title="Code standards">Kept five engineers writing in one clean, consistent style.</Point>
+  <Point title="Shared components">Split the UI into reusable pieces so the team could build in parallel.</Point>
+  <Point title="Committee sync">Worked directly with the orientation committee whenever scope or launch plans shifted.</Point>
 </Points>
+
+## Credits
+
+- **Athar:** Project Manager & Lead Backend Developer
+- **Kahfi:** Lead Frontend Developer
+- **Josef:** UI/UX Designer
+- **Fachri:** Frontend Developer
+- **Nurrizal:** Backend Developer

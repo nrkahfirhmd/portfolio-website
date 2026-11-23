@@ -31,7 +31,6 @@ export const PERSON = {
 export const SOCIALS: { label: string; href: string; icon: IconName }[] = [
   { label: "GitHub", href: "https://github.com/nrkahfirhmd", icon: "github" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/nrkahfirhmd/", icon: "linkedin" },
-  { label: "Email", href: "mailto:nurkahfirahmada@gmail.com", icon: "email" },
   { label: "itch.io", href: "https://firanda.itch.io", icon: "itch" },
 ];
 
@@ -87,6 +86,34 @@ export const CURRENT: { role: string; company: string; companyUrl: string } | nu
 // Projects, newest first; field docs on the Project type (app/software/projects.ts).
 export const PROJECTS: Project[] = [
   {
+    slug: "jelaja",
+    name: "Jelaja",
+    cover: "/project-media/SE/jelaja_background.jpg",
+    screen: "/project-media/SE/jelaja_capture.PNG",
+    platform: "mobile",
+    tagline: "Navigate Bali's Trans Metro Dewata buses and collect landmarks along the way",
+    body: "An iOS app built in collaboration with Forum Diskusi Transportasi Bali to help riders navigate Trans Metro Dewata routes and collect popular Bali landmarks reachable by bus.",
+    period: "Jul – Aug 2026",
+    tags: ["Apple Developer Academy", "Forum Diskusi Transportasi Bali"],
+    role: "iOS Developer",
+    stack: ["SwiftUI", "CoreLocation", "MapKit"],
+    live: "https://testflight.apple.com/join/JEydxGk4",
+  },
+  {
+    slug: "your-space",
+    name: "Your Space",
+    cover: "/project-media/SE/your_space_background.jpg",
+    screen: "/project-media/SE/your_space_recording.mp4",
+    platform: "mobile",
+    tagline: "A journaling app built for rereading, without the wall of text",
+    body: "An iOS journaling app that turns past entries into digestible snippets and grounded insights, so looking back brings perspective instead of overwhelm.",
+    period: "Oct 2026 – now",
+    tags: ["Apple Developer Academy"],
+    role: "Applied iOS AI Engineer",
+    stack: ["SwiftUI", "SwiftData", "Apple Foundation Models", "Swift"],
+    live: "https://apps.apple.com/id/app/id6829566352",
+  },
+  {
     slug: "omawe",
     name: "Omawe",
     cover: "/project-media/SE/omawe_bg.jpg",
@@ -94,11 +121,12 @@ export const PROJECTS: Project[] = [
     platform: "mobile",
     tagline: "Group trips, without the \"where are you?\" texts",
     body: "An iOS app that turns passive location sharing into active trip awareness. Everyone heading to the same place shows up on the Lock Screen and in the Dynamic Island as on the way, running late, or arrived, so the group knows when to leave without sending a single message.",
-    period: "Jun 2026 – now",
-    tags: ["Apple Developer Academy", "on the App Store"],
-    role: "Project Manager, team of 5",
+    period: "Jun 2026 – Nov 2026",
+    tags: ["Apple Developer Academy"],
+    role: "Project Manager",
     stack: ["Swift", "Go"],
     live: "https://apps.apple.com/id/app/omawe-group-trip-tracker/id6788641544",
+    website: "https://omaweapp.my.id",
   },
   {
     slug: "bitd-dashboard",
@@ -184,12 +212,12 @@ export const PROJECTS: Project[] = [
     cover: "/project-media/SE/prabu_bg.jpg",
     screen: "/project-media/SE/prabu_capture.png",
     platform: "web",
-    tagline: "The website for the 2025 university orientation, used by 5,000+ new students",
+    tagline: "The website for the 2025 Padjadjaran University orientation, used by 10.000+ new students",
     body: "The orientation's home on the web: the university's profile, the learning material new students work through, and the place they hand in their orientation tasks.",
     period: "Jun – Aug 2025",
     tags: ["freelance"],
-    role: "Lead Frontend Engineer, team of 5",
-    stack: ["Next.js"],
+    role: "Lead Frontend Engineer",
+    stack: ["Next.js", "Docker", "Google Sheets & Drive API"],
   },
   {
     slug: "14th-grand-summit",
@@ -275,6 +303,8 @@ export const PROJECTS: Project[] = [
 
 /** Projects with a long-form story at content/software/<slug>.mdx. */
 export const STORY_REPOS = new Set<string>([
+  "jelaja",
+  "your-space",
   "omawe",
   "katamata",
   "himatif-apps-v2",
@@ -357,22 +387,6 @@ export const STAGES: Stage[] = [
     play: "https://batangkayu.itch.io/body-count-shibuya-crossing",
     testflight: "https://testflight.apple.com/join/7S21PHFq",
   },
-  // TODO(kv): cover and `play` once they exist.
-  {
-    id: "1-3",
-    slug: "akar-fehu",
-    name: "Project Akar Fehu",
-    blurb:
-      "Batang Kayu Studio's first full-scale game: a narrative-driven puzzle game, built for release on Steam rather than for a jam.",
-    genre: "Narrative puzzle",
-    engine: "Godot",
-    platforms: "PC (Steam)",
-    year: "2027",
-    role: "Lead game designer",
-    team: "Team of 12",
-    status: "In development",
-  },
-  // TODO(kv): fill in blurb, metadata, cover, and `play` for these entries.
   {
     id: "1-4",
     slug: "green-sapphire",
@@ -387,6 +401,7 @@ export const STAGES: Stage[] = [
     jam: "Challenge 6 · Apple Developer Academy",
     status: "Done",
     year: "Sep 2026",
+    cover: "/project-media/GD/green_sapphire_logo.png",
     play: "https://firanda.itch.io/green-sapphire",
     testflight: "https://testflight.apple.com/join/tEvGHRhf",
   },
@@ -404,6 +419,8 @@ export const STAGES: Stage[] = [
     jam: "Unity Game Jam · theme \"Lucky Number\"",
     status: "Done",
     year: "Nov 2026",
+    cover: "/project-media/GD/dlaw_cover.png",
+    wide: true,
     play: "https://firanda.itch.io/dont-let-anyone-win",
   },
   {
@@ -420,6 +437,7 @@ export const STAGES: Stage[] = [
     jam: "Game Jam Plus 2026 · themes \"Roots & Legends\", \"Rules Are Made to be Broken\", and \"Small Actions, Big Impact\"",
     status: "Done",
     year: "Nov 2026",
+    cover: "/project-media/GD/pakem_cover.png",
     play: "https://firanda.itch.io/pakem-unbound",
   },
   {
@@ -436,6 +454,8 @@ export const STAGES: Stage[] = [
     jam: "GGG Jam · theme \"Overpowered\"",
     status: "Done",
     year: "Nov 2026",
+    cover: "/project-media/GD/whitejack_cover.png",
+    wide: true,
     play: "https://firanda.itch.io/whitejack",
   },
 ];
@@ -658,10 +678,10 @@ export const JOURNEY_STOPS: JourneyStop[] = [
     title: "Prabu 2025",
     place: "Freelance, Lead Frontend Engineer",
     kind: "work",
-    summary: "Led the frontend of the orientation site for 5,000+ new students.",
+    summary: "Led the frontend of the orientation site for 10.000+ new students.",
     skills: ["Frontend Architecture", "Next.js", "Stakeholder Management"],
     story: [
-      "Prabu 2025 was where the university's 5,000+ new students met the campus, studied the orientation material, and handed in their tasks.",
+      "Prabu 2025 was where Padjadjaran University's 10.000+ new students met the campus, studied the orientation material, and handed in their tasks.",
       "On a team of five, I led the frontend: its architecture, the code standard, how the designs broke down into components, and the conversations with the orientation committee. It held up through the rush right before every task deadline.",
     ],
     links: [{ href: "/software/work/prabu-2025", label: "Read the Prabu 2025 story" }],
@@ -785,11 +805,12 @@ export interface FriendEntry {
 export const ABOUT = {
   title: "Kahfi R | About Me",
   description:
-    "About Kahfi Rahmada: software engineer, AI tinkerer, and game maker based in Bali.",
-  heading: "Building software that feels like it was made for you.",
+    "About Kahfi Rahmada: software engineer, AI builder, and game maker based in Bali.",
+  heading: "Building products to talk to the people who use them.",
   bio: [
-    "I'm Kahfi Rahmada, a software engineer, AI tinkerer, and game maker. I studied Informatics at Universitas Padjadjaran majoring in Artificial Intelligence (GPA 3.92 / 4.00) and currently build iOS products at the Apple Developer Academy @ BINUS, Bali.",
-    "Outside of apps and backend infrastructure, I lead game design at Batang Kayu Studio, where twelve of us are building Project Akar Fehu in Godot. Whether it is a multi-tenant ISP platform, an LSTM forecast API, or a puzzle game, I care about the small details that make something feel honest and alive.",
+    "I'm Kahfi Rahmada, a software engineer who loves building products that **solve real problems and make daily life a little easier**, even when the problem looks small or easy to overlook. I studied Informatics at Universitas Padjadjaran majoring in Artificial Intelligence (GPA 3.92 / 4.00) and currently build iOS products at the **Apple Developer Academy @ BINUS, Bali**.",
+    "Whatever the problem calls for, I like bringing the solution to life across **websites, mobile apps, AI systems, or games**. More than anything, I care about how someone feels when they open something I made. For me, building a product is a way of **talking directly to its users**. Outside of client and Academy work, I founded **Batang Kayu Studio**, where I stay active in game jams and quietly build a new IP for the studio.",
+    "Next, I'm looking to work with teams who genuinely care about the craft and love of building products, and I'm open to **all kinds of software-related roles**.",
   ],
   quote: {
     text: "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines. Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.",
@@ -798,23 +819,23 @@ export const ABOUT = {
   values: [
     {
       number: "01",
-      title: "Earn a place in the day",
-      body: "Good software respects attention. I focus on the quiet, thoughtful details that make a tool feel natural instead of noisy.",
+      title: "Small problems still count",
+      body: "If fixing an everyday annoyance makes someone's day a little better, it's worth building. Even the smallest friction deserves real care.",
     },
     {
       number: "02",
-      title: "Unlearn, then build",
-      body: "Start from curiosity and the real human problem. Let research and constraints shape the architecture, not habit.",
+      title: "Speak through the product",
+      body: "I care about how someone feels the moment they open what I made. Every flow, detail, and interaction is a conversation with the user.",
     },
     {
       number: "03",
-      title: "Own it all the way to done",
-      body: "Mobile, web, backend, infrastructure, AI, or game systems. Whatever the product needs, I take responsibility until it ships.",
+      title: "Right medium for the problem",
+      body: "Web, iOS, AI, or game. I don't force one stack on every idea; I pick and learn whatever medium solves the problem best.",
     },
     {
       number: "04",
-      title: "Play on purpose",
-      body: "Serious engineering and playful craft belong together. Make software behave and games misbehave, intentionally.",
+      title: "Care for the craft, together",
+      body: "Great products come from teams who genuinely love building them. Whether shipping software or jamming on a game, I bring curiosity and ownership.",
     },
   ] satisfies AboutValue[],
   globeHeading: "Based in Bali. Working with teams worldwide.",
@@ -911,30 +932,30 @@ export const ABOUT = {
   ] satisfies GlobePlace[],
   photos: [
     {
-      src: "/portrait.webp",
-      alt: "Kahfi Rahmada portrait",
+      src: "/about-me/me.jpeg",
+      alt: "Kahfi Rahmada at IGDX Bali Beach Convention Center with Batang Kayu Studio",
       caption: "Bali, Indonesia",
       featured: true,
-      objectPosition: "center 20%",
+      objectPosition: "center 35%",
     },
     {
-      src: "/side-quests/academy.jpg",
-      alt: "Kahfi at Apple Developer Academy Kick-Off",
+      src: "/about-me/bfr.webp",
+      alt: "Kahfi Rahmada with friends in graduation stoles at Universitas Padjadjaran",
       objectPosition: "center center",
     },
     {
-      src: "/side-quests/omawe.jpg",
-      alt: "Building Omawe at Apple Developer Academy",
+      src: "/about-me/bgm.webp",
+      alt: "Kahfi and friends dressed as sheep at the Apple Developer Academy",
       objectPosition: "center center",
     },
     {
-      src: "/side-quests/hike.jpg",
-      alt: "Kahfi hiking outdoors",
+      src: "/about-me/sensi.webp",
+      alt: "Kahfi with university friends in studio group portrait",
       objectPosition: "center center",
     },
     {
-      src: "/side-quests/bfr.jpg",
-      alt: "Kahfi with close friends",
+      src: "/about-me/ssu.webp",
+      alt: "Kahfi with friends on a beach in Bali",
       objectPosition: "center center",
     },
   ] satisfies AboutPhoto[],

@@ -5,6 +5,14 @@ making yours worse on purpose. You sit down as a legendary high roller stuck
 with a rigged championship deck so overpowered that almost every hand blows
 straight past 21.
 
+<Stats
+  items={[
+    { label: "Jam", value: "GGG Jam (1 week)" },
+    { label: "Antes", value: "9" },
+    { label: "Team", value: "Solo" },
+  ]}
+/>
+
 ## Sabotaging an overpowered deck
 
 Built for GGG Jam around the theme **Overpowered**, the game flips the
@@ -22,6 +30,12 @@ busting.
   ]}
 />
 
+<Figure
+  src="/project-media/GD/whitejack_encounter.webp"
+  alt="WhiteJack gameplay table showing overpowered VIP Aces worth 13 and 11, Dealer Stands 17, and VIP Pit Pass badges"
+  caption="A standard hand: inflated VIP cards and Pit Pass badges push your total dangerously close to 21."
+/>
+
 ## The De-Escalation Desk
 
 Between antes, you spend your winnings to dismantle your own deck and strip
@@ -32,6 +46,62 @@ away the advantages hurting you:
   <Point title="Nerf stickers & perks">Apply nerf stickers and strip away VIP badges that push your total too high.</Point>
   <Point title="Boss dealers">Test your weakened deck against rule-bending dealers like The Red-Suit Auditor, The Speed Dealer, and The Purist.</Point>
 </Points>
+
+<Figure
+  src="/project-media/GD/whitejack_shop.webp"
+  alt="WhiteJack Cashier's Cage shop showing the Shred-O-Matic, nerf stickers, and VIP badge unpinning next to a 31-card deck"
+  caption="Between antes: shred high cards, apply nerf stickers, or unpin VIP badges."
+/>
+
+## Balancing the first encounter
+
+The hardest design problem was getting more than half of players past the
+first encounter. In the early prototype, **no one** got past Boss 1 because
+chips lost in earlier hands left players with too little room to survive the
+boss. Adding health recovery after each completed encounter finally gave
+players the breathing room to reach the De-Escalation Desk and play the real
+loop.
+
+<Compare
+  before={{
+    label: "Early prototype",
+    note: "0% past Boss 1",
+    text: "Chip damage carried straight into the first boss with no recovery, knocking out every playtester before the run opened up.",
+  }}
+  after={{
+    label: "Balanced build",
+    note: "Shipped",
+    text: "Added health recovery after every completed encounter so players could survive Boss 1 and start dismantling their deck.",
+  }}
+  caption="The balance change that opened up the first ante."
+/>
+
+## How it's built
+
+Built solo in **Unity** for browser play.
+
+<CraftList>
+  <CraftItem title="Boss rule overrides">Structured the dealer rules so boss encounters like The Red-Suit Auditor, The Speed Dealer, and The Purist could bend the core blackjack loop without breaking standard hands.</CraftItem>
+  <CraftItem title="UI & game feel">Getting card interactions, feedback, and pacing to feel satisfying was the hardest part of the build, and an area I am still actively sharpening.</CraftItem>
+</CraftList>
+
+<Figure
+  src="/project-media/GD/whitejack_boss.webp"
+  alt="WhiteJack boss encounter with the Stickers Void rule active and the boss dealer portrait on the table"
+  caption="A boss encounter overriding the rules with Stickers Void."
+/>
+
+## Finding the hook
+
+I nearly gave up two days into the one-week jam. My first brainstorm fell into
+the same "HR interview" interpretation of **Overpowered** that many other
+entries were making, and two days passed with nothing built. Stepping back to
+reframe the theme as a premise led to WhiteJack: what if your deck starts *too*
+good to play?
+
+Going forward, I want to keep widening my game references and theme-mapping
+process so I can spot stronger hooks faster. Early player feedback on the jam
+build has been encouraging (*"Mantap ini gamenya polished banget keren"*).
 
 <Callout>
   Play it in the browser on [itch.io](https://firanda.itch.io/whitejack).

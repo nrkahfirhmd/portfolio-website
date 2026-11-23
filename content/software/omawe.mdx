@@ -9,8 +9,7 @@ progress toward a single destination.
 <Stats
   items={[
     { label: "Status", value: "On the App Store" },
-    { label: "TestFlight testers", value: "20+" },
-    { label: "Team", value: "5 people" },
+    { label: "TestFlight testers", value: "26" },
   ]}
 />
 
@@ -32,18 +31,38 @@ progress toward a single destination.
   caption="A member's status through one trip, as the group sees it on the Lock Screen."
 />
 
+## Why we moved off CloudKit
+
+We started with CloudKit as the entire backend, hoping iCloud sync would carry
+live trip updates without a custom server. Group user tests proved otherwise:
+testers reported stale, inaccurate locations because CloudKit fetches on its own
+unpredictable schedule instead of pushing on demand.
+
+<Compare
+  before={{
+    label: "CloudKit-only",
+    note: "Early prototype",
+    text: "Location updates relied on CloudKit background sync, arriving on an unpredictable schedule and leaving testers with stale ETAs.",
+  }}
+  after={{
+    label: "Go + WebSocket",
+    note: "Shipped v1",
+    text: "A dedicated Go backend pushes trip state over WebSocket so every member sees live progress as it happens.",
+  }}
+  caption="What changed after group user testing exposed CloudKit's sync delay."
+/>
+
 ## How it's built
 
 A SwiftUI app with an ActivityKit widget extension for the Live Activities,
 sharing its types with the app so both sides read the same trip state. Behind
-it, a Go backend serves the usual API and pushes everyone's progress to the
-rest of the group in real time over WebSocket. Two details shape how it
-behaves on a real trip:
+it, the Go backend serves the API and pushes everyone's progress to the rest
+of the group over WebSocket.
 
-- **Honest under bad signal.** When GPS or the network drops, Omawe shows
-  "last seen X ago" instead of a status that looks live but isn't.
-- **Easy on the battery.** Background location and Live Activity updates are
-  tuned so a full trip doesn't drain the phone.
+<CraftList>
+  <CraftItem title="Honest under bad signal">When GPS or the network drops, Omawe shows "last seen X ago" instead of a status that looks live but isn't.</CraftItem>
+  <CraftItem title="Easy on the battery">Background location and Live Activity updates are tuned so a full trip doesn't drain the phone.</CraftItem>
+</CraftList>
 
 <Figure
   src="/project-media/SE/omawe_preview.png"
@@ -53,18 +72,27 @@ behaves on a real trip:
 
 ## My role
 
-I was the project manager on a team of five, building Omawe at the Apple
-Developer Academy from June 2026 through its release on the App Store. That
-meant all of the product side: planning the work, making the scope calls,
-and taking the app through TestFlight, where 20+ testers used it before
-launch, and App Store review.
+I was the project manager building Omawe at the Apple
+Developer Academy from June 2026 to November 2026 through its release on the App
+Store. Beyond planning the work and running TestFlight with 26 testers, the
+hardest call was cutting scope for v1: we had a share feature planned, but
+refining the core trip flow and migrating from CloudKit to Go took priority, so
+we moved sharing to the backlog to ship a reliable v1 on time.
 
 ## What's next
 
-Version 1 is iOS-only, built around Live Activities. Android support,
-multi-stop trips, and persistent friend groups are being considered for
-later versions.
+Version 1 is iOS-only, built around Live Activities. The deferred share
+feature, Android support, multi-stop trips, and persistent friend groups are on
+the list for later versions.
+
+## Credits
+
+- **Kahfi:** PM/Developer
+- **Gleen:** Developer
+- **Bintang:** Developer
+- **Luat:** Designer
+- **Syed:** Designer
 
 <Callout>
-  Omawe is on the [App Store](https://apps.apple.com/id/app/omawe-group-trip-tracker/id6788641544).
+  Visit the [product landing page](https://omaweapp.my.id) or download Omawe on the [App Store](https://apps.apple.com/id/app/omawe-group-trip-tracker/id6788641544).
 </Callout>

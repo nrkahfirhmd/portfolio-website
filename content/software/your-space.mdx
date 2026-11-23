@@ -1,0 +1,98 @@
+export const metadata = { title: "Your Space" };
+
+People who journal often love looking back at what they wrote months ago.
+Seeing how you handled a hard week brings real perspective, like realizing
+you have been in that spot before and made it through. The problem is that
+most journals turn into long, cluttered walls of text, so opening old entries
+feels overwhelming instead of helpful.
+
+Your Space is built around **rereading** your own journal.
+
+<Stats
+  items={[
+    { label: "Status", value: "On the App Store" },
+    { label: "Team", value: "5 people" },
+    { label: "Timeline", value: "Oct 2026 – now" },
+  ]}
+/>
+
+## What it does
+
+<Points>
+  <Point title="Log multiple emotions">Start each check-in by picking one or more emotions, without wrestling with an intensity slider.</Point>
+  <Point title="Write without clutter">Capture thoughts in a calm space without worrying about formatting.</Point>
+  <Point title="Reread through summaries">Open the summary view for concise insights, entry previews, and reflection prompts instead of digging through endless text.</Point>
+</Points>
+
+<Flow
+  steps={[
+    { title: "Log emotions", body: "Pick one or more emotions for how you feel." },
+    { title: "Write entry", body: "Get your thoughts down in your space." },
+    { title: "Open summary", body: "See concise insights, snippets, and previews." },
+    { title: "Reflect", body: "Revisit past perspective when time passes." },
+  ]}
+  caption="The daily loop from emotion check-in to rereading past perspective."
+/>
+
+<Figure
+  src="/project-media/SE/your_space_screenshots.png"
+  alt="Three Your Space iPhone screens: Monthly Emotional Landscape star grid, connected journal constellation, and an entry with multiple emotion stars"
+  caption="Emotional Landscape, the journal constellation, and an entry tagged with multiple emotions."
+/>
+
+## What user testing changed
+
+Early user tests showed that the look-back and summary experience needed work
+to carry the app's value. Testers found the AI tone stiff, were confused by
+icons (mistaking the filter button for list view), and felt an emotion-plus-intensity
+slider missed how complex real feelings are.
+
+<Compare
+  before={{
+    label: "Early prototype",
+    note: "User test v1",
+    text: "Single emotion with an intensity slider, stiff AI summary tone, confusing icons, and no journal preview.",
+  }}
+  after={{
+    label: "Shipped v1",
+    note: "App Store",
+    text: "Multi-select emotions without intensity sliders, clearer icons, journal entry previews, and a redesigned summary layout.",
+  }}
+  caption="How early user testing reshaped the emotion picker and look-back flow."
+/>
+
+<Figure
+  src="/project-media/SE/your_space_screenshots_2.png"
+  alt="Three Your Space iPhone screens: Weekly Landscape star card, Reread this prompt sheet, and Monthly Summary with Overview and Snippets"
+  caption="Weekly Landscape, the Reread This prompt, and Monthly Summary with grounded snippets."
+/>
+
+## How it's built
+
+Built natively for iOS with **SwiftUI** and **SwiftData**, using **Apple
+Intelligence's on-device Foundation Models** for private summarization and a
+plain **Swift** backend.
+
+<CraftList>
+  <CraftItem title="On-device AI insights">Apple Intelligence Foundation Models run on-device so journal entries stay private while generating concise insights and reflection prompts.</CraftItem>
+  <CraftItem title="Grounded, natural tone">As the Applied iOS AI Engineer, I refined the AI flow so summaries stay tied to what the user actually wrote instead of sounding stiff or rambling.</CraftItem>
+  <CraftItem title="SwiftData + Swift backend">SwiftData powers fast local persistence alongside a plain Swift backend.</CraftItem>
+</CraftList>
+
+## My role
+
+I worked as the **Applied iOS AI Engineer** on a five-person team at the Apple
+Developer Academy from October 2026 onward, integrating the Swift backend and
+on-device AI flow and shipping every planned v1 feature to the App Store.
+
+## Credits
+
+- **Dyan:** Project Manager
+- **Kahfi:** iOS Applied AI Engineer & Backend Developer
+- **Bintang:** Frontend Developer
+- **Nesa:** Graphic & UI/UX Designer
+- **Valen:** UI/UX Designer
+
+<Callout>
+  Download Your Space on the [App Store](https://apps.apple.com/id/app/id6829566352) or join the [TestFlight](https://testflight.apple.com/join/TPhWWN4r) beta.
+</Callout>
