@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Children, type ComponentPropsWithoutRef, type ReactNode } from "react";
+import { VideoPlayer } from "./video-player";
 
 // Story blocks shared by every section: lowercase keys restyle markdown's HTML, Capitalized ones are tags a story can use without importing.
 
@@ -36,6 +37,7 @@ export function Figure({
         alt={alt}
         width={phone ? 600 : 1600}
         height={phone ? 1300 : 900}
+        loading="eager"
         sizes={
           phone
             ? "18rem"
@@ -49,30 +51,36 @@ export function Figure({
   );
 }
 
-/** A demo video block with native pause/play controls; renders nothing until `src` is provided. */
+/** A demo video block with portfolio-native smoked-glass controls; renders nothing until `src` is provided. */
 export function Video({
   src,
   poster,
   caption,
+  size,
   wide,
 }: {
   src?: string;
   poster?: string;
   caption?: string;
+  size?: "phone";
   wide?: boolean;
 }) {
   if (!src) return null;
+  const phone = size === "phone";
+  const cls = [
+    "st-figure",
+    phone && "st-figure--phone",
+    wide && !phone && "st-wide",
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <figure className={wide ? "st-figure st-wide" : "st-figure"}>
-      <video
-        className="st-video"
-        src={src.includes("#") ? src : `${src}#t=0.1`}
+    <figure className={cls}>
+      <VideoPlayer
+        src={src}
         poster={poster}
-        controls
-        muted
-        loop
-        playsInline
-        preload="metadata"
+        label={caption ?? "Project demo video"}
+        variant={phone ? "mobile" : "default"}
       />
       {caption ? <figcaption>{caption}</figcaption> : null}
     </figure>
@@ -108,15 +116,7 @@ export function Compare({
       <div className="st-compare-body">
         {side.src ? (
           isVideoSrc(side.src) ? (
-            <video
-              className="st-video"
-              src={side.src.includes("#") ? side.src : `${side.src}#t=0.1`}
-              controls
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
+            <VideoPlayer src={side.src} label={side.alt ?? side.label} />
           ) : (
             <Image
               src={side.src}
@@ -274,15 +274,11 @@ export function HeroMedia({
     <figure className={mobile ? "story-hero-stage story-hero-stage--mobile" : "story-hero-stage"}>
       <div className="story-hero-frame">
         {video ? (
-          <video
-            className="story-hero-video"
-            src={src.includes("#") ? src : `${src}#t=0.1`}
-            controls
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label={alt}
+          <VideoPlayer
+            src={src}
+            label={alt}
+            variant={mobile ? "mobile" : "default"}
+            className="story-hero-player"
           />
         ) : (
           <Image
