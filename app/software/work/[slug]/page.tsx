@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PERSON, PROJECTS, STORY_REPOS } from "@/content/site";
 import { PageTransition } from "../../../page-transition";
 import { SiteFooter } from "../../../site-footer";
+import { WorkWithMeButton } from "../../../work-with-me";
 import { SOCIALS } from "../../../socials";
 import { StoryPager } from "../../../story/components";
 import { StoryNav } from "../../../story/story-nav";
@@ -92,12 +93,7 @@ export default async function StoryPage({ params }: PageProps<"/software/work/[s
             ))}
           </nav>
 
-          <a
-            href="mailto:nurkahfirahmada@gmail.com?subject=Work%20with%20Kahfi"
-            className="gh-cta"
-          >
-            Work With Me
-          </a>
+          <WorkWithMeButton />
         </header>
 
         <main className="st-main">

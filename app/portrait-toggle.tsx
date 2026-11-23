@@ -56,7 +56,7 @@ export function PortraitToggle({ name }: { name: string }) {
       {/* The circle is at most 168px (home.css), so sizes lets a 2x screen pick ~384px, not a full-size PNG. Eager: it's the first thing in view. */}
       <Image
         className="photo-img"
-        src="/portrait.png"
+        src="/portrait.webp"
         alt=""
         width={384}
         height={384}
@@ -66,13 +66,13 @@ export function PortraitToggle({ name }: { name: string }) {
       />
       <Image
         className="photo-img photo-img--spider"
-        src="/spiderman.png"
+        src="/spiderman.webp"
         alt=""
         width={384}
         height={384}
         sizes="168px"
       />
-      <BrushReveal src={spider ? "/portrait.png" : "/spiderman.png"} />
+      <BrushReveal src={spider ? "/portrait.webp" : "/spiderman.webp"} />
     </div>
   );
 }

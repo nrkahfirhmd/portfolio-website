@@ -158,7 +158,7 @@ export const PROJECTS: Project[] = [
     slug: "mpi-k8s-performance",
     name: "Performance Analysis MPI on K8s",
     cover: "/project-media/SE/perfanalysis_bg.jpg",
-    logo: "/project-media/SE/perf_analysis.png",
+    logo: "/project-media/SE/perf_analysis.webp",
     tagline: "Does MPI pay a price for running on Kubernetes? Benchmarked against bare metal",
     body: "A study of what containerising HPC workloads costs. The same MPI jobs, a LAMMPS molecular-dynamics simulation (500,000 atoms) and the OSU latency benchmark, ran at 1 to 32 processes on bare metal and on Kubernetes, and an interactive dashboard compares runtime, scaling, and message latency side by side.",
     period: "Sep – Dec 2025",
@@ -911,7 +911,7 @@ export const ABOUT = {
   ] satisfies GlobePlace[],
   photos: [
     {
-      src: "/portrait.png",
+      src: "/portrait.webp",
       alt: "Kahfi Rahmada portrait",
       caption: "Bali, Indonesia",
       featured: true,
