@@ -19,7 +19,8 @@ export function SiteHeader({ active }: { active?: NavHref }) {
       <Link
         href="/"
         className="gh-brand"
-        transitionTypes={["nav-back"]}
+        // On the index this link goes home to home: sliding would cross-fade two marquee positions into a double image.
+        transitionTypes={active ? ["nav-back"] : undefined}
         aria-label={`${PERSON.name}, home`}
       >
         <span className="gh-mark" aria-hidden="true">

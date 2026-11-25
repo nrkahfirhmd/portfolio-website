@@ -68,6 +68,9 @@ export function GalleryHome({
     const track = trackRef.current;
     const group = groupRef.current;
     if (!marquee || !track || !group) return;
+    // Each half moves on its own: one 4000px+ track at 2x passes Safari's 8192px layer limit and gets drawn in repeats.
+    const halves = Array.from(track.children) as HTMLElement[];
+    const place = (value: string) => halves.forEach((el) => (el.style.transform = value));
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mobileQuery = window.matchMedia("(max-width: 639px), (hover: none) and (pointer: coarse)");
@@ -97,7 +100,7 @@ export function GalleryHome({
       lastTime = now;
 
       if (mobileQuery.matches) {
-        if (track.style.transform) track.style.transform = "";
+        place("");
         offset = 0;
         wheelVel = 0;
       } else {
@@ -113,7 +116,7 @@ export function GalleryHome({
             wheelVel = 0;
           }
           offset = wrap(offset, span);
-          track.style.transform = `translate3d(${-offset.toFixed(2)}px, 0, 0)`;
+          place(`translate3d(${-offset.toFixed(2)}px, 0, 0)`);
         }
       }
 
@@ -126,7 +129,7 @@ export function GalleryHome({
     return () => {
       window.removeEventListener("wheel", onWheel);
       cancelAnimationFrame(raf);
-      track.style.transform = "";
+      place("");
     };
   }, []);
 
