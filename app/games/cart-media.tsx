@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useFinePointer } from "../fine-pointer";
 
 /** Tile video autoplay, one setting for every grid; saved per visitor, defaulting to on unless they prefer reduced motion. */
@@ -94,49 +94,5 @@ export function CartVideo({ src }: { src: string }) {
       preload="metadata"
       controls={!hover && !autoplay}
     />
-  );
-}
-
-/** Only one track plays at a time. */
-let playing: HTMLAudioElement | null = null;
-
-/** A music tile's Listen button. */
-export function CartAudio({ src, name }: { src: string; name: string }) {
-  const audio = useRef<HTMLAudioElement>(null);
-  const [on, setOn] = useState(false);
-
-  function toggle() {
-    const a = audio.current;
-    if (!a) return;
-    if (a.paused) {
-      if (playing && playing !== a) playing.pause();
-      playing = a;
-      void a.play().catch(() => {});
-    } else {
-      a.pause();
-    }
-  }
-
-  return (
-    <>
-      <button type="button" className="tile-btn" aria-pressed={on} onClick={toggle}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          {on ? (
-            <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor" />
-          ) : (
-            <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />
-          )}
-        </svg>
-        {on ? "Pause" : "Listen"}
-        <span className="sr-only"> {name}</span>
-      </button>
-      <audio
-        ref={audio}
-        src={src}
-        preload="none"
-        onPlay={() => setOn(true)}
-        onPause={() => setOn(false)}
-      />
-    </>
   );
 }

@@ -50,7 +50,7 @@ function buildUnifiedWork(): UnifiedWorkItem[] {
     screen: p.screen,
     logo: p.logo ?? p.cover,
     categories: classifySoftware(p.slug, p.platform, p.stack),
-    href: `/software/work/${p.slug}`,
+    href: `/work/article/${p.slug}`,
   }));
 
   const gameItems: UnifiedWorkItem[] = shelve(STAGES).map((s) => {
@@ -65,7 +65,7 @@ function buildUnifiedWork(): UnifiedWorkItem[] {
       screen: s.screen ?? s.video ?? s.cover,
       logo: s.logo ?? s.cover,
       categories: ["games"],
-      href: devlog ? `/games/stage/${s.slug}` : (s.play ?? STUDIO.url),
+      href: devlog ? `/work/article/${s.slug}` : (s.play ?? STUDIO.url),
       external: !devlog,
       play: s.play,
       locked: s.locked,
@@ -81,8 +81,6 @@ export default function WorkPage() {
   return (
     <PageTransition>
       <WorkGrid
-        name={PERSON.name}
-        roleSubtitle="Software Engineer"
         openToWork={PERSON.openToWork}
         items={items}
         socials={SOCIALS.map((s) => ({ label: s.label, href: s.href, d: s.d }))}

@@ -1,23 +1,4 @@
-/* The project and library tiles (project-lists.tsx), shared by /software and /games. */
-
-.sw-work {
-  scroll-margin-top: 1rem;
-}
-.sw-work-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: var(--spacing-stack);
-}
-.sw-h2 {
-  margin: 0;
-  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
-  font-weight: var(--primitive-fontWeight-bold);
-  letter-spacing: var(--primitive-tracking-tight);
-  line-height: 1.1;
-}
+/* The project and library tiles (project-lists.tsx) on /work. */
 
 /* The autoplay switch at the far right of a grid's heading row. */
 .autoplay-toggle {

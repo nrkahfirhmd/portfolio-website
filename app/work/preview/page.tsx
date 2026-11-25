@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
-import { Editor } from "../../story/editor";
-import "../software.css";
-import "../../story/story.css";
+import { Editor } from "@/app/story/editor";
+import "@/app/games/games.css";
+import "@/app/story/story.css";
 
 const STARTER = `export const metadata = { title: "Draft" };
 
 <ArticleHeader slug="omawe" />
 
-The opening paragraph. Write the way the finished story should read — the
-preview uses the same components and styles as /software/work/[slug].
+The opening paragraph. Write the way the finished story should read: the
+preview uses the same components and styles as /work/article/[slug].
 
 ## The first heading
 

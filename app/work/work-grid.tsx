@@ -1,15 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { SocialLinkItem } from "../gallery-home";
 import { AutoplayToggle } from "../games/cart-media";
 import { SharedTitle } from "../page-transition";
 import { SiteFooter } from "../site-footer";
-import { WorkWithMeButton } from "../work-with-me";
 import { Masonry } from "../software/masonry";
 import { Showcase, type Shape } from "../software/project-lists";
+import { SiteHeader } from "@/app/site-header";
 
 export type WorkCategory = "web" | "mobile" | "games" | "ai-data" | "systems";
 type FilterKey = "all" | WorkCategory;
@@ -31,19 +30,10 @@ export interface UnifiedWorkItem {
 }
 
 interface WorkGridProps {
-  name: string;
-  roleSubtitle: string;
   openToWork: boolean;
   items: UnifiedWorkItem[];
   socials: SocialLinkItem[];
 }
-
-const NAV_LINKS = [
-  { label: "Work", href: "/work", active: true },
-  { label: "About Me", href: "/about", active: false },
-  { label: "My Journey", href: "/journey", active: false },
-  { label: "Side Quests", href: "/side-quests", active: false },
-] as const;
 
 const SIDEBAR_CATEGORIES: { id: FilterKey; label: string }[] = [
   { id: "all", label: "All Works" },
@@ -55,8 +45,6 @@ const SIDEBAR_CATEGORIES: { id: FilterKey; label: string }[] = [
 ];
 
 export function WorkGrid({
-  name,
-  roleSubtitle,
   openToWork,
   items,
   socials,
@@ -68,41 +56,7 @@ export function WorkGrid({
 
   return (
     <div className="home-gallery wk-page">
-      <header className="gh-header">
-        <Link href="/" className="gh-brand" transitionTypes={["nav-back"]} aria-label={`${name}, home`}>
-          <span className="gh-mark" aria-hidden="true">
-            <Image
-              src="/kv_avatar.svg"
-              alt=""
-              width={44}
-              height={44}
-              className="gh-avatar"
-              priority
-            />
-          </span>
-          <span className="gh-identity">
-            <span className="gh-name">{name.toLowerCase()}</span>
-            <span className="gh-role">{roleSubtitle}</span>
-          </span>
-        </Link>
-
-        <nav className="gh-nav" aria-label="Primary">
-          {NAV_LINKS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              transitionTypes={[item.href === "/work" ? "nav-forward" : "nav-back"]}
-              className="gh-nav-link"
-              data-active={item.active || undefined}
-              aria-current={item.active ? "page" : undefined}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <WorkWithMeButton />
-      </header>
+      <SiteHeader active="/work" />
 
       <main className="wk-shell">
         <h1 className="sr-only">Work Archive</h1>
@@ -197,7 +151,7 @@ export function WorkGrid({
         </section>
       </main>
 
-      <SiteFooter name={name} openToWork={openToWork} socials={socials} />
+      <SiteFooter openToWork={openToWork} socials={socials} />
     </div>
   );
 }

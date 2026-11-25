@@ -1,4 +1,4 @@
-/* /work — Sticky category sidebar + /software & /games bento masonry catalogue */
+/* /work: sticky category sidebar + bento masonry catalogue of software and games */
 
 .wk-page .gh-nav-link[data-active] {
   color: var(--gh-ink);
@@ -55,7 +55,7 @@
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
   text-align: left;
   cursor: pointer;
   transition:
@@ -73,8 +73,8 @@
   outline-offset: 1px;
 }
 .wk-cat-btn[data-active] {
-  background: #0f0f0f;
-  color: #ffffff;
+  background: var(--primitive-color-zinc-950);
+  color: var(--primitive-color-site-white);
   font-weight: 600;
   box-shadow: 0 4px 12px -6px rgba(15, 15, 20, 0.4);
 }
@@ -154,7 +154,7 @@
 }
 
 :root[data-theme="dark"] .wk-page .gh-nav-link[data-active] {
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
@@ -169,16 +169,16 @@
 }
 
 :root[data-theme="dark"] .wk-cat-btn {
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 :root[data-theme="dark"] .wk-cat-btn:hover,
 :root[data-theme="dark"] .wk-cat-btn:focus-visible {
   background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
 }
 :root[data-theme="dark"] .wk-cat-btn[data-active] {
-  background: #f4f4f5;
-  color: #0c0c0e;
+  background: var(--primitive-color-zinc-100);
+  color: var(--primitive-color-night-ink);
 }
 
 :root[data-theme="dark"] .wk-sidebar-toggle {
