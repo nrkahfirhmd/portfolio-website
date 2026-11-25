@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono, Fraunces, Syne } from "next/font/google";
-import { HOME } from "@/content/site";
+import { HOME, PERSON, SITE_URL } from "@/content/site";
 import "./globals.css";
 
 const sans = DM_Sans({
@@ -29,8 +29,19 @@ const flourish = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: HOME.title,
   description: HOME.description,
+  applicationName: HOME.title,
+  authors: [{ name: PERSON.name }],
+  openGraph: {
+    type: "website",
+    siteName: HOME.title,
+    title: HOME.title,
+    description: HOME.description,
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image", title: HOME.title, description: HOME.description },
 };
 
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light"){document.documentElement.dataset.theme=t;}}catch(e){}})();`;

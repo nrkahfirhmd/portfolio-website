@@ -25,6 +25,8 @@ jobs:
       - run: npm run lint
 
       - run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
 
       # server.js serves these itself only when they sit inside the standalone folder.
       - name: Bundle static files
