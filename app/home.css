@@ -1,18 +1,18 @@
 /* Gallery home: pure white editorial canvas, tactile hardware switcher, shrink-wrapped vinyl sleeves. */
 
 body:has(.home-gallery) {
-  background-color: #ffffff;
+  background-color: var(--primitive-color-site-white);
   background-image: none;
-  color: #0f0f0f;
+  color: var(--primitive-color-zinc-950);
   font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .home-gallery {
   --gh-pad-x: clamp(1.25rem, 4.2vw, 3.75rem);
-  --gh-ink: #0f0f0f;
-  --gh-muted: #57534e;
-  --gh-accent: #166238;
-  --gh-footer-ink: #27272a;
+  --gh-ink: var(--primitive-color-zinc-950);
+  --gh-muted: var(--primitive-color-stone-600);
+  --gh-accent: var(--primitive-color-green-700);
+  --gh-footer-ink: var(--primitive-color-zinc-800);
   --gh-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
   display: grid;
@@ -20,7 +20,7 @@ body:has(.home-gallery) {
   min-height: 100dvh;
   width: 100%;
   overflow-x: clip;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   color: var(--gh-ink);
 }
 
@@ -115,7 +115,7 @@ body:has(.home-gallery) {
   border-radius: 8px;
   font-size: 0.84375rem;
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
   transition:
     color 150ms var(--gh-ease),
     background-color 150ms var(--gh-ease),
@@ -151,7 +151,7 @@ body:has(.home-gallery) {
     0 0 0 1px rgba(15, 15, 20, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
     0 8px 20px -12px rgba(15, 15, 20, 0.22);
-  color: #27272a;
+  color: var(--primitive-color-zinc-800);
   cursor: pointer;
   transition:
     color 150ms var(--gh-ease),
@@ -187,7 +187,7 @@ body:has(.home-gallery) {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 8px 20px -10px rgba(15, 15, 20, 0.38);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: -0.01em;
@@ -207,6 +207,11 @@ body:has(.home-gallery) {
 }
 .gh-cta:active {
   transform: scale(0.97);
+}
+.gh-story-cta {
+  justify-self: auto;
+  align-self: flex-start;
+  margin-top: 0.6rem;
 }
 
 /* ============================================================
@@ -237,7 +242,7 @@ body:has(.home-gallery) {
 /* Portrait vignette (uses existing PortraitToggle with clean square gallery framing) */
 .gh-vignette {
   flex: none;
-  width: clamp(80px, 8.2vw, 114px);
+  width: clamp(120px, 13vw, 190px);
   aspect-ratio: 1;
 }
 
@@ -247,8 +252,8 @@ body:has(.home-gallery) {
   width: 100%;
   height: 100%;
   border-radius: 14px;
-  border: 1px solid #e4e4e7;
-  background: #f4f4f5;
+  border: 1px solid var(--primitive-color-zinc-200);
+  background: var(--primitive-color-zinc-100);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -260,7 +265,7 @@ body:has(.home-gallery) {
 }
 .gh-vignette .photo:hover,
 .gh-vignette .photo:focus-visible {
-  border-color: #a1a1aa;
+  border-color: var(--primitive-color-zinc-400);
   box-shadow: 0 8px 20px -10px rgba(15, 15, 15, 0.22);
 }
 .gh-vignette .brush-canvas {
@@ -321,7 +326,7 @@ body:has(.home-gallery) {
 
 .gh-current-org {
   font-weight: 700;
-  color: #18181b;
+  color: var(--primitive-color-zinc-900);
   text-decoration: underline;
   text-decoration-color: rgba(24, 24, 27, 0.25);
   text-underline-offset: 3px;
@@ -348,8 +353,8 @@ body:has(.home-gallery) {
   width: 100%;
   overflow: hidden;
   padding: 0.5rem 0 1.25rem;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, var(--primitive-color-site-black) 4%, var(--primitive-color-site-black) 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, var(--primitive-color-site-black) 4%, var(--primitive-color-site-black) 96%, transparent 100%);
 }
 
 .gh-marquee-track {
@@ -493,7 +498,7 @@ body:has(.home-gallery) {
 }
 
 .gh-colophon-sep {
-  color: #a1a1aa;
+  color: var(--primitive-color-zinc-400);
 }
 
 /* Functional availability status link — tinted emerald glassmorphism matching header/footer chrome */
@@ -512,7 +517,7 @@ body:has(.home-gallery) {
     0 0 0 1px rgba(22, 98, 56, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
     0 8px 20px -12px rgba(22, 98, 56, 0.28);
-  color: #145932;
+  color: var(--primitive-color-green-800);
   font-size: 0.71875rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -537,7 +542,7 @@ body:has(.home-gallery) {
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-  background: #1c8049;
+  background: var(--primitive-color-green-600);
   flex: none;
 }
 
@@ -570,7 +575,7 @@ body:has(.home-gallery) {
   width: 38px;
   height: 38px;
   border-radius: 8px;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
   transition:
     color 150ms var(--gh-ease),
     background-color 150ms var(--gh-ease),
@@ -605,7 +610,7 @@ body:has(.home-gallery) {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #27272a;
+  color: var(--primitive-color-zinc-800);
 }
 
 .gh-clock-pill .clock {
@@ -622,7 +627,7 @@ body:has(.home-gallery) {
   letter-spacing: 0.04em;
   background: transparent;
   border: none;
-  border-bottom: 1px dashed #a1a1aa;
+  border-bottom: 1px dashed var(--primitive-color-zinc-400);
   padding: 0;
   cursor: text;
   field-sizing: content;
@@ -774,7 +779,7 @@ body:has(.home-gallery) {
   }
 
   .gh-vignette {
-    width: 72px;
+    width: 104px;
   }
 
   .gh-headline {
@@ -877,7 +882,7 @@ body:has(.home-gallery) {
   }
 
   .gh-vignette {
-    width: 76px;
+    width: 112px;
   }
 }
 
@@ -910,6 +915,26 @@ body:has(.home-gallery) {
   }
 }
 
+/* Short windows: give up air before the index has to scroll. */
+@media (max-height: 740px) {
+  .home-gallery:has(.gh-marquee) .gh-header {
+    padding-top: 0.5rem;
+  }
+  .home-gallery .gh-main:has(.gh-marquee) {
+    gap: 0.75rem;
+    padding-block: 0.5rem;
+  }
+  .home-gallery:has(.gh-marquee) .gh-footer {
+    gap: 0.5rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
+@media (max-height: 740px) and (max-width: 419px) {
+  .home-gallery:has(.gh-marquee) .gh-vignette {
+    width: 64px;
+  }
+}
+
 /* ============================================================
    WORK WITH ME — Native <dialog> contact form
    ============================================================ */
@@ -921,7 +946,7 @@ body:has(.home-gallery) {
   overflow-y: auto;
   border: 1px solid rgba(15, 15, 20, 0.12);
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   color: var(--gh-ink);
   box-shadow: 0 24px 60px -16px rgba(15, 15, 20, 0.25);
 }
@@ -1004,7 +1029,7 @@ body:has(.home-gallery) {
   padding: 0.65rem 0.85rem;
   border-radius: 10px;
   border: 1px solid rgba(15, 15, 20, 0.16);
-  background: #fafafa;
+  background: var(--primitive-color-zinc-50);
   color: var(--gh-ink);
   font: inherit;
   font-size: 0.9375rem;
@@ -1039,7 +1064,7 @@ body:has(.home-gallery) {
   margin: 0;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: #b42318;
+  color: var(--primitive-color-site-red-700);
 }
 
 .wwm-submit {
@@ -1053,7 +1078,7 @@ body:has(.home-gallery) {
   border: 0;
   border-radius: 9999px;
   background: var(--gh-accent);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   font: inherit;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -1064,7 +1089,7 @@ body:has(.home-gallery) {
 }
 
 .wwm-submit:hover {
-  background: #114f2c;
+  background: var(--primitive-color-green-850);
 }
 
 .wwm-submit:active {
@@ -1125,16 +1150,16 @@ body:has(.home-gallery) {
    DARK THEME — Gallery shell, frosted chrome, marquee & modal
    ============================================================ */
 :root[data-theme="dark"] body:has(.home-gallery) {
-  background-color: #0c0c0e;
-  color: #f4f4f5;
+  background-color: var(--primitive-color-night-0);
+  color: var(--primitive-color-zinc-100);
 }
 
 :root[data-theme="dark"] .home-gallery {
-  --gh-ink: #f4f4f5;
-  --gh-muted: #a1a1aa;
-  --gh-accent: #4fc17f;
-  --gh-footer-ink: #d4d4d8;
-  background: #0c0c0e;
+  --gh-ink: var(--primitive-color-zinc-100);
+  --gh-muted: var(--primitive-color-zinc-400);
+  --gh-accent: var(--primitive-color-green-400);
+  --gh-footer-ink: var(--primitive-color-zinc-300);
+  background: var(--primitive-color-night-0);
   color: var(--gh-ink);
 }
 
@@ -1148,7 +1173,7 @@ body:has(.home-gallery) {
     0 0 0 1px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 10px 26px -14px rgba(0, 0, 0, 0.7);
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 
 :root[data-theme="dark"] .gh-theme-toggle:hover,
@@ -1159,12 +1184,12 @@ body:has(.home-gallery) {
 }
 
 :root[data-theme="dark"] .gh-nav-link {
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 :root[data-theme="dark"] .gh-nav-link:hover,
 :root[data-theme="dark"] .gh-nav-link:focus-visible,
 :root[data-theme="dark"] .gh-nav-link[data-active] {
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   background: rgba(255, 255, 255, 0.12);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
@@ -1175,18 +1200,18 @@ body:has(.home-gallery) {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 8px 20px -10px rgba(0, 0, 0, 0.65);
-  color: #0c0c0e;
+  color: var(--primitive-color-night-ink);
 }
 :root[data-theme="dark"] .gh-cta:hover,
 :root[data-theme="dark"] .gh-cta:focus-visible {
-  background: #4fc17f;
+  background: var(--primitive-color-green-400);
   border-color: rgba(134, 239, 172, 0.5);
-  color: #06210f;
+  color: var(--primitive-color-green-950);
 }
 
 :root[data-theme="dark"] .gh-vignette .photo {
   border-color: rgba(255, 255, 255, 0.14);
-  background: #18181d;
+  background: var(--primitive-color-night-2);
 }
 :root[data-theme="dark"] .gh-vignette .photo:hover,
 :root[data-theme="dark"] .gh-vignette .photo:focus-visible {
@@ -1195,7 +1220,7 @@ body:has(.home-gallery) {
 }
 
 :root[data-theme="dark"] .gh-current-org {
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
   text-decoration-color: rgba(244, 244, 245, 0.32);
 }
 
@@ -1214,7 +1239,7 @@ body:has(.home-gallery) {
 }
 
 :root[data-theme="dark"] .gh-colophon-sep {
-  color: #52525b;
+  color: var(--primitive-color-zinc-600);
 }
 
 :root[data-theme="dark"] .gh-open-status {
@@ -1223,7 +1248,7 @@ body:has(.home-gallery) {
   box-shadow:
     0 0 0 1px rgba(79, 193, 127, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  color: #86efac;
+  color: var(--primitive-color-green-200);
 }
 :root[data-theme="dark"] .gh-open-status:hover,
 :root[data-theme="dark"] .gh-open-status:focus-visible {
@@ -1231,11 +1256,11 @@ body:has(.home-gallery) {
   border-color: rgba(79, 193, 127, 0.5);
 }
 :root[data-theme="dark"] .gh-open-dot {
-  background: #4fc17f;
+  background: var(--primitive-color-green-400);
 }
 
 :root[data-theme="dark"] .gh-social-link {
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 :root[data-theme="dark"] .gh-social-link:hover,
 :root[data-theme="dark"] .gh-social-link:focus-visible {
@@ -1244,11 +1269,11 @@ body:has(.home-gallery) {
 }
 
 :root[data-theme="dark"] .gh-clock-pill .clock-input {
-  border-bottom-color: #52525b;
+  border-bottom-color: var(--primitive-color-zinc-600);
 }
 
 :root[data-theme="dark"] .wwm-dialog {
-  background: #141418;
+  background: var(--primitive-color-night-1);
   border-color: rgba(255, 255, 255, 0.14);
   box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.75);
 }
@@ -1263,23 +1288,23 @@ body:has(.home-gallery) {
 }
 :root[data-theme="dark"] .wwm-input,
 :root[data-theme="dark"] .wwm-textarea {
-  background: #1b1b21;
+  background: var(--primitive-color-night-3);
   border-color: rgba(255, 255, 255, 0.16);
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
 }
 :root[data-theme="dark"] .wwm-input:focus-visible,
 :root[data-theme="dark"] .wwm-textarea:focus-visible {
   box-shadow: 0 0 0 3px rgba(79, 193, 127, 0.22);
 }
 :root[data-theme="dark"] .wwm-error {
-  color: #f87171;
+  color: var(--primitive-color-site-red-400);
 }
 :root[data-theme="dark"] .wwm-submit {
-  background: #4fc17f;
-  color: #06210f;
+  background: var(--primitive-color-green-400);
+  color: var(--primitive-color-green-950);
 }
 :root[data-theme="dark"] .wwm-submit:hover {
-  background: #6ee7a0;
+  background: var(--primitive-color-green-300);
 }
 :root[data-theme="dark"] .wwm-secondary {
   border-color: rgba(255, 255, 255, 0.18);

@@ -9,7 +9,7 @@ const FEATURED_PROJECTS: FeaturedShowcase[] = [
     id: "omawe",
     title: "Omawe",
     subtitle: "iOS App",
-    href: "/software/work/omawe",
+    href: "/work/article/omawe",
     labelLeft: "35%",
     labelBottom: "6%",
     layers: [
@@ -91,7 +91,7 @@ const FEATURED_PROJECTS: FeaturedShowcase[] = [
     id: "body-count",
     title: "Body Count",
     subtitle: "Game",
-    href: "/games/stage/body-count",
+    href: "/work/article/body-count",
     labelLeft: "10%",
     labelBottom: "8%",
     layers: [
@@ -173,7 +173,7 @@ const FEATURED_PROJECTS: FeaturedShowcase[] = [
     id: "prabu-2025",
     title: "Prabu 2025",
     subtitle: "Website",
-    href: "/software/work/prabu-2025",
+    href: "/work/article/prabu-2025",
     labelLeft: "39%",
     labelBottom: "5%",
     layers: [
@@ -267,7 +267,7 @@ const FEATURED_PROJECTS: FeaturedShowcase[] = [
     id: "your-space",
     title: "Your Space",
     subtitle: "iOS App",
-    href: "/software/work/your-space",
+    href: "/work/article/your-space",
     labelLeft: "70%",
     labelBottom: "9%",
     layers: [
@@ -361,7 +361,7 @@ const FEATURED_PROJECTS: FeaturedShowcase[] = [
     id: "whitejack",
     title: "WhiteJack",
     subtitle: "Game",
-    href: "/games/stage/whitejack",
+    href: "/work/article/whitejack",
     labelLeft: "66%",
     labelBottom: "8%",
     layers: [
@@ -550,7 +550,6 @@ export default function Home() {
     <PageTransition>
       <GalleryHome
         name={PERSON.name}
-        roleSubtitle="Software Engineer"
         currentRole={
           CURRENT
             ? {

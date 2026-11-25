@@ -2,7 +2,7 @@
 
 // Side-quests grid (ported from portfolio-website's MagicBento): story cards that open into an article, plus playful cells.
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
   AnimatePresence,
@@ -40,7 +40,9 @@ export function SideQuestBento({
   keepsakes,
   stickers,
   funFact,
+  hero,
 }: {
+  hero: ReactNode;
   entries: SideQuest[];
   album: SideQuestPhoto[];
   keepsakes: SideQuestPhoto[];
@@ -77,18 +79,28 @@ export function SideQuestBento({
 
   return (
     <>
-      <div className="sq-filters" role="group" aria-label="Filter stories by kind">
-        <FilterChip label="Everything" active={activeKind === null} onClick={() => setActiveKind(null)} />
-        {kinds.map((kind) => (
-          <FilterChip
-            key={kind}
-            label={KIND_LABEL[kind]}
-            active={activeKind === kind}
-            onClick={() => setActiveKind((k) => (k === kind ? null : kind))}
-          />
-        ))}
-      </div>
+      <main className="wk-shell">
+        <aside className="wk-sidebar" aria-label="Filter stories by kind">
+          <ul className="wk-cat-list" role="tablist" aria-orientation="vertical">
+            {[{ id: null, label: "Everything" }, ...kinds.map((k) => ({ id: k, label: KIND_LABEL[k] }))].map((f) => (
+              <li key={f.id ?? "all"} role="presentation">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={activeKind === f.id}
+                  data-active={activeKind === f.id || undefined}
+                  className="wk-cat-btn"
+                  onClick={() => setActiveKind(f.id)}
+                >
+                  <span>{f.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </aside>
 
+        <div className="sq-content">
+          {hero}
       <div className="sq-grid">
         {cells.map((cell) => {
           if (cell.type === "album") return <AlbumCell key="album" photos={album} />;
@@ -99,28 +111,21 @@ export function SideQuestBento({
             <StoryCard
               key={cell.entry.title}
               entry={cell.entry}
-              layoutId={`sq-${cell.index}`}
               dimmed={activeKind !== null && cell.entry.kind !== activeKind}
               onOpen={() => setOpenIndex(cell.index)}
             />
           );
         })}
       </div>
+        </div>
+      </main>
 
       <AnimatePresence>
         {openIndex !== null && (
-          <Article entry={entries[openIndex]} layoutId={`sq-${openIndex}`} onClose={close} />
+          <Article entry={entries[openIndex]} onClose={close} />
         )}
       </AnimatePresence>
     </>
-  );
-}
-
-function FilterChip({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
-  return (
-    <button type="button" className="sq-chip" aria-pressed={active} onClick={onClick}>
-      {label}
-    </button>
   );
 }
 
@@ -128,12 +133,10 @@ function FilterChip({ label, active, onClick }: { label: string; active: boolean
 
 function StoryCard({
   entry,
-  layoutId,
   dimmed,
   onOpen,
 }: {
   entry: SideQuest;
-  layoutId: string;
   dimmed: boolean;
   onOpen: () => void;
 }) {
@@ -158,7 +161,6 @@ function StoryCard({
   return (
     <div className="sq-cell reveal" data-size={entry.size ?? "sm"}>
       <motion.div
-        layoutId={layoutId}
         animate={{ opacity: dimmed ? 0.35 : 1, scale: dimmed ? 0.97 : 1 }}
         transition={{ duration: 0.35, ease: "easeInOut" }}
         style={reduce ? undefined : { rotateX: springX, rotateY: springY, transformPerspective: 900 }}
@@ -401,73 +403,57 @@ function FlipCell({ fact }: { fact: string }) {
 
 /* --- article ---------------------------------------------------------- */
 
-function Article({ entry, layoutId, onClose }: { entry: SideQuest; layoutId: string; onClose: () => void }) {
-  const hasCover = Boolean(entry.image);
-
+function Article({ entry, onClose }: { entry: SideQuest; onClose: () => void }) {
   return (
-    <>
-      <motion.div
-        className="sq-backdrop"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        onClick={onClose}
-      />
-      <div className="sq-dialog-wrap">
-        <motion.article layoutId={layoutId} role="dialog" aria-modal="true" aria-label={entry.title} className="sq-dialog">
-          {hasCover ? (
-            <div className="sq-dialog-cover">
-              <Cover entry={entry} />
-              <button type="button" className="sq-close" aria-label="Close story" onClick={onClose} autoFocus>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          ) : (
-            <div className="sq-dialog-bar">
-              <p className="sq-meta">
-                <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
-                <span>{entry.period}</span>
-              </p>
-              <button type="button" className="sq-close sq-close--inline" aria-label="Close story" onClick={onClose} autoFocus>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 6 6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          )}
-          <motion.div
-            className="sq-dialog-body"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.1 }}
-          >
-            {hasCover ? (
-              <p className="sq-meta">
-                <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
-                <span>{entry.period}</span>
-              </p>
-            ) : null}
-            <div>
-              <h3 className="sq-dialog-title">{entry.title}</h3>
-              <p className="sq-org">{entry.org}</p>
-            </div>
-            <p className="sq-lead">{entry.summary}</p>
-            <p>{entry.story}</p>
-            {entry.body?.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-            ))}
-            {entry.highlight && <blockquote>{entry.highlight}</blockquote>}
-            <ul className="sq-skills">
-              {entry.skills.map((skill) => (
-                <li key={skill}>{skill}</li>
-              ))}
-            </ul>
-          </motion.div>
-        </motion.article>
-      </div>
-    </>
+    <motion.div
+      className="sq-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label={entry.title}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22, ease: EASE_OUT }}
+    >
+      <button type="button" className="sq-close" aria-label="Close story" onClick={onClose} autoFocus>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+
+      <article className="sq-dialog-body">
+        <p className="sq-meta">
+          <span className="sq-badge">{KIND_LABEL[entry.kind]}</span>
+          <span className="sq-badge">{entry.period}</span>
+        </p>
+        <header>
+          <h3 className="sq-dialog-title">{entry.title}</h3>
+          <p className="sq-org">{entry.org}</p>
+          <p className="sq-lead">{entry.summary}</p>
+        </header>
+        {entry.image ? (
+          <div className="sq-dialog-cover">
+            <Cover entry={entry} />
+          </div>
+        ) : null}
+        <div className="sq-prose">
+          <p>{entry.story}</p>
+          {entry.body?.map((paragraph) => (
+            <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+          ))}
+        </div>
+        <ul className="sq-skills">
+          {entry.skills.map((skill) => (
+            <li key={skill}>{skill}</li>
+          ))}
+        </ul>
+        {entry.highlight ? (
+          <blockquote className="sq-reflection">
+            <span>Key takeaway</span>
+            <p>&ldquo;{entry.highlight}&rdquo;</p>
+          </blockquote>
+        ) : null}
+      </article>
+    </motion.div>
   );
 }

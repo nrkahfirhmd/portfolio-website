@@ -84,14 +84,20 @@ Three Google Fonts loaded in [app/layout.tsx](app/layout.tsx), each with a singl
 
 ## 4. Components
 
-1. **Brand Lockup (`.gh-brand`)**: `44×44px` avatar (`/kv_avatar.svg`) paired with lowercase `Syne` name and cobalt `DM Sans` role subtitle.
+1. **Brand Lockup (`.gh-brand`)**: `44×44px` avatar (`/kv_avatar.webp`) paired with lowercase `Syne` name and cobalt `DM Sans` role subtitle.
 2. **Frosted Nav Bar (`.gh-nav`)**: Centered light frosted glass bar holding real destinations (`Work`, `About Me`, `My Journey`, `Side Quests`) with white frosted hover chips.
 3. **Primary CTA (`.gh-cta`)**: Smoked dark glass button (`Work With Me` -> `mailto:`), shifting to frosted cobalt on hover/focus and `scale(0.97)` on press.
 4. **Editorial Intro (`.gh-intro`)**: Interactive square portrait vignette (`PortraitToggle`, `clamp(80px, 8.2vw, 114px)`) beside a 2-line bold `<h1>` and a single `Currently building at` status link.
 5. **Layered 16:9 Project Diorama (`.gh-diorama-card`)**:
    - Frameless 16:9 transparent canvas (`.gh-diorama-stage`) composed of individually positioned PNG layers (`z: 1` backdrop, `z: 2` device mockup, `z: 3` floating top accents, `z: 4` foreground characters/props).
    - Integrated frosted label (`.gh-diorama-tag`, `z: 6`) placed in each composition's open negative space, showing strictly `"NAME"` + `"PLATFORM"` (`iOS App`, `Game`, `Website`).
-6. **Footer Bar (`.gh-footer`)**: Left colophon (`©2026 KAHFI RAHMADA | OPEN TO WORK` emerald glass link); right grouped frosted social icon dock (`.gh-socials`) + interactive live `BaliClock` frosted pill (`.gh-clock-pill`).
+6. **Home Footer Bar (`.gh-footer`)**, home only, so the page fits one screen: Left colophon (`©2026 KAHFI RAHMADA | OPEN TO WORK` emerald glass link); right grouped frosted social icon dock (`.gh-socials`) + interactive live `BaliClock` frosted pill (`.gh-clock-pill`).
+7. **Footer (`.sf`)**, every other page: A print in one green family. The page melts through a Javanese batik motif into a flat sky that holds a short personal note, and an engraved landscape closes it. Four scenes ([app/footer/scenes.ts](app/footer/scenes.ts)): Bali (Mega Mendung clouds, scooter), Bandung (Kawung, steam train), the sea (Parang, phinisi), the forest (Truntum, canoe). The sea is the live one, set in [app/site-footer.tsx](app/site-footer.tsx); the others are kept but unused. Dark theme is not a recolor: land flips to a dark block cut with light, with stars, a crescent moon and lamps. Plates are distance fields baked by `node scripts/engrave-footer.mjs`. Motion is scroll-scrubbed; reduced motion shows the finished print.
+
+8. **Scroll film (`.fm`)**, `/story` only: one continuous voice, played by scroll, one to one (no smoothing). Copy in `STORY` ([content/site.ts](content/site.ts)), lengths in [timeline.ts](app/story/film/timeline.ts). Every animation is a paused CSS animation whose `currentTime` [film.tsx](app/story/film/film.tsx) sets, so `1s` in live.css, opening.css and told.css is one second of film. Reduced motion and no-JS get the same scenes stacked and finished; tall screens put copy above pictures.
+   - The yellow note is the narrator and the only character. It hops word to word ([narrator.ts](app/story/film/narrator.ts) measures every `[data-note]`), and becomes whatever the line needs: lens, badge, pad, pin, bookmark, slider knob, clock hand. `<Say>` in [parts.tsx](app/story/film/parts.tsx) sets a sentence; `quiet` ones come without it. `[Bracketed]` words turn into the picture.
+   - Every scene opens out of the last one (a lens, a crossing, a star, the shredder, a pin); nothing cuts. Each brings its project's own ground colour.
+   - The opening portrait goes from mono to colour through a noise mask ([bloom.ts](app/story/film/bloom.ts)). Handwriting is `Nanum Pen Script` (this page only).
 
 ---
 

@@ -4,8 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { PortraitToggle } from "./portrait-toggle";
-import { SiteFooter } from "./site-footer";
-import { WorkWithMeButton } from "./work-with-me";
+import { HomeFooter } from "./site-footer";
+import { SiteHeader } from "@/app/site-header";
 
 interface FeaturedLayer {
   src: string;
@@ -40,23 +40,14 @@ export interface SocialLinkItem {
 
 interface GalleryHomeProps {
   name: string;
-  roleSubtitle: string;
   currentRole: { company: string; companyUrl: string } | null;
   openToWork: boolean;
   items: FeaturedShowcase[];
   socials: SocialLinkItem[];
 }
 
-const NAV_LINKS = [
-  { label: "Work", href: "/work", isRoute: true },
-  { label: "About Me", href: "/about", isRoute: true },
-  { label: "My Journey", href: "/journey", isRoute: true },
-  { label: "Side Quests", href: "/side-quests", isRoute: true },
-] as const;
-
 export function GalleryHome({
   name,
-  roleSubtitle,
   currentRole,
   openToWork,
   items,
@@ -141,46 +132,7 @@ export function GalleryHome({
 
   return (
     <div className="home-gallery">
-      <header className="gh-header">
-        <Link href="/" className="gh-brand" aria-label={`${name}, home`}>
-          <span className="gh-mark" aria-hidden="true">
-            {/* shortcut: kv_avatar.svg embeds a 3MB raster PNG; convert to compressed WebP/PNG before production deploy */}
-            <Image
-              src="/kv_avatar.svg"
-              alt=""
-              width={44}
-              height={44}
-              className="gh-avatar"
-              priority
-            />
-          </span>
-          <span className="gh-identity">
-            <span className="gh-name">{name.toLowerCase()}</span>
-            <span className="gh-role">{roleSubtitle}</span>
-          </span>
-        </Link>
-
-        <nav className="gh-nav" aria-label="Primary">
-          {NAV_LINKS.map((item) =>
-            item.isRoute ? (
-              <Link
-                key={item.href}
-                href={item.href}
-                transitionTypes={["nav-forward"]}
-                className="gh-nav-link"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <a key={item.href} href={item.href} className="gh-nav-link">
-                {item.label}
-              </a>
-            ),
-          )}
-        </nav>
-
-        <WorkWithMeButton />
-      </header>
+      <SiteHeader />
 
       <main className="gh-main">
         <section id="about" className="gh-intro" aria-labelledby="gh-headline">
@@ -192,20 +144,29 @@ export function GalleryHome({
               <h1 id="gh-headline" className="gh-headline">
                 Hi, I&apos;m Kahfi! I build software that feels like it was made for you.
               </h1>
-              {currentRole ? (
-                <p className="gh-current">
-                  Currently building at{" "}
-                  <a
-                    href={currentRole.companyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gh-current-org"
-                  >
-                    {currentRole.company}
-                  </a>
-                  .
-                </p>
-              ) : null}
+              <p className="gh-current">
+                {currentRole ? (
+                  <>
+                    Currently building at{" "}
+                    <a
+                      href={currentRole.companyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gh-current-org"
+                    >
+                      {currentRole.company}
+                    </a>
+                    .
+                  </>
+                ) : null}
+              </p>
+              <Link
+                href="/story"
+                transitionTypes={["nav-forward"]}
+                className="gh-cta gh-story-cta"
+              >
+                Read my story
+              </Link>
             </div>
           </div>
         </section>
@@ -303,7 +264,7 @@ export function GalleryHome({
         </section>
       </main>
 
-      <SiteFooter name={name} openToWork={openToWork} socials={socials} showSpace={false} />
+      <HomeFooter name={name} openToWork={openToWork} socials={socials} />
     </div>
   );
 }

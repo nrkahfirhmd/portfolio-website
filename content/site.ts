@@ -16,6 +16,9 @@ import type { IconName } from "@/app/socials";
 // YOU
 // ============================================================
 
+/** The site's public origin: canonical URLs, Open Graph and the sitemap. Set SITE_URL where the site is built. */
+export const SITE_URL = process.env.SITE_URL ?? "http://localhost:3000";
+
 export const PERSON = {
   name: "Kahfi Rahmada",
   /** Article tab titles read "<shortName> — <article title>". */
@@ -49,7 +52,117 @@ export const HOME = {
 };
 
 // ============================================================
-// SOFTWARE ENGINEERING — /software
+// FOOTER — closes every page but the index, which only uses `email`
+// ============================================================
+
+export const FOOTER = {
+  hello: "Thanks for scrolling all the way down.",
+  note: "I'm Kahfi. I make apps and games in Bali. If you want to talk about either, write to me.",
+  /** Added to the note while PERSON.openToWork is true. */
+  openToWork: "I'm looking for work, too.",
+  email: "nurkahfirahmada@gmail.com",
+  links: [
+    { href: "/story", label: "Story" },
+    { href: "/work", label: "Work" },
+    { href: "/about", label: "About me" },
+    { href: "/journey", label: "Journey" },
+    { href: "/side-quests", label: "Side quests" },
+  ],
+};
+
+// ============================================================
+// STORY — the scroll film at /story
+// ============================================================
+
+// One continuous voice, told by the yellow note as it hops from word to word. [Brackets] mark
+// the words that turn into the picture. Feedback is paraphrased from the devlogs in content/;
+// the one real quote is whitejack.quote.
+export const STORY = {
+  title: "Kahfi R | Story",
+  description: "Five times people told me what was wrong with something I built, and what changed.",
+  // The heading is two lines that set to the same width; its full stop is the yellow note.
+  hello: {
+    heading: ["Hi there", "I’m Kahfi"],
+    lines: ["I make apps and games in Bali,", "and I like problems that look [too small] to bother with."],
+  },
+  small: {
+    chat: "Like the friend who’s always [5 minutes] away.",
+    /** The texts behind it, person 1 first, taking turns. */
+    texts: ["Yo, where are you?", "I'll be there in 5 minutes", "Ok, I'm also on my way"],
+    journal: ["Or the journal that got", "too [long]", "to read back,"],
+    table: "or the table you can only download [one page] at a time.",
+    /** Handwritten on the note: mine, then theirs. */
+    pad: ["When one of them bugs me, I build something and hand it over.", "Then people tell me what’s wrong with it."],
+  },
+  prabu: {
+    name: "Prabu 2025",
+    site: "Once, it was an orientation site for over [10.000] new students.",
+    form: "They had tasks to hand in, so we built a form that sorted every one by itself.",
+    ask: "Close to launch, the university asked for [Google Form] instead.",
+    end: "We pushed back, they kept their answer, and we shipped on time [without it].",
+    note: "Use Google Form instead.",
+  },
+  omawe: {
+    name: "Omawe",
+    again: "Another time, it was that friend again.",
+    show: "Omawe shows everyone [on their way], so nobody has to ask.",
+    wrong: "Then our testers said their friends were [in the wrong place].",
+    move: "CloudKit was syncing on its own schedule, so we moved to a Go backend and [cut a feature] to make room.",
+    end: "Now the pin [keeps up], and Omawe is on the App Store.",
+  },
+  bodyCount: {
+    name: "Body Count",
+    find: "Finding a pin is easy next to finding [one person] in Shibuya,",
+    game: "which is the whole game of Body Count.",
+    told: "It told you who to find in [a sentence].",
+    prompt: "Brown Shirt, White Hat, with White Bag",
+    missed: "Players couldn’t read it and watch the crowd.",
+    cut: "So we cut the sentence into [four slots].",
+    end: "It placed sixth out of 42, and I’d still change the core loop.",
+  },
+  yourSpace: {
+    name: "Your Space",
+    feelings: "Feelings don’t fit in [slots].",
+    journal: "Your Space is a journal made for [rereading],",
+    one: "and it used to ask for one feeling, and [how strong] it was.",
+    testers: "Testers felt more than one thing, and they said the AI sounded [stiff].",
+    end: "So we dropped the slider, and I brought the AI back to [what they wrote].",
+  },
+  whitejack: {
+    name: "WhiteJack",
+    alone: "The last one I made [alone], in a one-week jam.",
+    stuck: "Two days in, I had nothing and nearly quit.",
+    deck: "Then I had a blackjack deck so strong it keeps [busting],",
+    boss: "and [nobody] got past the first boss.",
+    end: "I added health recovery after each encounter, and a player wrote:",
+    quote: "Mantap ini gamenya polished banget keren",
+    gloss: "Indonesian, roughly: nice, this game is really polished, so cool.",
+  },
+  coretax: {
+    name: "Coretax Scraper",
+    quiet: "Sometimes nobody writes anything.",
+    using: "They just keep using it.",
+    end: "A tax team’s ten-minute export now takes under 15 seconds.",
+  },
+  map: {
+    bandung: "I studied Informatics and AI in [Bandung].",
+    gpa: "GPA 3.92",
+    bali: "Then the Apple Developer Academy picked me, from over 10,000 applicants, and I moved to [Bali].",
+    motto: "The motto there is to [unlearn].",
+    practice: "I’ve had practice.",
+  },
+  next: {
+    name: "Project Akar Fehu",
+    twelve: "Now [twelve] of us are making our first full-scale game,",
+    game: "a narrative puzzle for Steam called Project Akar Fehu, and I’m its lead designer.",
+    end: "I expect [more notes].",
+  },
+  notes: ["These are from my friends at the academy.", "They were kinder than the playtesters."],
+  end: { hello: "I'm looking for work.", note: "Write to me." },
+};
+
+// ============================================================
+// SOFTWARE ENGINEERING — shown on /work
 // ============================================================
 
 export const SOFTWARE = {
@@ -307,7 +420,7 @@ export const STORY_REPOS = new Set<string>([
 ]);
 
 // ============================================================
-// GAME DEVELOPMENT — /games
+// GAME DEVELOPMENT — shown on /work
 // ============================================================
 
 export const GAMES = {
@@ -605,8 +718,8 @@ export const SIDE_QUEST_STICKERS = [
 export const JOURNEY = {
   title: "Kahfi R — Journey",
   description: "The path so far: the roles and the learning along the way.",
-  heading: "Journey",
-  tagline: "Every stop on the way here, newest first. The path keeps going.",
+  heading: "My Journey",
+  tagline: "The work, roles, and detours that shaped how I build.",
 };
 
 // The stops, in any order: the page groups them by `kind` and sorts each
@@ -620,16 +733,96 @@ export const JOURNEY = {
 export const JOURNEY_STOPS: JourneyStop[] = [
   {
     when: "Aug 2022 – Aug 2026",
-    title: "Bachelor's in Informatics",
-    place: "Universitas Padjadjaran",
+    title: "Bachelor of Computer Science",
+    place: "Padjadjaran University, Jatinangor, Jawa Barat",
     kind: "education",
     summary: "Majored in Artificial Intelligence. GPA 3.92 / 4.00.",
     skills: ["Artificial Intelligence", "Machine Learning", "Software Engineering"],
-    story: [
-      "I studied Informatics at Universitas Padjadjaran, majoring in Artificial Intelligence, and graduated with a GPA of 3.92 out of 4.00.",
-      "In 2025, Himatif, the Informatics Engineering student association, named me its Most Outstanding Student. Alongside the coursework I taught as a practicum assistant, led committees, and kept building outside class, most of which is on this site.",
+    gallery: ["/about-me/bandung_1.webp", "/about-me/bandung_2.webp"],
+    stats: [
+      { value: "3.92", label: "GPA", note: "Out of 4.00" },
+      { value: "144", label: "Credits (SKS)" },
+      { value: "2nd", label: "Best graduate", note: "Faculty of Science, Batch 1 2026/2027" },
     ],
-    links: [{ href: "/side-quests", label: "What I did outside class" }],
+    stackLinks: true,
+    links: [
+      { href: "/side-quests", label: "Read the Practicum Assistant story" },
+      {
+        label:
+          "Thesis: Validity Analysis of Synthetic Video Kinematics Using a Normalized Spatiotemporal Gradient (NSG) Estimator Based on the Principle of Probability Conservation",
+        note: "Coming soon",
+      },
+    ],
+    coursework: [
+      "Programming and Algorithm",
+      "Statistics",
+      "Data Structure",
+      "Computer Architecture and Organization",
+      "Database System I & II",
+      "Numerical Methods",
+      "Operation System",
+      "Object Oriented Programming",
+      "Web Programming",
+      "Discrete Mathematics",
+      "Linear Algebra",
+      "Calculus I & II",
+      "Artificial Intelligence",
+      "Computer Network",
+      "Information Systems",
+      "Algorithm Analysis",
+      "Software Engineering",
+      "Computer Graphics",
+      "Robotics",
+      "Network Security Systems",
+      "Data Mining",
+      "Software Development I & II",
+      "Project Management",
+      "Human & Computer Interaction",
+      "Data Warehouse",
+      "Image Analysis & Processing",
+      "Soft Computing",
+      "High Performance Computing",
+      "Machine Learning",
+    ],
+    story: [
+      "I have been tinkering with computers since I was a kid, so Computer Science was an easy choice. I picked Artificial Intelligence as my major because it was the fastest-growing field in IT, with a lot of unknown ground left to explore.",
+      "I finished 144 credits (SKS) with a GPA of 3.92 out of 4.00. The Dean of the Faculty of Science named me the 2nd best graduate of Batch 1 2026/2027, based on both my GPA and my activities.",
+      "In 2025, Himatif, the Informatics Engineering student association, named me its Most Outstanding Student after I placed 3rd in the DataVers ANAVA #19 competition.",
+      "My thesis looks for AI-generated video by checking whether its motion follows real physics. It started at home: my parents were easily fooled by fake AI videos, and I wanted a way to tell.",
+      "In 2024 I was a practicum teaching assistant for Data Structures and Web Programming. Teaching is how I make sure I understand a topic myself, and it taught me a lot about people, especially character in the IT field.",
+    ],
+  },
+  {
+    when: "May 2025",
+    title: "Top 5, Classification Rumble",
+    place: "Neurontara Data Clash Competition 2025",
+    kind: "award",
+    summary: "Top 5 in a data competition on classifying freshwater data quality.",
+    skills: ["XGBoost", "LightGBM", "Classification"],
+    story: [
+      "Neurontara Data Clash 2025 gave us a case study on freshwater measurements: classify the data quality of 20,000 rows, using station, method, land-use and environmental covariates.",
+      "I built the classifier with XGBoost and LightGBM and reached a Macro-F1 score of roughly 0.785, which put me in the top 5 of the Classification Rumble. I entered as a Padjadjaran University student.",
+    ],
+  },
+  {
+    when: "Feb 2025",
+    title: "3rd Place, DataVers ANAVA #19",
+    place: "Gadjah Mada University",
+    kind: "award",
+    summary: "Third place in a predictive maintenance data competition.",
+    skills: ["Predictive Maintenance", "Autoencoder", "Anomaly Detection"],
+    story: [
+      "The DataVers ANAVA #19 case study was machine breakdown: 20 million records, and the job was to predict failures with predictive maintenance.",
+      "I built an autoencoder as the anomaly detector and finished 2nd on the preliminary leaderboard. I took 3rd place overall, representing Padjadjaran University.",
+    ],
+  },
+  {
+    when: "Jan 2024",
+    title: "Top 5, Web Landing Page Competition",
+    place: "FESTIDA 2023, Darussalam Gontor University",
+    kind: "award",
+    summary: "Top 5 in a web landing page competition.",
+    story: ["I placed in the top 5 of the FESTIDA 2023 web landing page competition, representing Padjadjaran University."],
   },
   {
     when: "Nov – Dec 2024",
@@ -642,12 +835,12 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "Bangkit Academy is a career-readiness program led by Google, with GoTo and Traveloka, run as part of the Indonesian government's Kampus Merdeka initiative. I was in its Machine Learning cohort.",
       "The program ends with a team capstone, and ours was AgriClime: an Android app that forecasts the weather for a farmer's location. I owned the machine learning flow, an LSTM forecast and a TensorFlow classifier, and the backend API that serves them to the app.",
     ],
-    links: [{ href: "/software/work/agriclime", label: "Read the AgriClime story" }],
+    links: [{ href: "/work/article/agriclime", label: "Read the AgriClime story" }],
   },
   {
     when: "Feb – Dec 2025",
-    title: "Himatif Apps v2",
-    place: "Freelance, Project Manager",
+    title: "Project Manager",
+    place: "Himatif Apps v2 (Freelance)",
     kind: "work",
     summary: "Led the rebuild of Himatif's superapp, used by 300+ people.",
     skills: ["Product Management", "Next.js", "Express.js"],
@@ -655,12 +848,12 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "Himatif's superapp keeps the Informatics student association's records in one place. Version 1 ran on an outdated, slow version of Laravel, so we rebuilt it on Next.js and Express.js.",
       "On a team of three, I owned the product side, from planning the rebuild to shipping it.",
     ],
-    links: [{ href: "/software/work/himatif-apps-v2", label: "Read the Himatif Apps v2 story" }],
+    links: [{ href: "/work/article/himatif-apps-v2", label: "Read the Himatif Apps v2 story" }],
   },
   {
     when: "Jun – Aug 2025",
-    title: "Prabu 2025",
-    place: "Freelance, Lead Frontend Engineer",
+    title: "Lead Frontend Engineer",
+    place: "Prabu 2025 (Freelance)",
     kind: "work",
     summary: "Led the frontend of the orientation site for 10.000+ new students.",
     skills: ["Frontend Architecture", "Next.js", "Stakeholder Management"],
@@ -668,7 +861,7 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "Prabu 2025 was where Padjadjaran University's 10.000+ new students met the campus, studied the orientation material, and handed in their tasks.",
       "On a team of five, I led the frontend: its architecture, the code standard, how the designs broke down into components, and the conversations with the orientation committee. It held up through the rush right before every task deadline.",
     ],
-    links: [{ href: "/software/work/prabu-2025", label: "Read the Prabu 2025 story" }],
+    links: [{ href: "/work/article/prabu-2025", label: "Read the Prabu 2025 story" }],
   },
   {
     when: "Aug – Dec 2025",
@@ -681,7 +874,7 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "Most of my work was automating the tax team's workflows in KNIME. The piece that stuck was Coretax Scraper, a Chrome extension that cut a ten-minute export to under fifteen seconds and became part of the team's monthly routine.",
       "My first corporate job taught me the work around the work: handling tasks under pressure and deadlines, managing stakeholders, and presenting what I'd built.",
     ],
-    links: [{ href: "/software/work/coretax-scraper", label: "Read the Coretax Scraper story" }],
+    links: [{ href: "/work/article/coretax-scraper", label: "Read the Coretax Scraper story" }],
   },
   {
     when: "Nov 2025 – Jan 2026",
@@ -701,20 +894,24 @@ export const JOURNEY_STOPS: JourneyStop[] = [
     kind: "work",
     summary: "Accepted from 10,000+ applicants across Indonesia.",
     skills: ["Swift", "Challenge Based Learning", "Product Thinking"],
-    images: ["/side-quests/academy.jpg", "/side-quests/omawe.jpg"],
+    images: [1, 2, 3, 4, 5, 6].map((n) => `/journey/ADA_${n}.webp`),
+    stats: [
+      { value: "10,000+", label: "Applicants", note: "Across Indonesia" },
+      { value: "2", label: "Projects born here", note: "Omawe and KataMata" },
+    ],
     story: [
       "I was accepted into the Apple Developer Academy from more than 10,000 applicants across Indonesia. The program's motto is to unlearn, and it runs on curiosity: every project starts from a real challenge, through Challenge Based Learning.",
       "It changed how I look at a problem, how I research it, and how I build a solution from what I find. Omawe and KataMata both came out of it.",
     ],
     links: [
-      { href: "/software/work/omawe", label: "Read the Omawe story" },
-      { href: "/software/work/katamata", label: "Read the KataMata story" },
+      { href: "/work/article/omawe", label: "Read the Omawe story" },
+      { href: "/work/article/katamata", label: "Read the KataMata story" },
     ],
   },
   {
     when: "May 2026 – now",
-    title: "BITD",
-    place: "Freelance, Backend Engineer & Infra",
+    title: "Backend Engineer & Infra",
+    place: "BITD (Freelance)",
     kind: "work",
     summary: "Backend and infrastructure for an ISP platform that also hosts other ISPs.",
     skills: ["NestJS", "Infrastructure", "Multi-tenancy"],
@@ -722,7 +919,7 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "BITD's platform runs its customers, packages, invoices, and support, and provisions subscribers straight onto its MikroTik routers over RADIUS. Other ISPs run on it too, each as its own tenant.",
       "On a team of two, I own the backend and the system it runs on. The hardest part so far: the spawner that sets up each new tenant.",
     ],
-    links: [{ href: "/software/work/bitd-dashboard", label: "Read the BITD Dashboard story" }],
+    links: [{ href: "/work/article/bitd-dashboard", label: "Read the BITD Dashboard story" }],
   },
   {
     when: "Aug 2026 – now",
@@ -736,8 +933,8 @@ export const JOURNEY_STOPS: JourneyStop[] = [
       "Now the studio is making its first full-scale game, Project Akar Fehu, a narrative-driven puzzle game for Steam, built in Godot. I'm its lead game designer, on a team of twelve.",
     ],
     links: [
-      { href: "/games/stage/warnet", label: "Read the WarNet devlog" },
-      { href: "/games", label: "See the library" },
+      { href: "/work/article/warnet", label: "Read the WarNet devlog" },
+      { href: "/work", label: "See all my work" },
     ],
   },
 ];
@@ -829,7 +1026,7 @@ export const ABOUT = {
     {
       id: "bali",
       label: "Bali",
-      detail: "Current base",
+      detail: "Apple Academy",
       lat: -8.65,
       lon: 115.22,
       timeZone: "Asia/Makassar",
@@ -837,79 +1034,49 @@ export const ABOUT = {
       media: [
         {
           type: "image",
-          src: "/side-quests/academy.jpg",
-          alt: "Apple Developer Academy Kick-Off in Bali",
-          caption: "Apple Developer Academy Kick-Off",
-        },
-        {
-          type: "video",
-          src: "/project-media/SE/omawe_recording.mp4",
-          poster: "/project-media/SE/omawe_preview.png",
-          alt: "Omawe iOS app walkthrough",
-          caption: "Omawe iOS app built in Bali",
+          src: "/about-me/bali_2.webp",
+          alt: "Volcano rising above a calm lake in Bali",
+          caption: "Volcano and lake, Bali",
         },
         {
           type: "image",
-          src: "/side-quests/omawe.jpg",
-          alt: "Building Omawe at Apple Developer Academy Bali",
-          caption: "Building Omawe with the team",
+          src: "/about-me/bali_1.webp",
+          alt: "Back covered in sticky notes with kind messages",
+          caption: "Notes from the academy crew",
+        },
+        {
+          type: "image",
+          src: "/about-me/bali_3.webp",
+          alt: "Sunset over the beach in Bali",
+          caption: "Bali sunsets",
         },
       ],
     },
     {
       id: "bandung",
       label: "Bandung",
-      detail: "Unpad & Himatif",
+      detail: "Padjadjaran University",
       lat: -6.91,
       lon: 107.61,
       timeZone: "Asia/Jakarta",
       media: [
         {
           type: "image",
-          src: "/side-quests/po_cbs.jpg",
-          alt: "Character Building Season at Universitas Padjadjaran",
-          caption: "Leading Character Building Season at Unpad",
-        },
-        {
-          type: "video",
-          src: "/project-media/SE/himatif_recording.mp4",
-          poster: "/project-media/SE/himatif_dashboard.png",
-          alt: "Himatif Apps v2 walkthrough",
-          caption: "Himatif Apps v2 for Unpad Informatics",
+          src: "/about-me/bandung_2.webp",
+          alt: "Thesis defense slide on a screen at Unpad Informatics",
+          caption: "Thesis defense",
         },
         {
           type: "image",
-          src: "/side-quests/gathering.jpg",
-          alt: "First time leading a committee in Bandung",
-          caption: "First time leading a team in Bandung",
-        },
-      ],
-    },
-    {
-      id: "jakarta",
-      label: "Jakarta",
-      detail: "Work & clients",
-      lat: -6.21,
-      lon: 106.85,
-      timeZone: "Asia/Jakarta",
-      media: [
-        {
-          type: "image",
-          src: "/project-media/SE/bitd_capture.jpg",
-          alt: "BITD ISP operations dashboard",
-          caption: "BITD multi-tenant ISP dashboard",
+          src: "/about-me/bandung_1.webp",
+          alt: "Graduation portrait at Universitas Padjadjaran",
+          caption: "Class of 2026, Unpad",
         },
         {
           type: "image",
-          src: "/project-media/SE/bitd_preview.png",
-          alt: "BITD platform preview",
-          caption: "BITD tenant portal preview",
-        },
-        {
-          type: "image",
-          src: "/project-media/SE/coretax_bg.jpg",
-          alt: "Coretax Scraper built during internship at PT Tunas Ridean",
-          caption: "Coretax Scraper at PT Tunas Ridean",
+          src: "/about-me/bandung_3.webp",
+          alt: "Graduation sash, diploma folder and flowers",
+          caption: "Graduation day keepsakes",
         },
       ],
     },

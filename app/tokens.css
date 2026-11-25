@@ -146,6 +146,51 @@
 }
 
 /* ============================================================
+   SITE PALETTE — the cool-neutral and green ramps the gallery pages (home, work, journey,
+   side quests, about) draw with. Page CSS references these names, never raw hex.
+   Change a dark surface here once and every page follows.
+   ============================================================ */
+:root {
+  --primitive-color-site-white: #ffffff;
+  --primitive-color-site-black: #000000;
+
+  --primitive-color-zinc-50: #fafafa;
+  --primitive-color-zinc-100: #f4f4f5;
+  --primitive-color-zinc-200: #e4e4e7;
+  --primitive-color-zinc-300: #d4d4d8;
+  --primitive-color-zinc-400: #a1a1aa;
+  --primitive-color-zinc-600: #52525b;
+  --primitive-color-zinc-700: #3f3f46;
+  --primitive-color-zinc-800: #27272a;
+  --primitive-color-zinc-900: #18181b;
+  --primitive-color-zinc-950: #0f0f0f;
+  --primitive-color-stone-600: #57534e;
+
+  --primitive-color-green-50: #f3faf6;
+  --primitive-color-green-200: #86efac;
+  --primitive-color-green-300: #6ee7a0;
+  --primitive-color-green-400: #4fc17f;
+  --primitive-color-green-600: #1c8049;
+  --primitive-color-green-700: #166238;
+  --primitive-color-green-800: #145932;
+  --primitive-color-green-850: #114f2c;
+  --primitive-color-green-950: #06210f;
+
+  --primitive-color-site-red-400: #f87171;
+  --primitive-color-site-red-700: #b42318;
+
+  /* Dark theme surfaces, page to chip: each step a little lighter. */
+  --primitive-color-night-0: #1a1b1f;
+  --primitive-color-night-1: #212227;
+  --primitive-color-night-2: #25262b;
+  --primitive-color-night-3: #292a30;
+  --primitive-color-night-4: #2d2e35;
+  --primitive-color-night-green: #121c16;
+  /* Ink on the light buttons dark mode uses. */
+  --primitive-color-night-ink: #0c0c0e;
+}
+
+/* ============================================================
    SEMANTIC — light-dark(light, dark); [data-theme] pins one side
    ============================================================ */
 :root {

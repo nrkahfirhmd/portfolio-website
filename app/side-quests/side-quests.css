@@ -1,27 +1,13 @@
 /* ============================================================
    SIDE QUESTS — Tactile gallery bento aligned with DESIGN.md
    ============================================================ */
-.sq-main {
-  width: 100%;
-  padding: clamp(2.25rem, 6vh, 4rem) var(--gh-pad-x) clamp(2rem, 5vh, 3.5rem);
+.sq-content {
+  min-width: 0;
 }
 
-/* --- Editorial Hero (mirrors /journey) --- */
+/* --- Hero (mirrors /journey) --- */
 .sq-hero {
-  max-width: 72rem;
-  margin: 0 auto clamp(2rem, 5vh, 3rem);
-  padding-bottom: clamp(1.5rem, 3.5vh, 2.25rem);
-  border-bottom: 1px solid rgba(15, 15, 20, 0.08);
-}
-
-.sq-eyebrow {
-  margin: 0 0 0.65rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--gh-muted);
+  margin-bottom: clamp(2rem, 5vh, 3rem);
 }
 
 .sq-hero-title {
@@ -42,60 +28,6 @@
   text-wrap: pretty;
 }
 
-.sq-shell {
-  max-width: 72rem;
-  margin: 0 auto;
-}
-
-/* --- Frosted Filter Bar --- */
-.sq-filters {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 1.5rem;
-  padding: 0.28rem;
-  border-radius: 12px;
-  background: rgba(244, 244, 247, 0.72);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow:
-    0 0 0 1px rgba(15, 15, 20, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 10px 24px -16px rgba(15, 15, 20, 0.18);
-}
-
-.sq-chip {
-  min-height: 34px;
-  padding: 0.35rem 0.85rem;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: #3f3f46;
-  font-family: inherit;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  cursor: pointer;
-  transition:
-    background-color 150ms var(--gh-ease),
-    color 150ms var(--gh-ease),
-    box-shadow 150ms var(--gh-ease);
-}
-
-.sq-chip:hover,
-.sq-chip:focus-visible {
-  background: rgba(255, 255, 255, 0.85);
-  color: var(--gh-ink);
-}
-
-.sq-chip[aria-pressed="true"] {
-  background: #0f0f0f;
-  color: #ffffff;
-  box-shadow: 0 4px 12px -6px rgba(15, 15, 20, 0.4);
-}
-
 /* --- Bento Grid: 6 columns of 10.5rem rows on desktop --- */
 .sq-grid {
   display: grid;
@@ -111,21 +43,32 @@
   min-height: 21rem;
 }
 
-@media (min-width: 48rem) {
+/* The sidebar takes a third of the width, so two columns until the page is wide. */
+@media (min-width: 40rem) {
   .sq-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: 10.5rem;
   }
   .sq-cell {
     min-height: 0;
+  }
+  .sq-cell:is([data-size="lg"], [data-size="wide"]) {
+    grid-column: span 2;
+  }
+  .sq-cell:is([data-size="lg"], [data-size="tall"]) {
+    grid-row: span 2;
+  }
+}
+
+@media (min-width: 72rem) {
+  .sq-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .sq-cell {
     grid-column: span 2;
   }
   .sq-cell[data-size="lg"] {
     grid-column: span 4;
-    grid-row: span 2;
-  }
-  .sq-cell[data-size="tall"] {
-    grid-row: span 2;
   }
   .sq-cell[data-size="wide"] {
     grid-column: span 6;
@@ -146,7 +89,7 @@
   overflow: hidden;
   border: 1px solid rgba(15, 15, 20, 0.08);
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   box-shadow: 0 12px 28px -22px rgba(15, 23, 42, 0.22);
 }
 
@@ -194,7 +137,7 @@
 /* Architectural paper dot grid for entries without a cover photo */
 .sq-art {
   display: block;
-  background-color: #f8f9fc;
+  background-color: var(--primitive-color-zinc-50);
   background-image: radial-gradient(rgba(15, 23, 42, 0.1) 1px, transparent 1px);
   background-size: 18px 18px;
 }
@@ -248,7 +191,7 @@
 
 .sq-card:is(:hover, :focus-visible) .sq-badge {
   background: var(--gh-accent);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
 }
 
 .sq-card-title {
@@ -267,14 +210,14 @@
   -webkit-line-clamp: 2;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
 }
 
 /* --- Swipeable Album Cell --- */
 .sq-album {
   display: flex;
   flex-direction: column;
-  background: #f4f4f6;
+  background: var(--primitive-color-zinc-100);
 }
 
 .sq-album-stage {
@@ -314,7 +257,7 @@
   font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.25;
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   pointer-events: none;
 }
 
@@ -367,9 +310,9 @@
 
 .sq-arrow:hover,
 .sq-arrow:focus-visible {
-  background: #0f0f0f;
-  border-color: #0f0f0f;
-  color: #ffffff;
+  background: var(--primitive-color-zinc-950);
+  border-color: var(--primitive-color-zinc-950);
+  color: var(--primitive-color-site-white);
   transform: translateY(-50%) scale(1.06);
 }
 
@@ -398,7 +341,7 @@
   justify-content: center;
   gap: 0.4rem;
   padding: 0.7rem;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   border-top: 1px solid rgba(15, 15, 20, 0.06);
 }
 
@@ -422,13 +365,13 @@
 
 /* --- Sticker Pile & Keepsakes Polaroids --- */
 .sq-pile {
-  background-color: #f3faf6;
+  background-color: var(--primitive-color-green-50);
   background-image: radial-gradient(rgba(22, 98, 56, 0.14) 1px, transparent 1px);
   background-size: 16px 16px;
 }
 
 .sq-keepsakes {
-  background-color: #f8f8f7;
+  background-color: var(--primitive-color-zinc-50);
 }
 
 .sq-play-title {
@@ -497,7 +440,7 @@
   padding: 0.45rem 0.45rem 0.55rem;
   border: 1px solid rgba(15, 15, 20, 0.1);
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   box-shadow: 0 12px 24px -14px rgba(15, 23, 42, 0.3);
   cursor: grab;
   touch-action: none;
@@ -521,7 +464,7 @@
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
   text-align: center;
-  color: #27272a;
+  color: var(--primitive-color-zinc-800);
 }
 
 /* --- Flip Card --- */
@@ -566,7 +509,7 @@
   flex-direction: column;
   justify-content: space-between;
   border-color: rgba(255, 255, 255, 0.12);
-  background: #0f0f0f;
+  background: var(--primitive-color-zinc-950);
   transition: background-color 180ms var(--gh-ease);
 }
 
@@ -576,7 +519,7 @@
 }
 
 .sq-flip-front .sq-card-title {
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
 }
 
 .sq-hint-inline {
@@ -591,77 +534,35 @@
   transform: rotateY(180deg);
   font-size: 0.875rem;
   line-height: 1.55;
-  color: #27272a;
+  color: var(--primitive-color-zinc-800);
 }
 
-/* --- Opened Article Modal (matches /journey gallery dialog) --- */
-.sq-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(255, 255, 255, 0.74);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.sq-dialog-wrap {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: grid;
-  place-items: center;
-  padding: clamp(1rem, 4vw, 2.5rem);
-  pointer-events: none;
-}
-
+/* --- Opened article: full-screen page (matches the /journey story panel) --- */
 .sq-dialog {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 44rem;
-  max-height: 100%;
-  overflow: hidden;
-  border: 1px solid rgba(15, 15, 20, 0.1);
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 28px 64px -20px rgba(15, 23, 42, 0.24);
-  pointer-events: auto;
-}
-
-.sq-dialog-cover {
-  position: relative;
-  flex: none;
-  height: clamp(11rem, 28vh, 17rem);
-  overflow: hidden;
-  border-bottom: 1px solid rgba(15, 15, 20, 0.08);
-  background: #f4f4f6;
-}
-
-.sq-dialog-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.2rem 1.5rem 0;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--primitive-color-site-white);
 }
 
 .sq-close {
-  position: absolute;
-  top: 0.9rem;
-  right: 0.9rem;
+  position: fixed;
+  top: clamp(0.9rem, 3vw, 1.75rem);
+  right: clamp(0.9rem, 3vw, 1.75rem);
+  z-index: 1;
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(15, 15, 20, 0.1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(12px) saturate(160%);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
-  box-shadow:
-    0 0 0 1px rgba(15, 15, 20, 0.08),
-    0 8px 20px -10px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 8px 20px -10px rgba(15, 23, 42, 0.35);
   color: var(--gh-ink);
   cursor: pointer;
   transition:
@@ -669,66 +570,111 @@
     color 150ms var(--gh-ease);
 }
 
-.sq-close--inline {
-  position: static;
-  background: #f4f4f6;
-  border-color: rgba(15, 15, 20, 0.1);
-  box-shadow: none;
-}
-
 .sq-close:hover,
 .sq-close:focus-visible {
-  background: #0f0f0f;
-  border-color: #0f0f0f;
-  color: #ffffff;
+  background: var(--primitive-color-zinc-950);
+  border-color: var(--primitive-color-zinc-950);
+  color: var(--primitive-color-site-white);
 }
 
 .sq-dialog-body {
-  display: grid;
-  gap: 1.05rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: clamp(1.35rem, 3.5vw, 2rem);
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: #27272a;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2rem);
+  width: min(46rem, 100%);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 10vh, 6rem) var(--gh-pad-x) max(clamp(3rem, 8vh, 5rem), env(safe-area-inset-bottom));
+  color: var(--primitive-color-zinc-700);
 }
 
 .sq-dialog-body p {
   margin: 0;
 }
 
+.sq-dialog-body .sq-meta {
+  font-family: inherit;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sq-dialog-body .sq-badge {
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: var(--primitive-color-site-white);
+  border: 1px solid rgba(15, 15, 20, 0.12);
+  box-shadow: 0 1px 2px rgba(15, 15, 20, 0.05);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gh-ink);
+}
+
 .sq-dialog-title {
   margin: 0;
-  font-size: clamp(1.45rem, 3vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.12;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  text-wrap: balance;
   color: var(--gh-ink);
 }
 
 .sq-org {
-  margin-top: 0.3rem !important;
-  font-size: 0.90625rem;
+  margin-top: 0.6rem !important;
+  font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--gh-accent);
+  color: var(--gh-muted);
 }
 
 .sq-lead {
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--gh-ink);
+  margin-top: 1rem !important;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: var(--gh-muted);
 }
 
-.sq-dialog-body blockquote {
+.sq-dialog-cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 7 / 3;
+  border-radius: 22px;
+  background: var(--primitive-color-zinc-100);
+  box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+}
+
+.sq-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.sq-reflection {
   margin: 0;
-  padding-left: 1rem;
-  border-left: 2px solid var(--gh-accent);
-  font-family: var(--font-flourish), Georgia, serif;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border-radius: 26px;
+  border: 1px solid rgba(15, 15, 20, 0.1);
+  background: var(--primitive-color-zinc-50);
+}
+
+.sq-reflection span {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gh-muted);
+}
+
+.sq-reflection p {
+  margin-top: 0.9rem;
+  font-size: 1.25rem;
   font-style: italic;
-  font-size: 1.15rem;
-  line-height: 1.48;
+  line-height: 1.6;
   color: var(--gh-ink);
 }
 
@@ -742,67 +688,25 @@
 }
 
 .sq-skills li {
-  padding: 0.24rem 0.6rem;
-  border-radius: 7px;
-  background: #f4f4f6;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--primitive-color-zinc-100);
   border: 1px solid rgba(15, 15, 20, 0.08);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
 }
 
 @media (max-width: 639px) {
-  .sq-filters {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-  }
-  .sq-filters::-webkit-scrollbar {
-    display: none;
-  }
-
-  .sq-chip {
-    flex: none;
-    white-space: nowrap;
-    min-height: 44px;
-  }
-
-  .sq-arrow,
-  .sq-close {
+  .sq-arrow {
     width: 44px;
     height: 44px;
-  }
-
-  .sq-backdrop {
-    align-items: flex-end;
-    padding: 0;
-  }
-
-  .sq-dialog {
-    width: 100%;
-    max-width: 100%;
-    max-height: 90dvh;
-    border-radius: 20px 20px 0 0;
-    border-bottom: 0;
-  }
-
-  .sq-dialog-bar {
-    padding: 1rem 1.15rem 0;
-  }
-
-  .sq-dialog-body {
-    padding: 1.15rem 1.15rem max(1.5rem, env(safe-area-inset-bottom));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sq-card,
   .sq-cover,
-  .sq-chip,
   .sq-badge,
   .sq-arrow,
   .sq-close,
@@ -818,34 +722,13 @@
   }
 }
 
-:root[data-theme="dark"] .sq-filters {
-  background: rgba(24, 24, 29, 0.78);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-:root[data-theme="dark"] .sq-chip {
-  color: #d4d4d8;
-}
-:root[data-theme="dark"] .sq-chip:hover,
-:root[data-theme="dark"] .sq-chip:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-:root[data-theme="dark"] .sq-chip[aria-pressed="true"] {
-  background: #f4f4f5;
-  color: #0c0c0e;
-}
-
 :root[data-theme="dark"] .sq-card,
 :root[data-theme="dark"] .sq-album,
 :root[data-theme="dark"] .sq-play,
 :root[data-theme="dark"] .sq-flip-face,
 :root[data-theme="dark"] .sq-dots,
 :root[data-theme="dark"] .sq-dialog {
-  background: #141418;
+  background: var(--primitive-color-night-1);
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -854,7 +737,7 @@
 }
 
 :root[data-theme="dark"] .sq-art {
-  background-color: #16161c;
+  background-color: var(--primitive-color-night-1);
   background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
 }
 
@@ -863,20 +746,20 @@
     to top,
     rgba(20, 20, 24, 0.96) 0%,
     rgba(20, 20, 24, 0.78) 55%,
-    rgba(20, 20, 24, 0.18) 100%
+    rgba(20, 20, 24, 0) 100%
   );
 }
 
 :root[data-theme="dark"] .sq-pile {
-  background-color: #121c16;
+  background-color: var(--primitive-color-night-green);
   background-image: radial-gradient(rgba(79, 193, 127, 0.2) 1px, transparent 1px);
 }
 :root[data-theme="dark"] .sq-keepsakes {
-  background-color: #16161b;
+  background-color: var(--primitive-color-night-1);
 }
 
 :root[data-theme="dark"] .sq-polaroid {
-  background: #1c1c22;
+  background: var(--primitive-color-night-2);
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -884,33 +767,37 @@
 :root[data-theme="dark"] .sq-polaroid figcaption,
 :root[data-theme="dark"] .sq-flip-back,
 :root[data-theme="dark"] .sq-dialog-body {
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 
 :root[data-theme="dark"] .sq-tag,
 :root[data-theme="dark"] .sq-arrow,
-:root[data-theme="dark"] .sq-close,
-:root[data-theme="dark"] .sq-close--inline {
+:root[data-theme="dark"] .sq-close {
   background: rgba(20, 20, 25, 0.86);
   border-color: rgba(255, 255, 255, 0.16);
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
 }
 :root[data-theme="dark"] .sq-arrow:hover,
 :root[data-theme="dark"] .sq-arrow:focus-visible,
 :root[data-theme="dark"] .sq-close:hover,
 :root[data-theme="dark"] .sq-close:focus-visible {
-  background: #f4f4f5;
-  border-color: #f4f4f5;
-  color: #0c0c0e;
+  background: var(--primitive-color-zinc-100);
+  border-color: var(--primitive-color-zinc-100);
+  color: var(--primitive-color-night-ink);
 }
 
-:root[data-theme="dark"] .sq-backdrop {
-  background: rgba(0, 0, 0, 0.68);
+:root[data-theme="dark"] .sq-reflection {
+  background: var(--primitive-color-night-2);
+  border-color: rgba(255, 255, 255, 0.12);
 }
-
+:root[data-theme="dark"] .sq-dialog-body .sq-badge {
+  background: var(--primitive-color-night-3);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--primitive-color-zinc-200);
+}
 :root[data-theme="dark"] .sq-dialog-cover,
 :root[data-theme="dark"] .sq-skills li {
-  background: #1b1b21;
+  background: var(--primitive-color-night-3);
   border-color: rgba(255, 255, 255, 0.12);
-  color: #e4e4e7;
+  color: var(--primitive-color-zinc-200);
 }
