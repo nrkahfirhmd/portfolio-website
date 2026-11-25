@@ -1,0 +1,929 @@
+/*
+ * The scroll film at /story. Two layouts from one markup:
+ *   base:  every scene stacked and finished (reduced motion, no JS).
+ *   live:  one pinned stage. Animations are paused; film.tsx sets their currentTime from
+ *          scroll, so inside the live block 1s means one second of film, not of clock.
+ */
+
+body:has(.fm) {
+  background: #ffffff;
+  color: #0f0f0f;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+:root[data-theme="dark"] body:has(.fm) {
+  background: #1a1b1f;
+  color: #f4f4f5;
+}
+
+.fm {
+  --ground: #ffffff;
+  --ink: #0f0f0f;
+  --soft: #57534e;
+  --accent: #166238;
+  --line: #e4e4e7;
+  --page: var(--ground);
+  --page-ink: var(--ink);
+  --e: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  overflow-x: clip;
+  background: var(--ground);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .fm {
+  --ground: #1a1b1f;
+  --ink: #f4f4f5;
+  --soft: #a1a1aa;
+  --accent: #4fc17f;
+  --line: #2b2b30;
+}
+
+/* ------------------------------------------------------------ chrome */
+
+.fm-chrome {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  padding: max(0.75rem, env(safe-area-inset-top)) clamp(1.25rem, 4.2vw, 3.75rem);
+  color: var(--ink);
+  pointer-events: none;
+  transition: opacity 200ms ease, visibility 200ms;
+}
+/* Out of the way while one scene scrolls off and the next scrolls in. */
+.fm:has(.fm-track[data-moving]) .fm-chrome:not(:focus-within) {
+  opacity: 0;
+}
+/* While the opening folds away or a card grows, the ground under the header changes mid-scroll. */
+.fm:has(.fm-stage[data-tone="ink"]) .fm-chrome {
+  color: #ffffff;
+  mix-blend-mode: difference;
+}
+.fm:has(.fm-stage[data-tone="dark"]) .fm-chrome {
+  color: #ffffff;
+}
+.fm:has(.fm-stage[data-tone="day"]) .fm-chrome {
+  color: #0f0f0f;
+}
+/* Past the film, the footer carries the links. */
+.fm:has(.fm-track[data-past]) .fm-chrome {
+  visibility: hidden;
+  opacity: 0;
+}
+.fm-chrome a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  pointer-events: auto;
+  text-decoration: underline transparent 1px;
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color 160ms ease;
+}
+.fm-chrome a:hover {
+  text-decoration-color: currentColor;
+}
+.fm-chrome a:active {
+  opacity: 0.7;
+}
+.fm-chrome a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.fm-chrome .fm-home {
+  font-family: var(--font-brand), var(--font-sans), sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+#end:focus {
+  outline: none;
+}
+
+/* ------------------------------------------------------------ shared pieces (base layout) */
+
+.fm-scene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 5rem max(1.25rem, 8vw);
+  background: var(--ground);
+  color: var(--ink);
+  isolation: isolate;
+}
+.fm-art {
+  position: relative;
+  container-type: size;
+  order: 2;
+  height: 70svh;
+  overflow: hidden;
+}
+.fm-art:empty,
+.fm-overlay,
+.fm-cue {
+  display: none;
+}
+.fm-copy {
+  position: relative;
+  z-index: 2;
+}
+.fm-copy p,
+.fm-copy h1,
+.fm-copy h2,
+.fm-copy ul,
+.fm-art p,
+.fm-art figure,
+.fm-overlay p {
+  margin: 0;
+}
+
+.fm-hand {
+  font-family: var(--font-hand), "Bradley Hand", cursive;
+  line-height: 1.02;
+  color: #1b1a17;
+  text-wrap: balance;
+}
+.fm-paper {
+  background:
+    linear-gradient(#0000000f, #0000 16%),
+    linear-gradient(155deg, #ffffff38, #0000 42%, #00000012),
+    var(--paper, #fff3a3);
+  box-shadow:
+    0 1px 1px #0000002b,
+    0 14px 22px -12px #00000059;
+  border-radius: 1px 1px 3px 14px / 1px 1px 3px 4px;
+}
+/* ------------------------------------------------------------ hello */
+
+.fm-hello {
+  --ground: #ffffff;
+  --ink: #0f0f0f;
+  --figure: 104vh;
+  --lift: -13vh;
+  justify-content: flex-end;
+  /* Keeps the stacked copy below the face. */
+  padding-top: 34vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #ffffff;
+}
+.fm-hello-block {
+  width: fit-content;
+  margin-inline: auto;
+  font-size: min(21.6vw, 28.5vh);
+}
+.fm-hello-head {
+  /* Hangs the H's side bearing, so its stem lines up with the copy below. */
+  margin-left: -0.06em !important;
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.84;
+}
+.fm-hello-head span {
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+/* The second line throws a shadow up the first. */
+.fm-hello-1 {
+  /* Room for the last letter, which tight tracking leaves outside the box. */
+  padding: 0 0.08em 0.12em 0;
+  margin: 0 -0.08em -0.12em 0;
+  background: linear-gradient(#0f0f0f 46%, #8d8d8d 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  /* Sets "Hi there" to the width of "I’m Kahfi". */
+  font-size: 1.06em;
+}
+.fm-hello-2 {
+  position: relative;
+}
+.fm-hello-stop {
+  --paper: #fff3a3;
+  position: absolute;
+  left: calc(100% + 0.07em);
+  bottom: 0.081em;
+  width: 0.17em;
+  aspect-ratio: 1;
+  border-radius: 0.004em 0.004em 0.01em 0.05em / 0.004em 0.004em 0.01em 0.014em;
+}
+.fm-hello-lines {
+  margin-top: clamp(1rem, 3vh, 2.25rem);
+  font-size: clamp(1.0625rem, min(2.4vw, 3.1vh), 2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.45;
+  color: #6b6b6b;
+}
+.fm-hello-lines b {
+  font-weight: 500;
+  color: #0f0f0f;
+}
+.fm-hello-lines a {
+  display: inline-flex;
+  align-items: center;
+  margin-block: -0.6em;
+  padding-block: 0.6em;
+  color: #0f0f0f;
+  font-weight: 500;
+  text-decoration: underline #0f0f0f66 1px;
+  text-underline-offset: 0.28em;
+  pointer-events: auto;
+  transition: text-decoration-color 160ms ease;
+}
+.fm-hello-lines a:hover {
+  text-decoration-color: #0f0f0f;
+}
+.fm-hello-lines a:active {
+  opacity: 0.7;
+}
+.fm-hello-lines a:focus-visible {
+  outline: 2px solid #0f0f0f;
+  outline-offset: 4px;
+}
+@media (max-aspect-ratio: 1/1) {
+  .fm-hello {
+    --figure: min(190vw, 96vh);
+    --lift: -2vh;
+  }
+}
+
+/* ------------------------------------------------------------ small problems */
+
+.fm-bubble {
+  display: block;
+  width: fit-content;
+  padding: 0.55em 0.9em;
+  max-width: 100%;
+  border-radius: 1.2em 1.2em 1.2em 0.3em;
+  background: var(--line);
+  font-size: clamp(1.2rem, min(3.1cqw, 5cqh), 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+/* Person 1, on the right. */
+.fm-bubble--1 {
+  margin-left: auto;
+  border-radius: 1.2em 1.2em 0.3em 1.2em;
+  background: #166238;
+  color: #ffffff;
+}
+.fm-texts {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--soft);
+}
+.fm-sheet {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1px;
+  padding: 1px;
+  background: color-mix(in srgb, var(--ink) 30%, var(--ground));
+  border-radius: 4px;
+}
+.fm-sheet i {
+  background: var(--ground);
+}
+.fm-sheet i:nth-child(-n + 3) {
+  background: var(--line);
+}
+
+/* ------------------------------------------------------------ 1 of 5: Prabu */
+
+.fm-prabu {
+  --ground: #aee7e2;
+  --ink: #0d2b33;
+  background: #aee7e2;
+}
+.pr-hall {
+  position: absolute;
+  left: 62%;
+  bottom: 10cqh;
+  width: min(70cqw, 112cqh);
+  max-width: none;
+  height: auto;
+  translate: -50% 0;
+}
+.pr-ground {
+  position: absolute;
+  inset: auto 0 0;
+  height: 14cqh;
+  background: #e8c27a;
+}
+.pr-crowd {
+  position: absolute;
+  inset: auto 0 5cqh;
+  height: 24cqh;
+}
+.pr-crowd img {
+  position: absolute;
+  bottom: calc(var(--row) * 3.2cqh);
+  left: calc(1.5cqw + var(--i) * 4.5cqw);
+  width: auto;
+  height: 17cqh;
+}
+.pr-bus {
+  position: absolute;
+  bottom: 1cqh;
+  left: 100cqw;
+  width: min(34cqw, 52cqh);
+  height: auto;
+}
+.pr-man {
+  position: absolute;
+  bottom: -18cqh;
+  width: auto;
+  height: 72cqh;
+}
+.pr-man--1 {
+  right: 24cqw;
+}
+.pr-man--2 {
+  right: 7cqw;
+}
+.pr-sorter,
+.pr-form {
+  position: absolute;
+  top: 13cqh;
+  right: 7cqw;
+  width: 36cqw;
+  height: 36cqh;
+}
+.pr-trays {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4%;
+}
+.pr-trays i {
+  border: 2px solid #0d2b33;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+.pr-form {
+  display: none;
+  flex-direction: column;
+  gap: 9%;
+  width: 30cqw;
+  padding: 0 2cqw;
+  background: #fffdf8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.pr-form-head {
+  flex: none;
+  height: 12%;
+  margin: 0 -2cqw;
+  background: #0d2b33;
+}
+.pr-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9cqh;
+}
+.pr-form-row i {
+  height: 0.8cqh;
+  width: 55%;
+  background: #0d2b3355;
+}
+.pr-form-row i:first-child {
+  width: 78%;
+  background: #0d2b33;
+}
+.pr-form-row i:last-child {
+  width: 42%;
+}
+
+/* ------------------------------------------------------------ 2 of 5: Omawe */
+
+.fm-omawe {
+  --ground: #16222f;
+  --ink: #ffffff;
+  background: #16222f;
+}
+.fm-map-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.fm-map-svg--tall {
+  display: none;
+}
+.om-streets path {
+  fill: none;
+  stroke: #223445;
+  stroke-width: 16;
+}
+.om-route,
+.om-done,
+.om-gap {
+  fill: none;
+  stroke: #3a5266;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.om-done {
+  stroke: #2ec4b6;
+}
+.om-gap {
+  stroke: #ffb02e;
+  stroke-linecap: butt;
+}
+.om-marker circle {
+  fill: #14c457;
+}
+.om-marker path {
+  fill: #ffffff;
+}
+.om-marker .om-marker-halo {
+  opacity: 0.28;
+}
+.om-marker[data-stale] circle {
+  fill: #7d8b97;
+}
+.om-marker[data-stale] .om-marker-halo {
+  fill: none;
+  stroke: #ffb02e;
+  stroke-width: 3;
+  stroke-dasharray: 8 7;
+  opacity: 1;
+}
+.om-card {
+  position: absolute;
+  top: 12cqh;
+  right: 5cqw;
+  width: min(38cqw, 60cqh);
+  height: auto;
+}
+
+/* ------------------------------------------------------------ 3 of 5: Body Count */
+
+.fm-bodyCount {
+  --ground: #1d1d45;
+  --ink: #ffffff;
+  background: #1d1d45;
+}
+.bc-street {
+  position: absolute;
+  inset: 0 0 0 38cqw;
+  container-type: size;
+  overflow: hidden;
+  background: #2b2950;
+}
+.bc-stripes i {
+  position: absolute;
+  top: calc(27cqh + var(--i) * 3.6cqh + var(--i) * var(--i) * 0.5cqh);
+  left: 50%;
+  width: calc(44cqw + var(--i) * 7cqw);
+  height: calc(1.7cqh + var(--i) * 0.62cqh);
+  translate: -50% 0;
+  background: #c9c2dc;
+  clip-path: polygon(2% 0, 98% 0, 100% 100%, 0 100%);
+}
+.bc-light {
+  position: absolute;
+  top: 9cqh;
+  right: -1cqw;
+  width: auto;
+  height: 46cqh;
+}
+.bc-crowd {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+.fm-walker {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 13cqh;
+  margin-left: -6.5cqh;
+  margin-top: -30cqh;
+  transform-origin: 50% 100%;
+}
+.fm-walker svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.fm-walker--target::after {
+  content: "";
+  position: absolute;
+  inset: -8% -22% -2%;
+  border: 0.55cqh solid #ffd23f;
+  border-radius: 50%;
+}
+.bc-hud {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 200;
+  display: grid;
+  place-items: start center;
+  padding: max(9cqh, 3.5rem) 3cqw 0;
+}
+.bc-hud > * {
+  grid-area: 1 / 1;
+}
+.bc-prompt {
+  display: none;
+  width: min(92cqw, 30rem);
+  padding: 0.8em 1em;
+  background: #12122f;
+  color: #ffffff;
+  font-size: clamp(1rem, 3.4cqw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  text-align: center;
+}
+.bc-slots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  width: min(92cqw, 34rem);
+}
+.bc-slot {
+  display: grid;
+  grid-template-rows: auto 2.4rem;
+  place-items: center;
+  gap: 0.3rem;
+  padding: 0.6rem 0.25rem 0.7rem;
+  background: #12122f;
+  color: #ffffff;
+}
+.bc-slot small {
+  font-size: 0.8125rem;
+}
+.bc-slot i {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 4px;
+}
+.bc-slot b {
+  font-size: 1.1rem;
+}
+
+/* ------------------------------------------------------------ 4 of 5: Your Space */
+
+.fm-yourSpace {
+  --ground: #0a0e2c;
+  --ink: #ffffff;
+  background: #0a0e2c;
+}
+.ys-sky,
+.ys-lines {
+  position: absolute;
+  inset: 0;
+}
+.ys-sky i {
+  position: absolute;
+  border-radius: 50%;
+  background: #cfd8ff;
+}
+.ys-book {
+  position: absolute;
+  left: 8cqw;
+  bottom: -10cqh;
+  width: min(48cqw, 94cqh);
+  height: auto;
+}
+.ys-phone {
+  position: absolute;
+  left: calc(8cqw + min(48cqw, 94cqh) * 0.5);
+  bottom: 11cqh;
+  width: auto;
+  height: 74cqh;
+  translate: -50% 0;
+}
+.ys-lines {
+  inset: auto;
+  left: 4cqw;
+  top: 4cqh;
+  width: min(46cqw, 90cqh);
+  height: 62cqh;
+  opacity: 0.7;
+}
+.ys-lines path {
+  fill: none;
+  stroke: #dfe5ff;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.ys-star {
+  --sz: min(19cqw, 33cqh);
+  position: absolute;
+  left: calc(4cqw + min(46cqw, 90cqh) * var(--x));
+  top: calc(4cqh + 62cqh * var(--y));
+  width: var(--sz);
+  height: var(--sz);
+  margin: calc(var(--sz) / -2);
+}
+.ys-star--1 {
+  --x: 0.14;
+  --y: 0.62;
+}
+.ys-star--2 {
+  --x: 0.5;
+  --y: 0.22;
+}
+.ys-star--3 {
+  --x: 0.86;
+  --y: 0.58;
+}
+.ys-slider {
+  display: none;
+  position: absolute;
+  left: calc(4cqw + min(46cqw, 90cqh) * 0.14 - min(6cqw, 11cqh));
+  top: 60cqh;
+  width: min(12cqw, 22cqh);
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #c8f2ff 58%, #45507e 58%);
+}
+/* ------------------------------------------------------------ 5 of 5: WhiteJack */
+
+.fm-whitejack {
+  --ground: #0f3029;
+  --ink: #ffffff;
+  background: #0f3029;
+}
+.fm-whitejack img,
+.wj-shred {
+  image-rendering: pixelated;
+}
+.wj-table {
+  position: absolute;
+  left: 72%;
+  top: 41cqh;
+  width: 92cqmax;
+  height: 92cqmax;
+  translate: -50% 0;
+  border: 0.8cqh solid #d9a441;
+  border-radius: 50%;
+  background: #16443a;
+}
+.wj-hand {
+  --ch: min(52cqh, 30cqw);
+  position: absolute;
+  right: 7cqw;
+  bottom: 10cqh;
+  width: calc(var(--ch) * 1.5);
+  height: var(--ch);
+}
+.wj-card {
+  position: absolute;
+  left: calc(var(--slot) * var(--ch) * 0.375);
+  bottom: 0;
+  width: calc(var(--ch) * 71 / 95);
+  height: var(--ch);
+  rotate: var(--r);
+  transform-origin: 50% 120%;
+}
+.wj-card img {
+  width: 100%;
+  height: 100%;
+}
+.wj-card--jack {
+  --slot: 0;
+  --r: -8deg;
+}
+.wj-card--king {
+  --slot: 1;
+  --r: 0deg;
+  display: none;
+}
+.wj-card--ace {
+  --slot: 2;
+  --r: 8deg;
+}
+.wj-shred {
+  position: absolute;
+  inset-block: 0;
+  left: calc(var(--i) * 100% / 7);
+  width: calc(100% / 7 + 0.5px);
+  background: url("/featured/whitejack/KING_OF_HEARTS.png") calc(var(--i) * 100% / 6) 0 / 700% 100%;
+}
+.wj-total {
+  position: absolute;
+  right: 5cqw;
+  top: 13cqh;
+  display: flex;
+  align-items: baseline;
+  gap: 0.15em;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: clamp(1rem, min(2.2cqw, 4cqh), 2rem);
+  font-variant-numeric: tabular-nums;
+}
+.wj-total b {
+  font-size: 3.6em;
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.wj-total b[data-hand="bust"] {
+  color: #ff8a7a;
+}
+.wj-total b[data-hand="won"] {
+  color: #ffd36b;
+}
+.wj-chips {
+  position: absolute;
+  right: 5cqw;
+  top: calc(13cqh + clamp(4.6rem, min(10cqw, 18cqh), 9rem));
+  display: flex;
+  gap: 0.6rem;
+}
+.wj-chips i {
+  width: clamp(26px, 5cqh, 44px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: clamp(5px, 1cqh, 8px) dashed #fff6df;
+  background: #c8433a;
+}
+.wj-suit {
+  position: absolute;
+  width: 7cqh;
+  height: 7cqh;
+}
+.wj-suit--0 {
+  left: 47cqw;
+  top: 30cqh;
+  rotate: -14deg;
+}
+.wj-suit--1 {
+  left: 91cqw;
+  top: 60cqh;
+  rotate: 12deg;
+}
+.wj-suit--2 {
+  left: 43cqw;
+  top: 78cqh;
+  rotate: 18deg;
+}
+.wj-suit--3 {
+  left: 66cqw;
+  top: 16cqh;
+  rotate: -8deg;
+}
+/* ------------------------------------------------------------ the quiet one */
+
+.ct-clock {
+  position: absolute;
+  inset: 36cqh 0 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: min(28cqw, 50cqh);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.08em;
+  line-height: 1;
+}
+
+/* ------------------------------------------------------------ Bandung to Bali */
+
+.fm-map {
+  --ground: #f4f7ec;
+  --ink: #123a24;
+  background: #f4f7ec;
+}
+.mp-camera {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100cqw;
+}
+.mp-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mp-land {
+  fill: #166238;
+}
+.mp-cut {
+  stroke: #f4f7ec;
+  stroke-width: 0.55;
+}
+.mp-coast {
+  stroke: #166238;
+  stroke-width: 1.1;
+}
+.mp-water {
+  fill: none;
+  stroke: #166238;
+  stroke-linejoin: round;
+}
+.mp-water--1 {
+  stroke-width: 7;
+  stroke-opacity: 0.3;
+}
+.mp-water--2 {
+  stroke-width: 15;
+  stroke-opacity: 0.14;
+}
+.mp-water--3 {
+  stroke-width: 26;
+  stroke-opacity: 0.08;
+}
+.mp-route {
+  fill: none;
+  stroke: #d2462f;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+}
+.mp-pin {
+  fill: #d2462f;
+  stroke: #f4f7ec;
+  stroke-width: 2;
+}
+.mp-place {
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  fill: #123a24;
+  stroke: #f4f7ec;
+  stroke-width: 4;
+  paint-order: stroke;
+}
+.mp-print {
+  position: absolute;
+  padding: 0.55cqmin;
+  background: #ffffff;
+  box-shadow: 0 1px 2px #123a2440, 0 18px 30px -18px #123a2480;
+}
+.mp-print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mp-print--bandung {
+  right: 8cqw;
+  bottom: 10cqh;
+  width: min(27cqw, 52cqh);
+  aspect-ratio: 3 / 4;
+  rotate: 2.5deg;
+}
+.mp-print--bali {
+  left: 6cqw;
+  bottom: 12cqh;
+  width: min(28cqw, 44cqh);
+  aspect-ratio: 4 / 3;
+  rotate: -2deg;
+}
+
+/* ------------------------------------------------------------ next */
+
+.fm-next {
+  --ground: #0e2a1b;
+  --ink: #ffffff;
+  background: #0e2a1b;
+}
+.nx-tally {
+  position: absolute;
+  right: 6cqw;
+  top: 22cqh;
+  width: 40cqw;
+  height: auto;
+  overflow: visible;
+}
+.nx-tally path {
+  fill: none;
+  stroke: #86d9a8;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 1 2;
+}
+/* ------------------------------------------------------------ the notes */
+
+.nt-photo {
+  width: min(100%, 30rem);
+}
+.nt-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .bc-street {
+    inset: 41cqh 0 0;
+  }
+  .fm-map-svg--tall {
+    display: block;
+  }
+  .fm-map-svg--wide {
+    display: none;
+  }
+}

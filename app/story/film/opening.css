@@ -1,0 +1,660 @@
+/* Hello, the small problems and Prabu: told by the yellow note (narrator.ts). Base first, then live. */
+
+.nr-note,
+.nr-spot,
+.nr-os {
+  display: none;
+}
+.nr-say {
+  max-width: 22ch;
+  font-size: clamp(1.7rem, min(4.4vw, 8vh), 4.6rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.26;
+  text-wrap: balance;
+}
+.fm-copy .nr-say {
+  margin-bottom: 0.8em;
+}
+.nr-line {
+  display: block;
+  white-space: nowrap;
+}
+.nr-title {
+  margin: 0 0 1.5rem;
+  font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
+  font-weight: 600;
+}
+.nr-ten {
+  font-size: 2.1em;
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+.nr-zero {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+}
+/* Each student is a little wider than the hole in the zero, and stands behind it. */
+.nr-zero img {
+  position: absolute;
+  left: 50%;
+  bottom: 0.1em;
+  z-index: -1;
+  width: auto;
+  max-width: none;
+  height: 0.52em;
+  translate: -50% 0;
+}
+.fm-small .fm-art {
+  display: none;
+}
+.nr-pad-text {
+  margin-top: 2rem !important;
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  color: var(--ink);
+}
+.fm-figure > * {
+  position: absolute;
+  top: var(--lift);
+  left: 50%;
+  width: var(--figure);
+  max-width: none;
+  height: var(--figure);
+  translate: -50% 0;
+  mask: linear-gradient(#000 60%, #0000 94%);
+}
+.fm-figure canvas {
+  display: none;
+}
+/* Reduced motion: the headline, then the two lines under it. */
+.nr-stack--hello {
+  margin-top: 3rem;
+  color: #0f0f0f;
+}
+
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  /* ============================================================ sentences */
+
+  .nr-spot {
+    display: block;
+    position: absolute;
+    pointer-events: none;
+  }
+  .nr-stack {
+    grid-row: 1 / -1;
+    display: grid;
+    align-content: start;
+  }
+  .nr-stack > * {
+    grid-area: 1 / 1;
+    margin: 0 !important;
+  }
+  .nr-say {
+    max-width: min(48cqw, 15em);
+    font-size: clamp(1.5rem, min(4.3cqw, 8cqh), 5.2rem);
+  }
+  .nr-w {
+    display: inline-block;
+  }
+  .nr-i {
+    display: inline-block;
+    transform-origin: 50% 100%;
+    animation: nr-say 0.22s calc(var(--t) - 0.11s) linear both;
+  }
+  /* Up from below, pressed as the note lands, then settles. */
+  @keyframes nr-say {
+    from {
+      opacity: 0;
+      transform: translateY(0.55em) rotate(5deg);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-0.03em);
+    }
+    62% {
+      transform: translateY(0.07em) scaleY(0.94);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  .nr-say--out {
+    animation: nr-out 0.2s var(--out) cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+  }
+  @keyframes nr-out {
+    to {
+      opacity: 0;
+      translate: 0 -0.7em;
+      filter: blur(6px);
+      visibility: hidden;
+    }
+  }
+  .nr-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /* ============================================================ the note */
+
+  .nr-note {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    container-type: size;
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+  .nr-note[data-away] {
+    visibility: hidden;
+  }
+  .fm-stage[data-narrated] .fm-hello-stop {
+    opacity: 0;
+  }
+  .nr-paper {
+    --paper: #ffe05a;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      0 1px 1px #0000002b,
+      0 calc(2px + var(--lift, 0) * 14px) calc(4px + var(--lift, 0) * 16px) -2px #0006;
+  }
+  .nr-face {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+  }
+  .nr-note[data-face="lens"] .nr-face--lens,
+  .nr-note[data-face="1"] .nr-face--1,
+  .nr-note[data-face="2"] .nr-face--2,
+  .nr-note[data-face="3"] .nr-face--3,
+  .nr-note[data-face="pad"] .nr-face--pad,
+  .nr-note[data-face="ask"] .nr-face--ask {
+    opacity: 1;
+  }
+  /* A lens is the note with its middle cut out. */
+  .nr-note:is([data-face="lens"], [data-face="hole"]) .nr-paper {
+    background: none;
+    box-shadow:
+      inset 0 0 0 min(5cqmin, 10px) #ffe05a,
+      0 10px 24px -6px #000a;
+  }
+  .nr-face--lens {
+    border-radius: 50%;
+    overflow: hidden;
+    inset: min(4cqmin, 8px);
+    background: #000000;
+    color: #f4f4f4;
+    font-size: 18cqmin;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .nr-face:is(.nr-face--1, .nr-face--2, .nr-face--3) {
+    color: #1b1a17;
+    font-size: 56cqmin;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .nr-face--pad {
+    align-content: center;
+    justify-items: start;
+    gap: 6cqmin;
+    padding: 10cqmin;
+    font-size: 11cqmin;
+  }
+  .nr-face--pad p:last-child {
+    color: #b3261e;
+    rotate: -2deg;
+  }
+  .nr-face--ask {
+    justify-items: start;
+    padding: 10cqmin;
+    font-size: 17cqmin;
+  }
+
+  /* ============================================================ hello */
+
+  .fm-figure > * {
+    --figure: 104cqh;
+    --lift: -13cqh;
+  }
+  .fm-figure canvas {
+    display: block;
+  }
+  .fm-hello .nr-stack {
+    position: absolute;
+    left: 6cqw;
+    right: 6cqw;
+    bottom: 13cqh;
+    margin: 0;
+    align-content: end;
+  }
+  .fm-hello .nr-say {
+    align-self: end;
+    max-width: 19em;
+    font-size: clamp(1.6rem, min(5cqw, 9cqh), 6rem);
+  }
+  .fm-hello .nr-say--out {
+    --up: 0;
+  }
+  .nr-key {
+    position: relative;
+  }
+  .nr-tiny {
+    display: inline-block;
+  }
+  .nr-tiny > .nr-w {
+    --small: 0.16;
+    animation: nr-shrink 0.4s 3.55s cubic-bezier(0.5, 0, 0.2, 1) forwards;
+  }
+  /* Both words shrink towards the middle of the phrase. */
+  .nr-tiny > .nr-w:first-child {
+    transform-origin: 108% 78%;
+  }
+  .nr-tiny > .nr-w:nth-child(2) {
+    transform-origin: -8% 78%;
+  }
+  @keyframes nr-shrink {
+    to {
+      transform: scale(var(--small));
+    }
+  }
+  .nr-spot--lens {
+    --lens: min(26cqmin, 280px);
+    left: calc(50% - var(--lens) / 2);
+    top: calc(0.8em - var(--lens) / 2);
+    width: var(--lens);
+    height: var(--lens);
+  }
+  .nr-spot--grow {
+    left: -80cqmax;
+    top: calc(50cqh - 130cqmax);
+    width: 260cqmax;
+    height: 260cqmax;
+  }
+
+  /* ============================================================ small */
+
+  .fm-small .fm-art {
+    display: block;
+  }
+  .fm-small .fm-copy {
+    display: block;
+    padding: 0;
+  }
+  .fm-small .nr-stack {
+    position: absolute;
+    left: 6cqw;
+    top: 0;
+    bottom: 0;
+    align-content: center;
+  }
+  .fm-small .nr-say {
+    align-self: center;
+    max-width: 9.5em;
+    font-size: clamp(1.8rem, min(5.2cqw, 9.4cqh), 6rem);
+  }
+  .fm-texts {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .nr-bubble {
+    display: inline-block;
+    padding: 0.02em 0.4em 0.1em;
+    margin-inline: -0.1em;
+    border-radius: 0.6em 0.6em 0.6em 0.14em;
+    background: var(--line);
+    animation: nr-pop 0.2s 1.5s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+  }
+  @keyframes nr-pop {
+    from {
+      background: transparent;
+    }
+  }
+  .nr-chat {
+    position: absolute;
+    right: 8cqw;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2.4cqh;
+    width: 39cqw;
+    animation: nr-out 0.2s 2.92s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+  }
+  .fm-bubble {
+    position: relative;
+    font-size: clamp(1.15rem, min(2.5cqw, 5cqh), 2.6rem);
+    animation: nr-bubble 0.16s var(--t) cubic-bezier(0.2, 1.3, 0.4, 1) both;
+  }
+  .fm-bubble--1 {
+    align-self: flex-end;
+  }
+  @keyframes nr-bubble {
+    from {
+      opacity: 0;
+      translate: 0 0.8em;
+      scale: 0.8;
+    }
+  }
+  .nr-spot--badge {
+    top: -0.5em;
+    right: -0.45em;
+    width: 1.15em;
+    height: 1.15em;
+  }
+  .fm-bubble:not(.fm-bubble--1) .nr-spot--badge {
+    right: auto;
+    left: -0.45em;
+  }
+
+  .nr-long {
+    white-space: nowrap;
+  }
+  .nr-os {
+    display: inline-block;
+    position: relative;
+    width: 0;
+    overflow: clip;
+    overflow-clip-margin: 1em;
+    vertical-align: bottom;
+    animation: nr-long 1.05s 4.05s cubic-bezier(0.4, 0, 0.6, 1) both;
+  }
+  .fm-small .nr-os {
+    overflow: hidden;
+  }
+  @keyframes nr-long {
+    from,
+    to {
+      width: 0;
+    }
+    52%,
+    66% {
+      width: 125cqw;
+    }
+  }
+  .nr-spot--ride {
+    right: 0;
+    top: 0.06em;
+    width: 0.3em;
+    height: 0.3em;
+  }
+
+  .nr-pile {
+    position: absolute;
+    right: 8cqw;
+    top: 21cqh;
+    width: 38cqw;
+    height: 58cqh;
+    animation:
+      nr-pile-in 0.3s 5.95s var(--e) both,
+      nr-pile-out 0.4s 7.95s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+  }
+  @keyframes nr-pile-in {
+    from {
+      opacity: 0;
+      translate: 14cqw 0;
+    }
+  }
+  @keyframes nr-pile-out {
+    to {
+      translate: var(--drop, 0 110cqh);
+      rotate: 4deg;
+    }
+  }
+  .fm-sheet {
+    z-index: calc(6 - var(--i));
+    translate: calc(var(--i) * 0.9cqw) calc(var(--i) * -1.1cqh);
+  }
+  .fm-sheet:nth-child(-n + 5) {
+    animation: nr-page 0.14s calc(6.85s + var(--i) * 0.13s) cubic-bezier(0.5, 0, 0.9, 0.5) both;
+  }
+  @keyframes nr-page {
+    to {
+      translate: 4cqw 70cqh;
+      rotate: 5deg;
+      opacity: 0;
+    }
+  }
+  .nr-spot--pile {
+    --d: min(7cqw, 11cqh);
+    right: calc(var(--d) * -0.25);
+    top: calc(var(--d) * -0.55);
+    width: var(--d);
+    height: var(--d);
+  }
+  .nr-spot--pad {
+    --d: min(70cqmin, 660px);
+    left: calc(50cqw - var(--d) / 2);
+    top: calc(50cqh - var(--d) / 2);
+    width: var(--d);
+    height: var(--d);
+  }
+  .nr-spot--cover {
+    left: calc(50cqw - 130cqmax);
+    top: calc(50cqh - 130cqmax);
+    width: 260cqmax;
+    height: 260cqmax;
+  }
+
+  /* ============================================================ Prabu */
+
+  .fm-prabu .nr-stack {
+    align-self: start;
+  }
+  .fm-prabu .nr-say {
+    max-width: 11.5em;
+    font-size: clamp(1.4rem, min(3.8cqw, 6.9cqh), 4.6rem);
+  }
+  .nr-zero img {
+    animation: nr-peek 0.22s var(--t) cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  }
+  /* They come up from behind the baseline. */
+  .nr-zero {
+    clip-path: inset(-0.1em -0.1em 0.1em);
+  }
+  @keyframes nr-peek {
+    from {
+      translate: -50% 125%;
+    }
+  }
+  @keyframes fm-from-below {
+    from {
+      translate: -50% 60cqh;
+    }
+  }
+  .pr-hall {
+    animation: fm-from-below 0.5s 0.35s var(--e) both;
+  }
+  .pr-crowd img {
+    animation: pr-pop 0.22s calc(1.85s + var(--d) * 0.04s) cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  }
+  @keyframes pr-pop {
+    from {
+      translate: 0 32cqh;
+    }
+  }
+  .pr-bus {
+    animation: pr-bus 2.6s 1.2s linear both;
+  }
+  @keyframes pr-bus {
+    from {
+      left: -36cqw;
+    }
+    to {
+      left: 120cqw;
+    }
+  }
+  .nr-spot--bus {
+    left: 46%;
+    top: -8%;
+    width: 13%;
+    aspect-ratio: 1;
+  }
+  .pr-sorter {
+    animation:
+      fm-rise 0.24s 4.35s both,
+      pr-fall 0.5s 9.5s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+  }
+  @keyframes pr-fall {
+    to {
+      translate: var(--drop, 0 120cqh);
+      rotate: -7deg;
+    }
+  }
+  /* The sentence files itself, word by word. */
+  .nr-sorts .nr-i {
+    border-radius: 0.12em;
+    animation:
+      nr-say 0.22s calc(var(--t) - 0.11s) linear both,
+      nr-sort 0.34s calc(4.95s + (var(--t) - 3.25s) * 0.28) cubic-bezier(0.5, 0, 0.2, 1) forwards,
+      nr-shake 0.3s 7.2s linear,
+      nr-drop 0.5s 9.5s cubic-bezier(0.5, 0, 0.9, 0.5) forwards;
+  }
+  @keyframes nr-sort {
+    to {
+      translate: var(--dx) var(--dy);
+      scale: var(--fit);
+      background: #fffaf0;
+      box-shadow: 0 0.04em 0 #0d2b3326, 0 0 0 0.14em #fffaf0;
+    }
+  }
+  @keyframes nr-shake {
+    20% {
+      rotate: 5deg;
+    }
+    50% {
+      rotate: -4deg;
+    }
+    75% {
+      rotate: 2deg;
+    }
+  }
+  @keyframes nr-drop {
+    to {
+      translate: var(--dx) calc(var(--dy) + 120cqh);
+      rotate: 14deg;
+    }
+  }
+  .nr-spot--trays {
+    --d: min(5cqw, 8cqh);
+    right: calc(25cqw - var(--d) / 2);
+    top: calc(13cqh - var(--d) * 0.6);
+    width: var(--d);
+    height: var(--d);
+  }
+  .nr-spot--ask {
+    --d: min(40cqmin, 420px);
+    right: calc(25cqw - var(--d) / 2);
+    top: 10cqh;
+    width: var(--d);
+    height: var(--d);
+  }
+  .nr-spot--corner {
+    left: 20px;
+    bottom: 26px;
+    width: 34px;
+    height: 34px;
+  }
+  .pr-man {
+    height: 64cqh;
+    bottom: -17cqh;
+    animation: pr-man 0.35s 7.25s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+  }
+  .pr-man--2 {
+    animation-delay: 7.4s;
+  }
+  @keyframes pr-man {
+    from {
+      translate: 0 90cqh;
+    }
+  }
+  .pr-form {
+    display: flex;
+    animation: pr-form 0.4s 9.75s var(--e) both;
+  }
+  @keyframes pr-form {
+    from {
+      opacity: 0;
+      translate: 0 -60cqh;
+    }
+  }
+
+  /* ============================================================ tall */
+
+  @media (max-aspect-ratio: 1/1) {
+    .fm-figure > * {
+      --figure: min(190cqw, 96cqh);
+      --lift: -2cqh;
+    }
+    .fm-hello .nr-stack {
+      bottom: 12cqh;
+    }
+    .nr-say,
+    .fm-hello .nr-say,
+    .fm-small .nr-say {
+      max-width: 88cqw;
+      font-size: clamp(1.6rem, min(9.6cqw, 6cqh), 4.6rem);
+    }
+    .fm-small .nr-say {
+      font-size: clamp(1.5rem, min(8.2cqw, 5.6cqh), 4.6rem);
+    }
+    .fm-prabu .nr-say {
+      max-width: 88cqw;
+      font-size: clamp(1.3rem, min(7.4cqw, 4.2cqh), 4rem);
+    }
+    .fm-small .nr-stack {
+      align-content: start;
+      top: 13cqh;
+    }
+    .nr-chat {
+      left: 6cqw;
+      right: 6cqw;
+      top: 44cqh;
+      bottom: 20cqh;
+      width: auto;
+    }
+    .fm-bubble {
+      font-size: clamp(1.1rem, 5.2cqw, 2.6rem);
+    }
+    .nr-pile {
+      left: 8cqw;
+      right: 12cqw;
+      top: 47cqh;
+      width: auto;
+      height: 36cqh;
+    }
+    .nr-spot--pad {
+      --d: min(86cqw, 62cqh);
+    }
+    .pr-man {
+      height: 46cqh;
+      bottom: -8cqh;
+    }
+    .nr-spot--trays {
+      right: calc(50cqw - var(--d) / 2);
+      top: calc(39cqh - var(--d) * 0.6);
+    }
+    .nr-spot--ask {
+      --d: min(60cqw, 34cqh);
+      right: calc(50cqw - var(--d) / 2);
+      top: 33cqh;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 /* ============================================================
    ARTICLE / DEVLOG PAGES — Editorial monograph aligned with DESIGN.md
-   Shared by /software/work/[slug], /games/stage/[slug], and dev MDX previews.
+   Shared by /work/article/[slug] and the dev MDX previews.
    ============================================================ */
 
 .st-main {
@@ -675,7 +675,7 @@
   box-shadow: 0 20px 44px -20px rgba(15, 15, 20, 0.28);
 }
 .story-hero-frame:has(.vp-root) {
-  background: #0a0a0d;
+  background: #17181c;
   border-color: rgba(15, 15, 20, 0.14);
 }
 .story-hero-stage--mobile .story-hero-frame img {
@@ -1221,7 +1221,7 @@
   overflow: hidden;
   border-radius: 14px;
   border: 1px solid rgba(15, 15, 20, 0.12);
-  background: #0a0a0d;
+  background: #17181c;
   box-shadow: 0 16px 36px -22px rgba(15, 23, 42, 0.26);
   isolation: isolate;
 }
@@ -1590,7 +1590,7 @@
 }
 :root[data-theme="dark"] .st-crumb:hover,
 :root[data-theme="dark"] .st-crumb:focus-visible {
-  background: #1b1b21;
+  background: #292a30;
   color: var(--gh-accent);
 }
 
@@ -1607,7 +1607,7 @@
 }
 
 :root[data-theme="dark"] .st-code {
-  background: #1b1b21;
+  background: #292a30;
   border-color: rgba(255, 255, 255, 0.12);
   color: #e4e4e7;
 }
@@ -1619,7 +1619,7 @@
 }
 :root[data-theme="dark"] .story-action:hover,
 :root[data-theme="dark"] .story-action:focus-visible {
-  background: #1f1f26;
+  background: #2d2e35;
   border-color: var(--gh-accent);
   color: var(--gh-accent);
 }
@@ -1661,12 +1661,12 @@
 :root[data-theme="dark"] .st-compare-panel,
 :root[data-theme="dark"] .story-pager-card,
 :root[data-theme="dark"] .ap-card {
-  background: #141418;
+  background: #212227;
 }
 
 :root[data-theme="dark"] .story-pager-card:hover,
 :root[data-theme="dark"] .story-pager-card:focus-visible {
-  background: #1b1b21;
+  background: #292a30;
   border-color: rgba(79, 193, 127, 0.45);
 }
 
@@ -1684,11 +1684,11 @@
 }
 
 :root[data-theme="dark"] .story-hero-stage {
-  background: #141418;
+  background: #212227;
   border-color: rgba(255, 255, 255, 0.1);
 }
 :root[data-theme="dark"] .story-hero-frame {
-  background: #0a0a0d;
+  background: #17181c;
   border-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -1712,6 +1712,6 @@
   stroke: rgba(255, 255, 255, 0.35);
 }
 :root[data-theme="dark"] .dg-step circle {
-  fill: #141418;
+  fill: #212227;
   stroke: #f4f4f5;
 }

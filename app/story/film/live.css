@@ -1,0 +1,167 @@
+/*
+ * LIVE: one pinned stage, played by scroll. Every animation is paused and film.tsx sets its
+ * currentTime, so here 1s is one second of film (PACE screens of scroll), not of clock.
+ *
+ * Keyframes that animate scale next to translate/rotate take it from a variable: Lightning
+ * CSS otherwise drops `scale: 1` from them.
+ */
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  .fm-track {
+    position: relative;
+    height: calc((var(--screens) + 1) * 100svh);
+  }
+  .fm-stage {
+    --ph: min(84cqh, 74cqw);
+    --pdx: 19cqw;
+    --pdy: 2cqh;
+
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    container-type: size;
+  }
+  .fm-stage *,
+  .fm-stage *::before,
+  .fm-stage *::after {
+    animation-play-state: paused !important;
+  }
+
+  .fm-scene {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 0;
+    overflow: hidden;
+  }
+  /* Two scenes scroll past each other: the floor of one is the map of the next. */
+  .fm-prabu {
+    animation: fm-depart var(--exit) var(--exit-at) linear forwards;
+  }
+  .fm-omawe {
+    animation: fm-arrive var(--enter) linear both;
+  }
+  @keyframes fm-arrive {
+    from {
+      translate: 0 100cqh;
+    }
+  }
+  @keyframes fm-depart {
+    to {
+      translate: 0 -100cqh;
+    }
+  }
+  /* Off screen but still readable by assistive tech, so not visibility: hidden. */
+  .fm-scene[data-off] {
+    clip-path: inset(50%) !important;
+  }
+  .fm-scene[data-off] .fm-art {
+    visibility: hidden;
+  }
+  .fm-art {
+    display: block;
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+  .fm-overlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  /* ============================================================ copy */
+
+  .fm-copy {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template: auto minmax(0, 1fr) / minmax(0, 1fr);
+    padding: clamp(3.75rem, 13cqh, 8rem) 6cqw clamp(5rem, 12cqh, 7rem);
+    pointer-events: none;
+  }
+  .fm-copy > * {
+    grid-column: 1;
+  }
+  /* Resolves out of a blur as it rises. */
+  @keyframes fm-rise {
+    from {
+      opacity: 0;
+      translate: 0 0.5em;
+      filter: blur(9px);
+    }
+  }
+  @keyframes fm-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes fm-gone {
+    to {
+      opacity: 0;
+    }
+  }
+  .fm-word {
+    animation: fm-fade 0.05s calc((var(--at) + var(--i) * 0.032) * 1s) both;
+  }
+  .fm-texts {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0 !important;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ============================================================ hello */
+
+  .fm-hello {
+    background: #ffffff;
+  }
+  .fm-hello .fm-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 5cqw clamp(1.5rem, 5.5cqh, 4rem);
+  }
+  .fm-hello-block {
+    font-size: min(21.6cqw, 28.5cqh);
+  }
+  .fm-hello-lines {
+    animation: fm-leave 0.18s 0.06s linear both;
+  }
+  .fm-cue {
+    display: block;
+    position: absolute;
+    right: 5cqw;
+    bottom: clamp(1.5rem, 5.5cqh, 4rem);
+    margin: 0;
+    font-size: 0.9375rem;
+    color: #6b6b6b;
+    animation: fm-leave 0.12s 0.04s linear both;
+  }
+  @keyframes fm-leave {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  /* The lines part, and leave the figure alone for a moment. */
+  .fm-hello-1 {
+    --away: -110cqw;
+    animation: fm-part 0.55s 0.22s cubic-bezier(0.6, 0, 0.8, 0.4) both;
+  }
+  .fm-hello-2 {
+    --away: 110cqw;
+    animation: fm-part 0.55s 0.3s cubic-bezier(0.6, 0, 0.8, 0.4) both;
+  }
+  @keyframes fm-part {
+    to {
+      translate: var(--away) 0;
+    }
+  }
+}
