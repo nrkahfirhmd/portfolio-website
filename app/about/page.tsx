@@ -4,68 +4,22 @@ import Link from "next/link";
 import { ABOUT, FRIENDS, PERSON } from "@/content/site";
 import { PageTransition } from "../page-transition";
 import { SiteFooter } from "../site-footer";
-import { WorkWithMeButton } from "../work-with-me";
 import { SOCIALS } from "../socials";
 import { DottedGlobe } from "./dotted-globe";
 import "../home.css";
 import "./about.css";
+import { SiteHeader } from "@/app/site-header";
 
 export const metadata: Metadata = {
   title: ABOUT.title,
   description: ABOUT.description,
 };
 
-const NAV_LINKS = [
-  { label: "Work", href: "/work", active: false },
-  { label: "About Me", href: "/about", active: true },
-  { label: "My Journey", href: "/journey", active: false },
-  { label: "Side Quests", href: "/side-quests", active: false },
-] as const;
-
 export default function AboutPage() {
   return (
     <PageTransition>
       <div className="home-gallery ab-page">
-        <header className="gh-header">
-          <Link
-            href="/"
-            className="gh-brand"
-            transitionTypes={["nav-back"]}
-            aria-label={`${PERSON.name}, home`}
-          >
-            <span className="gh-mark" aria-hidden="true">
-              <Image
-                src="/kv_avatar.svg"
-                alt=""
-                width={44}
-                height={44}
-                className="gh-avatar"
-                priority
-              />
-            </span>
-            <span className="gh-identity">
-              <span className="gh-name">{PERSON.name.toLowerCase()}</span>
-              <span className="gh-role">Software Engineer</span>
-            </span>
-          </Link>
-
-          <nav className="gh-nav" aria-label="Primary">
-            {NAV_LINKS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                transitionTypes={[item.active ? "nav-forward" : "nav-back"]}
-                className="gh-nav-link"
-                data-active={item.active || undefined}
-                aria-current={item.active ? "page" : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <WorkWithMeButton />
-        </header>
+        <SiteHeader active="/about" />
 
         <main className="ab-main">
           {/* 1. About Me (full-screen editorial profile) */}
@@ -237,7 +191,6 @@ export default function AboutPage() {
         </main>
 
         <SiteFooter
-          name={PERSON.name}
           openToWork={PERSON.openToWork}
           socials={SOCIALS.map((s) => ({ label: s.label, href: s.href, d: s.d }))}
         />

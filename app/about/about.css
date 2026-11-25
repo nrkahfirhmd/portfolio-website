@@ -49,13 +49,13 @@
   margin: 0;
   font-size: 0.96875rem;
   line-height: 1.68;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
   text-wrap: pretty;
 }
 
 .ab-bio strong {
   font-weight: 600;
-  color: var(--gh-ink, #0f0f0f);
+  color: var(--gh-ink, var(--primitive-color-zinc-950));
 }
 
 .ab-hero-actions {
@@ -88,7 +88,7 @@
 
 .ab-btn:hover,
 .ab-btn:focus-visible {
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   border-color: var(--gh-accent);
   color: var(--gh-accent);
 }
@@ -96,7 +96,7 @@
 .ab-btn--primary {
   background: rgba(18, 18, 22, 0.88);
   border-color: rgba(255, 255, 255, 0.16);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   box-shadow: 0 8px 20px -10px rgba(15, 15, 20, 0.38);
 }
 
@@ -104,7 +104,7 @@
 .ab-btn--primary:focus-visible {
   background: var(--gh-accent);
   border-color: var(--gh-accent);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
 }
 
 .ab-btn:active {
@@ -124,7 +124,7 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 14px;
-  background: #f4f4f6;
+  background: var(--primitive-color-zinc-100);
   border: 1px solid rgba(15, 15, 20, 0.09);
 }
 
@@ -171,7 +171,7 @@
   width: 7px;
   height: 7px;
   border-radius: 9999px;
-  background: #1c8049;
+  background: var(--primitive-color-green-600);
 }
 
 /* --- Shared Section Rhythm --- */
@@ -268,7 +268,7 @@
   padding: 1.35rem 1.4rem;
   border-radius: 16px;
   border: 1px solid rgba(15, 15, 20, 0.08);
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   box-shadow: 0 10px 26px -22px rgba(15, 23, 42, 0.18);
   transition:
     border-color 180ms var(--gh-ease),
@@ -277,7 +277,7 @@
 
 .ab-value-card:hover {
   border-color: rgba(22, 98, 56, 0.26);
-  background: #fafcfb;
+  background: var(--primitive-color-zinc-50);
 }
 
 .ab-value-title {
@@ -293,7 +293,7 @@
   margin: 0.5rem 0 0;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
 }
 
 /* --- 3. Interactive Dotted Globe --- */
@@ -366,8 +366,8 @@
   padding: 0;
   overflow: hidden;
   border-radius: 13px;
-  border: 3px solid #ffffff;
-  background: #18181b;
+  border: 3px solid var(--primitive-color-site-white);
+  background: var(--primitive-color-zinc-900);
   box-shadow:
     0 0 0 1px rgba(15, 15, 20, 0.08),
     0 12px 26px -12px rgba(15, 23, 42, 0.36);
@@ -425,7 +425,7 @@
   place-items: center;
   width: 100%;
   height: 100%;
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.6875rem;
 }
@@ -440,7 +440,7 @@
   height: 24px;
   border-radius: 9999px;
   background: rgba(18, 18, 22, 0.84);
-  color: #ffffff;
+  color: var(--primitive-color-site-white);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -519,7 +519,7 @@
   gap: 0.85rem;
   padding: 1rem;
   border-radius: 18px;
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   border: 1px solid rgba(15, 15, 20, 0.08);
   box-shadow: 0 28px 64px -24px rgba(15, 23, 42, 0.45);
   text-align: left;
@@ -556,7 +556,7 @@
   padding: 0.35rem 0.85rem;
   border-radius: 8px;
   border: 1px solid rgba(15, 15, 20, 0.14);
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   font-family: inherit;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -580,17 +580,17 @@
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: 12px;
-  background: #f4f4f6;
+  background: var(--primitive-color-zinc-100);
   border: 1px solid rgba(15, 15, 20, 0.08);
 }
 
 .ab-lightbox-stage[data-kind="video"] {
-  background: #121216;
+  background: var(--primitive-color-night-1);
 }
 
 .ab-lightbox-img {
   object-fit: contain;
-  background: #f4f4f6;
+  background: var(--primitive-color-zinc-100);
 }
 
 .ab-media-video {
@@ -598,7 +598,7 @@
   height: 100%;
   display: block;
   object-fit: contain;
-  background: #121216;
+  background: var(--primitive-color-night-1);
 }
 
 .ab-media-error {
@@ -630,7 +630,7 @@
   margin: 0;
   font-size: 0.84375rem;
   line-height: 1.45;
-  color: #3f3f46;
+  color: var(--primitive-color-zinc-700);
 }
 
 .ab-lightbox-nav {
@@ -664,11 +664,11 @@
 
 .ab-pin-btn:hover,
 .ab-pin-btn:focus-visible {
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
 }
 
 .ab-pin-btn[aria-pressed="true"] {
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   box-shadow:
     0 0 0 1px rgba(22, 98, 56, 0.35),
     0 8px 20px -12px rgba(22, 98, 56, 0.3);
@@ -678,11 +678,11 @@
   width: 6px;
   height: 6px;
   border-radius: 9999px;
-  background: #52525b;
+  background: var(--primitive-color-zinc-600);
 }
 
 .ab-pin-dot--primary {
-  background: #166238;
+  background: var(--primitive-color-green-700);
 }
 
 .ab-pin-name {
@@ -760,7 +760,7 @@
   padding: 1rem 1.1rem;
   border-radius: 12px;
   border: 1px solid rgba(15, 15, 20, 0.08);
-  background: #ffffff;
+  background: var(--primitive-color-site-white);
   text-decoration: none;
   transition:
     background-color 160ms var(--gh-ease),
@@ -770,7 +770,7 @@
 
 a.ab-friend-card:hover,
 a.ab-friend-card:focus-visible {
-  background: #fafcfb;
+  background: var(--primitive-color-zinc-50);
   border-color: rgba(22, 98, 56, 0.3);
   transform: translateY(-2px);
 }
@@ -936,75 +936,75 @@ a.ab-friend-card:focus-visible .ab-friend-arrow {
 :root[data-theme="dark"] .ab-bio p,
 :root[data-theme="dark"] .ab-value-body,
 :root[data-theme="dark"] .ab-media-caption {
-  color: #d4d4d8;
+  color: var(--primitive-color-zinc-300);
 }
 
 :root[data-theme="dark"] .ab-btn,
 :root[data-theme="dark"] .ab-pin-btn {
   background: rgba(24, 24, 29, 0.8);
   border-color: rgba(255, 255, 255, 0.14);
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
 }
 :root[data-theme="dark"] .ab-btn:hover,
 :root[data-theme="dark"] .ab-btn:focus-visible,
 :root[data-theme="dark"] .ab-pin-btn:hover,
 :root[data-theme="dark"] .ab-pin-btn:focus-visible,
 :root[data-theme="dark"] .ab-pin-btn[aria-pressed="true"] {
-  background: #1f1f26;
+  background: var(--primitive-color-night-4);
   border-color: var(--gh-accent);
   color: var(--gh-accent);
 }
 :root[data-theme="dark"] .ab-btn--primary {
-  background: #f4f4f5;
-  border-color: #f4f4f5;
-  color: #0c0c0e;
+  background: var(--primitive-color-zinc-100);
+  border-color: var(--primitive-color-zinc-100);
+  color: var(--primitive-color-night-ink);
 }
 :root[data-theme="dark"] .ab-btn--primary:hover,
 :root[data-theme="dark"] .ab-btn--primary:focus-visible {
-  background: #4fc17f;
-  border-color: #4fc17f;
-  color: #06210f;
+  background: var(--primitive-color-green-400);
+  border-color: var(--primitive-color-green-400);
+  color: var(--primitive-color-green-950);
 }
 
 :root[data-theme="dark"] .ab-photo-tile,
 :root[data-theme="dark"] .ab-lightbox-stage,
 :root[data-theme="dark"] .ab-lightbox-img {
-  background: #141418;
+  background: var(--primitive-color-night-1);
   border-color: rgba(255, 255, 255, 0.1);
 }
 
 :root[data-theme="dark"] .ab-portrait-tag {
   background: rgba(20, 20, 25, 0.86);
   border-color: rgba(255, 255, 255, 0.14);
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
 }
 
 :root[data-theme="dark"] .ab-value-card,
 :root[data-theme="dark"] .ab-friend-card,
 :root[data-theme="dark"] .ab-lightbox-panel {
-  background: #141418;
+  background: var(--primitive-color-night-1);
   border-color: rgba(255, 255, 255, 0.1);
 }
 :root[data-theme="dark"] .ab-value-card:hover,
 :root[data-theme="dark"] a.ab-friend-card:hover,
 :root[data-theme="dark"] a.ab-friend-card:focus-visible {
-  background: #1a1a20;
+  background: var(--primitive-color-night-1);
   border-color: rgba(79, 193, 127, 0.4);
 }
 
 :root[data-theme="dark"] .ab-lightbox-close,
 :root[data-theme="dark"] .ab-lightbox-nav-btn,
 :root[data-theme="dark"] .ab-media-retry {
-  background: #1b1b21;
+  background: var(--primitive-color-night-3);
   border-color: rgba(255, 255, 255, 0.16);
-  color: #f4f4f5;
+  color: var(--primitive-color-zinc-100);
 }
 :root[data-theme="dark"] .ab-fan-card {
-  border-color: #27272e;
+  border-color: var(--primitive-color-night-3);
 }
 :root[data-theme="dark"] .ab-pin-dot {
-  background: #a1a1aa;
+  background: var(--primitive-color-zinc-400);
 }
 :root[data-theme="dark"] .ab-pin-btn[aria-pressed="true"] .ab-pin-dot {
-  background: #4fc17f;
+  background: var(--primitive-color-green-400);
 }

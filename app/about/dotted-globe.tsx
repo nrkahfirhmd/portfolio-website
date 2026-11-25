@@ -497,7 +497,7 @@ export function DottedGlobe({ places }: { places: GlobePlace[] }) {
         ctx.fill();
 
         if (isActive) {
-          ctx.fillStyle = isDark ? "#0c0c0e" : "#ffffff";
+          ctx.fillStyle = isDark ? "#1a1b1f" : "#ffffff";
           ctx.beginPath();
           ctx.arc(sx, sy, 7.5, 0, Math.PI * 2);
           ctx.fill();
