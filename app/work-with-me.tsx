@@ -12,6 +12,8 @@ export function WorkWithMeButton() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  // Honeypot: people never see it, bots fill it.
+  const [website, setWebsite] = useState("");
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -29,6 +31,7 @@ export function WorkWithMeButton() {
     setEmail("");
     setSubject("");
     setMessage("");
+    setWebsite("");
     setError("");
     setSubmitted(false);
   };
@@ -51,6 +54,7 @@ export function WorkWithMeButton() {
           email: email.trim(),
           subject: subject.trim(),
           message: message.trim(),
+          website,
         }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
@@ -154,6 +158,7 @@ export function WorkWithMeButton() {
                   type="text"
                   required
                   autoComplete="name"
+                  maxLength={100}
                   placeholder="Your Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -172,6 +177,7 @@ export function WorkWithMeButton() {
                   type="email"
                   required
                   autoComplete="email"
+                  maxLength={254}
                   placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -189,6 +195,7 @@ export function WorkWithMeButton() {
                   name="subject"
                   type="text"
                   required
+                  maxLength={150}
                   placeholder="Project Collaboration"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
@@ -206,11 +213,25 @@ export function WorkWithMeButton() {
                   name="message"
                   rows={4}
                   required
+                  maxLength={5000}
                   placeholder="Hey, I'd love to chat about building a mobile app..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="wwm-textarea"
                   disabled={sending}
+                />
+              </div>
+
+              <div className="sr-only" aria-hidden="true">
+                <label htmlFor={`${baseId}-website`}>Leave this empty</label>
+                <input
+                  id={`${baseId}-website`}
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
                 />
               </div>
 

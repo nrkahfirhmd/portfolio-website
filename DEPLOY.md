@@ -69,20 +69,36 @@ chmod 440 /etc/sudoers.d/portfolio
 visudo -c   # must say "parsed OK"
 ```
 
-### 6. systemd service
+### 6. Secrets and systemd service
+
+The contact form needs the iCloud mail settings. They live outside `/srv/portfolio`, which every
+deploy wipes (`rsync --delete`):
+
+```bash
+cat > /etc/portfolio.env <<'EOF'
+ICLOUD_USER=you@icloud.com
+ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+ICLOUD_FROM=you@icloud.com
+CONTACT_TO=you@example.com
+EOF
+chown root:deploy /etc/portfolio.env && chmod 640 /etc/portfolio.env
+```
 
 ```bash
 cat > /etc/systemd/system/portfolio.service <<'EOF'
 [Unit]
 Description=Portfolio (Next.js)
 After=network.target
+StartLimitIntervalSec=0
 
 [Service]
 User=deploy
 WorkingDirectory=/srv/portfolio
 ExecStart=/usr/bin/node server.js
 Environment=NODE_ENV=production PORT=3000 HOSTNAME=127.0.0.1
+EnvironmentFile=/etc/portfolio.env
 Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
@@ -149,6 +165,9 @@ Repo → Settings → Secrets and variables → Actions → New repository secre
 | `SSH_USER` | `deploy` |
 | `SSH_KEY` | full contents of `~/.ssh/portfolio_deploy` (the private one, no `.pub`) |
 | `SSH_KNOWN_HOSTS` | output of `ssh-keyscan SERVER_IP` run on your laptop |
+
+Also add a repository **variable** (same page, "Variables" tab) named `SITE_URL`, e.g.
+`https://example.com`. The build bakes it into canonical URLs, link previews, `robots.txt` and the sitemap.
 
 ## First deploy
 
