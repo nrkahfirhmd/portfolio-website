@@ -17,7 +17,8 @@ import type { IconName } from "@/app/socials";
 // ============================================================
 
 /** The site's public origin: canonical URLs, Open Graph and the sitemap. Set SITE_URL where the site is built. */
-export const SITE_URL = process.env.SITE_URL ?? "http://localhost:3000";
+// `||`, not `??`: CI passes an empty string while the variable is unset.
+export const SITE_URL = process.env.SITE_URL || "http://localhost:3000";
 
 export const PERSON = {
   name: "Kahfi Rahmada",
